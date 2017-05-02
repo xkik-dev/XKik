@@ -7,6 +7,7 @@ import android.content.res.Resources;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.TimeZone;
 
 import de.robv.android.xposed.IXposedHookInitPackageResources;
@@ -43,13 +44,15 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                 Class recpt_mgr = XposedHelpers.findClass(hooks.kikRecptMgr, loadPackageParam.classLoader);
 
 
-                // my attempt at adding a smiley manager; added test smiley (doge) shows up but can't be sent
-                /*final Class smiley = XposedHelpers.findClass("com.kik.android.b.f",loadPackageParam.classLoader);
+                /*
+                my attempt at adding a smiley manager; added test smiley (doge), shows up in picker but disappears once clicked
+                 */
+                final Class smiley = XposedHelpers.findClass("com.kik.android.b.f",loadPackageParam.classLoader);
                 XposedHelpers.findAndHookMethod("com.kik.android.b.j", loadPackageParam.classLoader, "a", new XC_MethodHook() {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                         ArrayList<Object> res = (ArrayList<Object>) param.getResult(); // array of installed smileys
-                        res.add(kikUtil.gen_smiley(smiley,"doge",":3","420db9b5",System.currentTimeMillis()));
+                        res.add(kikUtil.gen_smiley(smiley,"doge",":3","420db9b5",0));
                         param.setResult(res); // "doge","<3","0bc84433","<3",0
                         /*XposedBridge.log("name: "+XposedHelpers.getObjectField(res.get(0),"a")); // name
                         XposedBridge.log("id: "+XposedHelpers.getObjectField(res.get(0),"b")); // id
@@ -57,10 +60,10 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                         XposedBridge.log("??: "+XposedHelpers.getObjectField(res.get(0),"d")); // category/text
                         XposedBridge.log("active: "+XposedHelpers.getObjectField(res.get(0),"e")); // is active
                         XposedBridge.log("?: "+XposedHelpers.getObjectField(res.get(0),"f")); // ??, always true
-                        XposedBridge.log("when: "+XposedHelpers.getObjectField(res.get(0),"g")); // when purchased
+                        XposedBridge.log("when: "+XposedHelpers.getObjectField(res.get(0),"g")); // when purchased*/
                         super.afterHookedMethod(param);
                     }
-                });*/
+                });
 
 
                 /*

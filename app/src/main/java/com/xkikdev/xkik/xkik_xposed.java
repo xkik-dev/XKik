@@ -140,7 +140,6 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                             XposedBridge.log("type: " + value);
 
                             if (value.equalsIgnoreCase("read")) { // read receipt
-                                Util.printStack("read");
                                 if (settings != null && settings.isNoReadreceipt()) {
                                     XposedBridge.log("Blocked a read receipt");
                                     param.setResult(null);

@@ -2,6 +2,8 @@
 Tweaks for Kik using Xposed framework
 
 
+<center>Currently Compatible with<br><h2>11.15.0.15115</h2></center>
+
 Current tweaks available:
 
 Chat

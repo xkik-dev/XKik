@@ -18,7 +18,7 @@
             android:padding="16dp">
 
         <TextView
-            android:text="Media Settings"
+            android:text="@string/media_settings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/imgtitle"
@@ -29,7 +29,7 @@
             android:layout_alignParentStart="true" />
 
             <Switch
-                android:text="Fake Camera"
+                android:text="@string/fake_camera"
                 android:layout_height="wrap_content"
                 android:id="@+id/fake_cam_switch"
                 android:layout_width="match_parent"
@@ -56,7 +56,7 @@
             android:padding="16dp">
 
             <TextView
-                android:text="Receipt Settings"
+                android:text="@string/receipt_settings"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/recptitletv"
@@ -67,7 +67,7 @@
                 android:layout_alignParentStart="true" />
 
             <Switch
-                android:text="Disable Read Receipts"
+                android:text="@string/disable_read_receipts"
                 android:layout_height="wrap_content"
                 android:id="@+id/read_recpt_switch"
                 android:layout_width="match_parent"
@@ -77,7 +77,7 @@
                 android:layout_marginTop="11dp" />
 
             <Switch
-                android:text="Disable Typing Receipts"
+                android:text="@string/disable_typing_receipts"
                 android:layout_height="wrap_content"
                 android:id="@+id/typing_recpt_switch"
                 android:layout_width="match_parent"

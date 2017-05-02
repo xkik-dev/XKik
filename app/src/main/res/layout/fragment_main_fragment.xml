@@ -29,7 +29,7 @@
                     android:id="@+id/welcometv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Welcome to XKik!"
+                    android:text="@string/welcome_to_xkik"
                     android:textAlignment="center"
                     android:textSize="36sp" />
 
@@ -38,7 +38,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
                     android:layout_below="@+id/welcometv"
-                    app:srcCompat="@mipmap/ic_launcher" />
+                    app:srcCompat="@mipmap/ic_launcher"
+                    android:contentDescription="@string/xkik_logo" />
 
                 <TextView
                     android:id="@+id/versiontv"
@@ -46,7 +47,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/logopicview"
                     android:layout_centerHorizontal="true"
-                    android:text="Version 0.1 BETA"
+                    android:text="@string/version"
                     android:textAlignment="center" />
 
                 <TextView
@@ -55,7 +56,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/versiontv"
                     android:layout_centerHorizontal="true"
-                    android:text="Compatible with Kik 11.15.0.15115"
+                    android:text="@string/compability"
                     android:textAlignment="center"
                     android:textSize="18sp"
                     android:textStyle="normal|bold" />
@@ -68,7 +69,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/compabilitytv"
                     android:layout_marginTop="13dp"
-                    android:text="Changing settings automatically kills Kik in the background\n\n\nKIK is the property of KIK INTERACTIVE INC. XKik is in no way affiliated with, authorized, maintained, sponsored or endorsed by KIK INTERACTIVE INC or any of its affiliates or subsidiaries. This is an independent application."
+                    android:text="@string/warning_disclaimer"
                     android:textAlignment="center" />
             </RelativeLayout>
         </android.support.v7.widget.CardView>

@@ -1,14 +1,17 @@
 package com.xkikdev.xkik;
 
-import android.app.AndroidAppHelper;
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.res.Resources;
+import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.robv.android.xposed.IXposedHookInitPackageResources;
 import de.robv.android.xposed.IXposedHookLoadPackage;
@@ -24,8 +27,12 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPackageResources {
 
+    private Pattern fromPattern = Pattern.compile("from=\"(.*?)\"");
+    private Pattern msgIdPattern = Pattern.compile("msgid id=\"(.*?)\"");
+    private Pattern useridPattern = Pattern.compile("(.*)_[^_]*");
     public Settings settings = null;
     public static DateFormat format = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
+    Activity chatContext = null;
 
     @Override
     public void handleLoadPackage(final XC_LoadPackage.LoadPackageParam loadPackageParam) throws Throwable {
@@ -76,7 +83,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                             String type = (String) param.args[0];
                             if (type.equalsIgnoreCase("com.kik.ext.gallery")) {
                                 param.args[0] = "com.kik.ext.camera";
-                            }else if (type.equalsIgnoreCase("com.kik.ext.video-gallery")) {
+                            } else if (type.equalsIgnoreCase("com.kik.ext.video-gallery")) {
                                 param.args[0] = "com.kik.ext.video-camera";
                             }
                         }
@@ -84,6 +91,49 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                     }
                 });
 
+                /*
+                    Who's lurking feature
+                 */
+                if (settings.getWhosLurking()){ // using this before hooking since it's very intensive when receiving a receipt
+                    XposedHelpers.findAndHookMethod(hooks.KIK_RECEIPT_RECV, loadPackageParam.classLoader, "a", "kik.core.net.g", new XC_MethodHook() {
+                        @Override
+                        protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                            char[] txtBuf = (char[]) XposedHelpers.getObjectField(param.args[0],"srcBuf");
+                            String resp = String.valueOf(txtBuf);
+                            if (resp.contains("type=\"read\"")){
+                                Matcher fromMch = fromPattern.matcher(resp);
+                                Matcher uuidMch = msgIdPattern.matcher(resp);
+                                String from = null;
+                                String uuid = null; // currently no use for this, but eventually will map a seen receipt to a specific message
+                                if (fromMch.find()){
+                                    from = fromMch.group(1);
+                                    Matcher userMatcher = useridPattern.matcher(from);
+                                    if (userMatcher.find()){
+                                        from=userMatcher.group(1);
+                                    }
+                                }
+                                if (uuidMch.find()){
+                                    uuid = uuidMch.group(1);
+                                }
+                                if (chatContext!=null){
+
+                                    final String finalFrom = from;
+                                    if (from!=null && from.equals("warehouse@talk.kik.com")){ // avoids some of the internal kik classes
+                                        chatContext.runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Toast.makeText(chatContext.getApplicationContext(), finalFrom +" saw your message!",Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    }
+
+                                }
+                                XposedBridge.log("from: "+from);
+                            }
+                            super.beforeHookedMethod(param);
+                        }
+                    });
+                }
 
                 /*
                 Dev mode
@@ -91,7 +141,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                 XposedHelpers.findAndHookMethod(hooks.kikDeviceUtils, loadPackageParam.classLoader, "f", new XC_MethodHook() {
                     @Override
                     protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                        if (settings.get_dev()) {
+                        if (settings.getDev()) {
                             param.setResult(true);
                         }
                         super.beforeHookedMethod(param);
@@ -140,12 +190,12 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                             XposedBridge.log("type: " + value);
 
                             if (value.equalsIgnoreCase("read")) { // read receipt
-                                if (settings != null && settings.isNoReadreceipt()) {
+                                if (settings != null && settings.getNoReadreceipt()) {
                                     XposedBridge.log("Blocked a read receipt");
                                     param.setResult(null);
                                 }
                             } else if (value.equalsIgnoreCase("is-typing")) { // typing receipt
-                                if (settings != null && settings.isNoTyping()) {
+                                if (settings != null && settings.getNoTyping()) {
                                     XposedBridge.log("Blocked a typing receipt");
                                     param.setResult(null);
                                 }

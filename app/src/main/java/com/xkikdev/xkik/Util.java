@@ -31,6 +31,41 @@ public class Util {
         }
     }
 
+    /**
+     * Gat a field from an object
+     * @param obj The object
+     * @param fld The field
+     * @return The field, or null if it doesn't exist
+     */
+    public static Object getObjField(Object obj, String fld) {
+        try {
+            return XposedHelpers.getObjectField(obj, fld);
+        } catch (NoSuchFieldError e) {
+            return null;
+        }
+
+    }
+
+    /**
+     * Prints all declared fields of a object
+     * @param start Object to analyze
+     */
+    public static void printDeclaredFields(Object start) {
+        int lenlen = start.getClass().getDeclaredFields().length;
+        for (int i = 0; i < lenlen; i++) {
+            try {
+                String name = start.getClass().getDeclaredFields()[i].getName();
+                Object found = getObjField(start, name);
+                XposedBridge.log("Declared field " + i + "(" + name + "): " + found.toString());
+
+            } catch (Exception ignored) {
+
+            }
+
+        }
+    }
+
+
 
     /**
      * Kills Kik

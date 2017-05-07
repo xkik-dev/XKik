@@ -52,6 +52,7 @@ public class Settings {
     private boolean noReadreceipt = false; // read receipt allowed
     private boolean noTyping = false; // typing blocked
     private boolean fakeCamera = false; // fake camera enabled
+    private boolean whosLurking = false;
     private int dateFormat = 0; // date format, currently only 0 and 1
     boolean devMode = false; // devMode mode enabled
     private HashMap<String, Integer> colors = new HashMap<String, Integer>(); // color settings
@@ -73,15 +74,15 @@ public class Settings {
         }
     }
 
-    public boolean isNoReadreceipt() {
+    public boolean getNoReadreceipt() {
         return noReadreceipt;
     }
 
-    public boolean isNoTyping() {
+    public boolean getNoTyping() {
         return noTyping;
     }
 
-    public void set_dev(boolean b) {
+    public void setDev(boolean b) {
         devMode = b;
         try {
             save();
@@ -90,7 +91,20 @@ public class Settings {
         }
     }
 
-    public boolean get_dev() {
+    public boolean getWhosLurking(){
+        return whosLurking;
+    }
+
+    public void setWhosLurking(boolean b){
+        whosLurking = b;
+        try {
+            save();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean getDev() {
         return this.devMode;
     }
 

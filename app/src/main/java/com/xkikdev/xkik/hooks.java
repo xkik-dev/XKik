@@ -11,4 +11,5 @@ public class hooks {
     public static final String kikContentMessage = "kik.core.datatypes.messageExtensions.ContentMessage";
     public static final String kikDeviceUtils = "kik.android.util.DeviceUtils";
     public static final String kikDateDisplayManager = "kik.android.util.bq";
+    public static final String KIK_RECEIPT_RECV = "kik.core.net.b.d";
 }

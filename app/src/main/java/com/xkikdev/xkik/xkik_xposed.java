@@ -118,7 +118,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                                 if (chatContext!=null){
 
                                     final String finalFrom = from;
-                                    if (from!=null && from.equals("warehouse@talk.kik.com")){ // avoids some of the internal kik classes
+                                    if (from!=null && !from.equals("warehouse@talk.kik.com")){ // avoids some of the internal kik classes
                                         chatContext.runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {

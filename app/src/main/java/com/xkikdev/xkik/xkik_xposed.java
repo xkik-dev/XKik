@@ -1,12 +1,26 @@
 package com.xkikdev.xkik;
 
+import android.app.Activity;
+import android.app.AndroidAppHelper;
 import android.app.Application;
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.Bundle;
+import android.os.Looper;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.Reader;
+import java.io.StringReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.robv.android.xposed.IXposedHookInitPackageResources;
 import de.robv.android.xposed.IXposedHookLoadPackage;
@@ -22,8 +36,12 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPackageResources {
 
+    private Pattern fromPattern = Pattern.compile("from=\"(.*?)\"");
+    private Pattern msgIdPattern = Pattern.compile("msgid id=\"(.*?)\"");
+    private Pattern useridPattern = Pattern.compile("(.*)_[^_]*");
     public Settings settings = null;
     public static DateFormat format = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
+    Activity chatContext = null;
 
     @Override
     public void handleLoadPackage(final XC_LoadPackage.LoadPackageParam loadPackageParam) throws Throwable {
@@ -40,6 +58,14 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 Class recpt_mgr = XposedHelpers.findClass(hooks.kikRecptMgr, loadPackageParam.classLoader);
+
+                XposedHelpers.findAndHookMethod("kik.android.util.r", loadPackageParam.classLoader, "a", Activity.class, new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        chatContext= ((Activity) param.args[0]);
+                        super.afterHookedMethod(param);
+                    }
+                });
 
                 /*
                 Camera spoofing, for gallery images
@@ -59,6 +85,48 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                     }
                 });
 
+                /*
+                    Who's lurking feature
+                 */
+                if (settings.isWhosLurking()){ // using this before hooking since it's very intensive when receiving a receipt
+                    XposedHelpers.findAndHookMethod("kik.core.net.b.d", loadPackageParam.classLoader, "a", "kik.core.net.g", new XC_MethodHook() {
+                        @Override
+                        protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                            char[] txtBuf = (char[]) XposedHelpers.getObjectField(param.args[0],"srcBuf");
+                            String resp = String.valueOf(txtBuf);
+                            if (resp.contains("type=\"read\"")){
+                                Matcher fromMch = fromPattern.matcher(resp);
+                                Matcher uuidMch = msgIdPattern.matcher(resp);
+                                String from = null;
+                                String uuid = null; // currently no use for this, but eventually will map a seen receipt to a specific message
+                                if (fromMch.find()){
+                                    from = fromMch.group(1);
+                                    Matcher userMatcher = useridPattern.matcher(from);
+                                    if (userMatcher.find()){
+                                        from=userMatcher.group(1);
+                                    }
+                                }
+                                if (uuidMch.find()){
+                                    uuid = uuidMch.group(1);
+                                }
+                                if (chatContext!=null){
+
+                                    final String finalFrom = from;
+                                    chatContext.runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(chatContext.getApplicationContext(), finalFrom +" saw your message!",Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+
+
+                                }
+                                XposedBridge.log("from: "+from);
+                            }
+                            super.beforeHookedMethod(param);
+                        }
+                    });
+                }
 
                 /*
                 Dev mode
@@ -115,7 +183,6 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                             XposedBridge.log("type: " + value);
 
                             if (value.equalsIgnoreCase("read")) { // read receipt
-                                Util.printStack("read");
                                 if (settings != null && settings.isNoReadreceipt()) {
                                     XposedBridge.log("Blocked a read receipt");
                                     param.setResult(null);

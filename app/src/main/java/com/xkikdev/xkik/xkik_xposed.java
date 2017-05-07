@@ -79,7 +79,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                     Who's lurking feature
                  */
                 if (settings.getWhosLurking()){ // using this before hooking since it's very intensive when receiving a receipt
-                    XposedHelpers.findAndHookMethod("kik.core.net.b.d", loadPackageParam.classLoader, "a", "kik.core.net.g", new XC_MethodHook() {
+                    XposedHelpers.findAndHookMethod(hooks.KIK_RECEIPT_RECV, loadPackageParam.classLoader, "a", "kik.core.net.g", new XC_MethodHook() {
                         @Override
                         protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                             char[] txtBuf = (char[]) XposedHelpers.getObjectField(param.args[0],"srcBuf");

@@ -50,6 +50,13 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 Class recpt_mgr = XposedHelpers.findClass(hooks.kikRecptMgr, loadPackageParam.classLoader);
 
+                XposedHelpers.findAndHookMethod("kik.android.util.r", loadPackageParam.classLoader, "a", Activity.class, new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        chatContext= ((Activity) param.args[0]);
+                        super.afterHookedMethod(param);
+                    }
+                });
 
                 /*
                 my attempt at adding a smiley manager; added test smiley (doge), shows up in picker but disappears once clicked

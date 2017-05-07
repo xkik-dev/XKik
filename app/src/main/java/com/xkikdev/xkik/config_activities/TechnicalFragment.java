@@ -35,7 +35,7 @@ public class TechnicalFragment extends Fragment {
         }
 
         final Switch dmode_switch = (Switch) v.findViewById(R.id.devmode_switch);
-        dmode_switch.setChecked(settings.get_dev());
+        dmode_switch.setChecked(settings.getDev());
         dmode_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -46,7 +46,7 @@ public class TechnicalFragment extends Fragment {
                         public void onClick(DialogInterface dialog, int which) {
                             switch (which) {
                                 case DialogInterface.BUTTON_POSITIVE:
-                                    settings.set_dev(true);
+                                    settings.setDev(true);
                                     AlertDialog.Builder b = new AlertDialog.Builder(v.getContext());
                                     b.setTitle("Ok.").setMessage("Enabled. Dev tools are accessible via\nSettings>Your account>A/B Tests.\n\nThe smiley shop " +
                                             "will be non functional while dev tools are enabled.").show();
@@ -54,7 +54,7 @@ public class TechnicalFragment extends Fragment {
 
                                 case DialogInterface.BUTTON_NEGATIVE:
                                     dmode_switch.setChecked(false);
-                                    settings.set_dev(false);
+                                    settings.setDev(false);
                                     break;
                             }
                         }
@@ -67,7 +67,7 @@ public class TechnicalFragment extends Fragment {
                             "sure you want to enable Kik developer features?").setPositiveButton("Yes, I accept the risks", dev_warning)
                             .setNegativeButton("No!", dev_warning).show();
                 } else {
-                    settings.set_dev(false);
+                    settings.setDev(false);
                 }
 
             }

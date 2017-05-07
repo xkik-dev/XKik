@@ -1,23 +1,13 @@
 package com.xkikdev.xkik;
 
 import android.app.Activity;
-import android.app.AndroidAppHelper;
 import android.app.Application;
 import android.content.Context;
 import android.content.res.Resources;
-import android.os.Bundle;
-import android.os.Looper;
-import android.view.LayoutInflater;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.Reader;
-import java.io.StringReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -88,7 +78,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                 /*
                     Who's lurking feature
                  */
-                if (settings.isWhosLurking()){ // using this before hooking since it's very intensive when receiving a receipt
+                if (settings.getWhosLurking()){ // using this before hooking since it's very intensive when receiving a receipt
                     XposedHelpers.findAndHookMethod("kik.core.net.b.d", loadPackageParam.classLoader, "a", "kik.core.net.g", new XC_MethodHook() {
                         @Override
                         protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
@@ -135,7 +125,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                 XposedHelpers.findAndHookMethod(hooks.kikDeviceUtils, loadPackageParam.classLoader, "f", new XC_MethodHook() {
                     @Override
                     protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                        if (settings.get_dev()) {
+                        if (settings.getDev()) {
                             param.setResult(true);
                         }
                         super.beforeHookedMethod(param);
@@ -184,12 +174,12 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                             XposedBridge.log("type: " + value);
 
                             if (value.equalsIgnoreCase("read")) { // read receipt
-                                if (settings != null && settings.isNoReadreceipt()) {
+                                if (settings != null && settings.getNoReadreceipt()) {
                                     XposedBridge.log("Blocked a read receipt");
                                     param.setResult(null);
                                 }
                             } else if (value.equalsIgnoreCase("is-typing")) { // typing receipt
-                                if (settings != null && settings.isNoTyping()) {
+                                if (settings != null && settings.getNoTyping()) {
                                     XposedBridge.log("Blocked a typing receipt");
                                     param.setResult(null);
                                 }

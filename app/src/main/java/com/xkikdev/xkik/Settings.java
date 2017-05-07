@@ -74,15 +74,15 @@ public class Settings {
         }
     }
 
-    public boolean isNoReadreceipt() {
+    public boolean getNoReadreceipt() {
         return noReadreceipt;
     }
 
-    public boolean isNoTyping() {
+    public boolean getNoTyping() {
         return noTyping;
     }
 
-    public void set_dev(boolean b) {
+    public void setDev(boolean b) {
         devMode = b;
         try {
             save();
@@ -91,7 +91,7 @@ public class Settings {
         }
     }
 
-    public boolean isWhosLurking(){
+    public boolean getWhosLurking(){
         return whosLurking;
     }
 
@@ -104,7 +104,7 @@ public class Settings {
         }
     }
 
-    public boolean get_dev() {
+    public boolean getDev() {
         return this.devMode;
     }
 

@@ -47,10 +47,10 @@ public class ChatFragment extends Fragment {
         typingRecpt = (Switch) rootView.findViewById(R.id.typing_recpt_switch);
         fakeCam = (Switch) rootView.findViewById(R.id.fake_cam_switch);
         lurkDetector = (Switch) rootView.findViewById(R.id.lurk_detector);
-        readRecpt.setChecked(settings.isNoReadreceipt());
-        typingRecpt.setChecked(settings.isNoTyping());
+        readRecpt.setChecked(settings.getNoReadreceipt());
+        typingRecpt.setChecked(settings.getNoTyping());
         fakeCam.setChecked(settings.getFakeCam());
-        lurkDetector.setChecked(settings.isWhosLurking());
+        lurkDetector.setChecked(settings.getWhosLurking());
         readRecpt.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

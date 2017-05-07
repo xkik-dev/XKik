@@ -112,13 +112,14 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                                 if (chatContext!=null){
 
                                     final String finalFrom = from;
-                                    chatContext.runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Toast.makeText(chatContext.getApplicationContext(), finalFrom +" saw your message!",Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-
+                                    if (from!=null && from.equals("warehouse@talk.kik.com")){ // avoids some of the internal kik classes
+                                        chatContext.runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Toast.makeText(chatContext.getApplicationContext(), finalFrom +" saw your message!",Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    }
 
                                 }
                                 XposedBridge.log("from: "+from);

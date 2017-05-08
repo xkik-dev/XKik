@@ -1,5 +1,6 @@
 package com.xkikdev.xkik;
 
+import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 
 /**

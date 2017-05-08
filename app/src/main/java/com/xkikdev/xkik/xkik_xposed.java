@@ -9,6 +9,7 @@ import android.widget.Toast;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -48,34 +49,19 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
         XposedHelpers.findAndHookMethod(Application.class, "attach", Context.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                final Class smiley = XposedHelpers.findClass("com.kik.android.b.f",loadPackageParam.classLoader);
                 Class recpt_mgr = XposedHelpers.findClass(hooks.kikRecptMgr, loadPackageParam.classLoader);
 
-                XposedHelpers.findAndHookMethod("kik.android.util.r", loadPackageParam.classLoader, "a", Activity.class, new XC_MethodHook() {
-                    @Override
-                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        chatContext= ((Activity) param.args[0]);
-                        super.afterHookedMethod(param);
-                    }
-                });
-
                 /*
-                my attempt at adding a smiley manager; added test smiley (doge), shows up in picker but disappears once clicked
+                my attempt at adding a smiley manager;
                  */
-                final Class smiley = XposedHelpers.findClass("com.kik.android.b.f",loadPackageParam.classLoader);
                 XposedHelpers.findAndHookMethod("com.kik.android.b.j", loadPackageParam.classLoader, "a", new XC_MethodHook() {
                     @Override
-                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        ArrayList<Object> res = (ArrayList<Object>) param.getResult(); // array of installed smileys
-                        res.add(kikUtil.gen_smiley(smiley,"doge",":3","420db9b5",0));
-                        param.setResult(res); // "doge","<3","0bc84433","<3",0
-                        /*XposedBridge.log("name: "+XposedHelpers.getObjectField(res.get(0),"a")); // name
-                        XposedBridge.log("id: "+XposedHelpers.getObjectField(res.get(0),"b")); // id
-                        XposedBridge.log("??: "+XposedHelpers.getObjectField(res.get(0),"c")); // category/text
-                        XposedBridge.log("??: "+XposedHelpers.getObjectField(res.get(0),"d")); // category/text
-                        XposedBridge.log("active: "+XposedHelpers.getObjectField(res.get(0),"e")); // is active
-                        XposedBridge.log("?: "+XposedHelpers.getObjectField(res.get(0),"f")); // ??, always true
-                        XposedBridge.log("when: "+XposedHelpers.getObjectField(res.get(0),"g")); // when purchased*/
-                        super.afterHookedMethod(param);
+                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                        List<Object> e = new ArrayList<>();
+                        e.add(kikUtil.gen_smiley(smiley,"doge",":3","420db9b5",1494202364000L));
+                        XposedHelpers.callMethod(param.thisObject,"a",e);
+                        super.beforeHookedMethod(param);
                     }
                 });
 

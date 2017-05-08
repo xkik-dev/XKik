@@ -1,6 +1,5 @@
 package com.xkikdev.xkik;
 
-import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 
 /**
@@ -9,6 +8,10 @@ import de.robv.android.xposed.XposedHelpers;
 
 public class kikUtil {
 
+
+    public static Object gen_smiley(Class smiley_class, kikSmiley smiley) {
+        return gen_smiley(smiley_class, smiley.title, smiley.text, smiley.id, smiley.idate);
+    }
 
     /**
      * Generate a kik smiley type, currently beta

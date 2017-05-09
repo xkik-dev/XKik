@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "23.0.3"
+    buildToolsVersion '25.0.2'
     defaultConfig {
         applicationId 'com.xkikdev.xkik'
         minSdkVersion 14
@@ -18,7 +18,19 @@ android {
     }
     productFlavors {
     }
+
+    packagingOptions {
+        pickFirst 'META-INF/DEPENDENCIES'
+        pickFirst 'META-INF/LICENSE'
+    }
+
+    repositories{
+        maven{
+            url 'https://raw.github.com/zeeshanejaz/unirest-android/mvn-repo'
+        }
+    }
 }
+
 
 dependencies {
     provided fileTree(include: ['*.jar'], dir: 'libs')
@@ -30,5 +42,8 @@ dependencies {
     compile 'com.android.support:cardview-v7:24.2.1'
     compile 'com.afollestad.material-dialogs:core:0.9.1.0'
     compile 'com.pavelsikun:vintage-chroma:1.5'
+    compile 'com.squareup.okhttp3:okhttp:3.7.0'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     testCompile 'junit:junit:4.12'
 }
+

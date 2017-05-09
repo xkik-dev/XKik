@@ -1,5 +1,7 @@
 package com.xkikdev.xkik;
 
+import de.robv.android.xposed.XposedBridge;
+
 public class kikSmiley {
 
     String title;

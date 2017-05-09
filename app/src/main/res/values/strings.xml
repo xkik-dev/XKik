@@ -25,4 +25,6 @@
     <string name="exact_dates">Exact dates</string>
     <string name="reset_tip">Long-Clicking on a button resets it\'s respective value</string>
     <string name="text_tweaks">Text Tweaks</string>
+    <string name="smiley_settings">Smiley Settings</string>
+    <string name="auto_add_smiley">Automatically add smiley when tapped in chat</string>
 </resources>

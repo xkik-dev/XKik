@@ -10,7 +10,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.xkikdev.xkik.config_activities.ChatFragment;
+import com.xkikdev.xkik.config_activities.SmileyFragment;
 import com.xkikdev.xkik.config_activities.TechnicalFragment;
 import com.xkikdev.xkik.config_activities.VisualFragment;
 
@@ -37,6 +40,10 @@ public class MainActivity extends AppCompatActivity
 
         Settings.verifyStoragePermissions(this); // make sure we can access settings
 
+
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
+                .build();
+        ImageLoader.getInstance().init(config);
     }
 
     @Override
@@ -64,6 +71,8 @@ public class MainActivity extends AppCompatActivity
             fm.beginTransaction().replace(R.id.contentframe, new VisualFragment()).commit(); // visual manager
         } else if (id == R.id.nav_xkik_tech) {
             fm.beginTransaction().replace(R.id.contentframe, new TechnicalFragment()).commit(); // tech manager
+        } else if (id == R.id.nav_xkik_smiley) {
+            fm.beginTransaction().replace(R.id.contentframe, new SmileyFragment()).commit(); // smiley manager
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

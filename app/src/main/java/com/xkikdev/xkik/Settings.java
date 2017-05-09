@@ -12,7 +12,10 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+
+import de.robv.android.xposed.XposedBridge;
 
 /**
  * Settings class
@@ -57,6 +60,7 @@ public class Settings {
     boolean devMode = false; // devMode mode enabled
     private HashMap<String, Integer> colors = new HashMap<String, Integer>(); // color settings
     private HashMap<String, String> strings = new HashMap<String, String>(); // string settings
+    private ArrayList<kikSmiley> smileys = new ArrayList<>();
 
     /**
      * Loads settings
@@ -69,9 +73,36 @@ public class Settings {
             return new Gson().fromJson(FileUtils.readFileToString(getSaveFile(), "UTF-8"), Settings.class);
         } else {
             Settings set = new Settings();
-            set.save();
+            set.save(true);
             return set;
         }
+    }
+
+    public ArrayList<kikSmiley> getSmileys() {
+        return smileys;
+    }
+
+    public void addSmiley(kikSmiley ks,boolean kill){
+        if (ks==null){
+            return;
+        }
+        if (!containsSmiley(ks)){
+            smileys.add(ks);
+            try {
+                save(kill);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public boolean containsSmiley(kikSmiley ks){
+        for (kikSmiley smil : getSmileys()){
+            if (smil.id.equals(ks.id)){
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean getNoReadreceipt() {
@@ -85,7 +116,7 @@ public class Settings {
     public void setDev(boolean b) {
         devMode = b;
         try {
-            save();
+            save(true);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -98,7 +129,7 @@ public class Settings {
     public void setWhosLurking(boolean b){
         whosLurking = b;
         try {
-            save();
+            save(true);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -115,7 +146,7 @@ public class Settings {
     public void setDateFormat(int fmt) {
         dateFormat = fmt;
         try {
-            save();
+            save(true);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -128,7 +159,7 @@ public class Settings {
     public void setFakeCam(boolean b){
         fakeCamera = b;
         try {
-            save();
+            save(true);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -137,7 +168,7 @@ public class Settings {
     public void setNoReadreceipt(boolean value) {
         noReadreceipt = value;
         try {
-            save();
+            save(true);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -146,7 +177,7 @@ public class Settings {
     public void setNoTyping(boolean value) {
         noTyping = value;
         try {
-            save();
+            save(true);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -155,7 +186,7 @@ public class Settings {
     public void setColor(String id, int color) {
         colors.put(id, color);
         try {
-            save();
+            save(true);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -166,7 +197,7 @@ public class Settings {
             colors.remove(id);
         }
         try {
-            save();
+            save(true);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -175,7 +206,7 @@ public class Settings {
     public void setString(String id, String val) {
         strings.put(id, val);
         try {
-            save();
+            save(true);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -186,7 +217,7 @@ public class Settings {
             strings.remove(id);
         }
         try {
-            save();
+            save(true);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -222,9 +253,11 @@ public class Settings {
         return new File(getSaveDir().getPath() + File.separator + "config.json");
     }
 
-    public void save() throws IOException {
+    public void save(boolean kill) throws IOException {
         FileUtils.writeStringToFile(getSaveFile(), new Gson().toJson(this).toString(), "UTF-8", false);
-        Util.killKik(null);
+        if (kill){
+            Util.killKik(null);
+        }
     }
 
 

@@ -1,6 +1,16 @@
 package com.xkikdev.xkik;
 
+import android.support.annotation.NonNull;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
 import de.robv.android.xposed.XposedHelpers;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Utilities for Kik itself, i.e generating kik objects
@@ -8,6 +18,7 @@ import de.robv.android.xposed.XposedHelpers;
 
 public class kikUtil {
 
+    static OkHttpClient client = new OkHttpClient();
 
     public static Object gen_smiley(Class smiley_class, kikSmiley smiley) {
         return gen_smiley(smiley_class, smiley.title, smiley.text, smiley.id, smiley.idate);
@@ -39,6 +50,33 @@ public class kikUtil {
 
         return XposedHelpers.newInstance(smiley_class, title, text, id, text, installdate);
 
+    }
+
+    public static kikSmiley smileyFromID(final String id) throws IOException {
+        Request request = new Request.Builder()
+                .url("https://sticker-service.appspot.com/v2/smiley/"+id)
+                .build();
+
+        Response response = client.newCall(request).execute();
+        String resp = response.body().string();
+        if (resp.equals("not found")){
+            return null;
+        }
+        try {
+            return getSmileyFromJSON(id,new JSONObject(resp));
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @NonNull
+    private static kikSmiley getSmileyFromJSON(String id, JSONObject response) throws JSONException {
+        kikSmiley smiley;
+        String type = response.getString("type");
+        String name = response.getString("name");
+        smiley = new kikSmiley(name, type, id, System.currentTimeMillis());
+        return smiley;
     }
 
 }

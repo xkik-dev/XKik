@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.res.Resources;
+import android.view.View;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,7 +35,30 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
     private Pattern useridPattern = Pattern.compile("(.*)_[^_]*");
     public Settings settings = null;
     public static DateFormat format = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
+    private Object smileyManager =null;
     Activity chatContext = null;
+    private Class smileyClass;
+
+
+    public void updateSmileys(Class smileyClass){
+        if (smileyManager ==null || smileyClass == null){
+            return;
+        }
+        List<Object> e = new ArrayList<>();
+        for (kikSmiley s : settings.getSmileys()){
+            e.add(kikUtil.gen_smiley(smileyClass,s.title,s.text,s.id,s.idate));
+        }
+        XposedHelpers.callMethod(smileyManager,"a",e);
+    }
+
+    public void updateSmileys(Class smileyClass,kikSmiley smiley){
+        if (smileyManager ==null || smileyClass == null || smiley==null){
+            return;
+        }
+        List<Object> e = new ArrayList<>();
+        e.add(kikUtil.gen_smiley(smileyClass,smiley));
+        XposedHelpers.callMethod(smileyManager,"a",e);
+    }
 
     @Override
     public void handleLoadPackage(final XC_LoadPackage.LoadPackageParam loadPackageParam) throws Throwable {
@@ -49,19 +74,53 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
         XposedHelpers.findAndHookMethod(Application.class, "attach", Context.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                final Class smiley = XposedHelpers.findClass("com.kik.android.b.f",loadPackageParam.classLoader);
+                smileyClass = XposedHelpers.findClass("com.kik.android.b.f",loadPackageParam.classLoader);
                 Class recpt_mgr = XposedHelpers.findClass(hooks.kikRecptMgr, loadPackageParam.classLoader);
 
+                XposedHelpers.findAndHookMethod("kik.android.util.r", loadPackageParam.classLoader, "a", Activity.class, new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        chatContext= ((Activity) param.args[0]);
+                        super.afterHookedMethod(param);
+                    }
+                });
+
                 /*
-                my attempt at adding a smiley manager;
+                On smiley click
                  */
-                XposedHelpers.findAndHookMethod("com.kik.android.b.j", loadPackageParam.classLoader, "a", new XC_MethodHook() {
+                XposedHelpers.findAndHookMethod("com.kik.android.b.c", loadPackageParam.classLoader, "onClick", View.class, new XC_MethodHook() {
                     @Override
                     protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                        List<Object> e = new ArrayList<>();
-                        e.add(kikUtil.gen_smiley(smiley,"doge",":3","420db9b5",1494202364000L));
-                        XposedHelpers.callMethod(param.thisObject,"a",e);
+                        //String type = (String) Util.getObjField(param.thisObject,"f");
+                        final String id = (String) Util.getObjField(param.thisObject,"b");
+                        new Thread(){
+                            @Override
+                            public void run() {
+                                try {
+                                    kikSmiley ks = kikUtil.smileyFromID(id);
+                                    settings.addSmiley(ks,false);
+                                    updateSmileys(smileyClass,ks);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                super.run();
+                            }
+                        }.start();
+                        param.setResult(null);
+
                         super.beforeHookedMethod(param);
+                    }
+                });
+
+                /*
+                Smiley Manager
+                 */
+                XposedHelpers.findAndHookConstructor("com.kik.android.b.j", loadPackageParam.classLoader, Context.class, "kik.core.interfaces.ad", new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        smileyManager = param.thisObject;
+                        updateSmileys(smileyClass);
+                        super.afterHookedMethod(param);
                     }
                 });
 

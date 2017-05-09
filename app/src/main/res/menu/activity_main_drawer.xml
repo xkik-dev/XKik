@@ -18,6 +18,10 @@
             android:id="@+id/nav_xkik_tech"
             android:icon="@drawable/ic_settings_applications_black_24dp"
             android:title="Technical Tweaks" />
+        <item
+            android:id="@+id/nav_xkik_smiley"
+            android:icon="@drawable/ic_insert_emoticon_black_24dp"
+            android:title="Smiley Manager" />
     </group>
 
     <!--<item android:title="Communicate">

@@ -11,8 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -31,6 +33,7 @@ public class SmileyFragment extends Fragment {
     ImageLoader imageLoader = ImageLoader.getInstance(); // Get singleton instance
     GridLayout gv;
     Button addb;
+    Switch addTap;
     Settings settings;
 
     public SmileyFragment() {
@@ -50,13 +53,22 @@ public class SmileyFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_smiley, container, false);
         gv = (GridLayout) v.findViewById(R.id.smileyGrid);
         addb = (Button) v.findViewById(R.id.addbyid);
+        addTap = (Switch) v.findViewById(R.id.autosmiley);
         final Context c = this.getContext();
 
         try {
             settings = Settings.load();
+            addTap.setChecked(settings.getAutoSmiley());
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        addTap.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                settings.setAutoSmiley(isChecked);
+            }
+        });
 
         addb.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -54,6 +54,21 @@ public class Settings {
     private boolean noTyping = false; // typing blocked
     private boolean fakeCamera = false; // fake camera enabled
     private boolean whosLurking = false;
+
+    public boolean getAutoSmiley() {
+        return autoSmiley;
+    }
+
+    public void setAutoSmiley(boolean autoSmiley) {
+        this.autoSmiley = autoSmiley;
+        try {
+            save(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean autoSmiley = false;
     private int dateFormat = 0; // date format, currently only 0 and 1
     boolean devMode = false; // devMode mode enabled
     private HashMap<String, Integer> colors = new HashMap<String, Integer>(); // color settings

@@ -91,26 +91,27 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                 XposedHelpers.findAndHookMethod("com.kik.android.b.c", loadPackageParam.classLoader, "onClick", View.class, new XC_MethodHook() {
                     @Override
                     protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                        //String type = (String) Util.getObjField(param.thisObject,"f");
-                        final String id = (String) Util.getObjField(param.thisObject, "b");
-                        new Thread() {
-                            @Override
-                            public void run() {
-                                try {
-                                    kikSmiley ks = kikUtil.smileyFromID(id);
-                                    settings.addSmiley(ks, false);
-                                    updateSmileys(smileyClass, ks);
-                                    if (ks != null) {
-                                        kikToast("Smiley \"" + ks.title + "\" Added!");
+                        if (settings.getAutoSmiley()) {
+                            //String type = (String) Util.getObjField(param.thisObject,"f");
+                            final String id = (String) Util.getObjField(param.thisObject, "b");
+                            new Thread() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        kikSmiley ks = kikUtil.smileyFromID(id);
+                                        settings.addSmiley(ks, false);
+                                        updateSmileys(smileyClass, ks);
+                                        if (ks != null) {
+                                            kikToast("Smiley \"" + ks.title + "\" Added!");
+                                        }
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
                                     }
-                                } catch (IOException e) {
-                                    e.printStackTrace();
+                                    super.run();
                                 }
-                                super.run();
-                            }
-                        }.start();
-                        param.setResult(null);
-
+                            }.start();
+                            param.setResult(null);
+                        }
                         super.beforeHookedMethod(param);
                     }
                 });

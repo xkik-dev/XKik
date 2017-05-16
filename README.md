@@ -10,6 +10,7 @@ Chat
 * Fake Camera
 * Block Read Receipts
 * Block Typing Receipts
+* See who's reading your messages in group chats
 
 Visual
 * Small color tweaks
@@ -18,6 +19,11 @@ Visual
 
 Technical
 * Kik dev features (risky)
+
+Smileys
+* Add someone's smiley by tapping it in chat
+* Add smiley by ID (See <a href="https://github.com/xkik-dev/XKik/wiki/Smileys">here</a> for more about that)
+* Smiley manager for added smileys
 
 <br>
 <h3>KIK is the property of KIK INTERACTIVE INC. XKik is in no way affiliated with, authorized, maintained, 

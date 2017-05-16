@@ -1,6 +1,8 @@
 package com.xkikdev.xkik.config_activities;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Icon;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -14,12 +16,15 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.xkikdev.xkik.R;
 import com.xkikdev.xkik.Settings;
 import com.xkikdev.xkik.kikSmiley;
@@ -125,6 +130,7 @@ public class SmileyFragment extends Fragment {
             @Override
             public void run() {
                 final ImageView iv = new ImageView(c);
+                final ProgressBar loadingBar = new ProgressBar(c);
                 iv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -147,7 +153,31 @@ public class SmileyFragment extends Fragment {
                     }
                 });
                 gv.addView(iv);
-                imageLoader.displayImage("https://smiley-cdn.kik.com/smileys/" + s.getId() + "/96x96.png", iv);
+                gv.addView(loadingBar);
+                imageLoader.displayImage("https://smiley-cdn.kik.com/smileys/" + s.getId() + "/96x96.png", iv, new ImageLoadingListener() {
+                    @Override
+                    public void onLoadingStarted(String imageUri, View view) {
+
+                    }
+
+                    @Override
+                    public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+                        gv.removeView(loadingBar);
+                        iv.setImageResource(R.drawable.ic_report_problem_black_24dp);
+
+                    }
+
+                    @Override
+                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                        gv.removeView(loadingBar);
+                    }
+
+                    @Override
+                    public void onLoadingCancelled(String imageUri, View view) {
+                        gv.removeView(loadingBar);
+                        iv.setImageResource(R.drawable.ic_report_problem_black_24dp);
+                    }
+                });
             }
         });
 

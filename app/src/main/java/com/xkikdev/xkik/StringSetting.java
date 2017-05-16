@@ -11,9 +11,8 @@ public class StringSetting {
     public String defval;
 
     /**
-     *
-     * @param label String lable shown in settings app
-     * @param id resource id used in kik app
+     * @param label  String lable shown in settings app
+     * @param id     resource id used in kik app
      * @param defval default value
      */
     public StringSetting(String label, String id, String defval) {

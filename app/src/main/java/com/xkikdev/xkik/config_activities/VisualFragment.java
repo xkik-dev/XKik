@@ -12,13 +12,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Switch;
 
+import com.pavelsikun.vintagechroma.ChromaDialog;
+import com.pavelsikun.vintagechroma.OnColorSelectedListener;
+import com.pavelsikun.vintagechroma.colormode.ColorMode;
 import com.xkikdev.xkik.ColorSetting;
 import com.xkikdev.xkik.R;
 import com.xkikdev.xkik.Settings;
 import com.xkikdev.xkik.StringSetting;
-import com.pavelsikun.vintagechroma.ChromaDialog;
-import com.pavelsikun.vintagechroma.OnColorSelectedListener;
-import com.pavelsikun.vintagechroma.colormode.ColorMode;
 
 import java.io.IOException;
 
@@ -30,16 +30,16 @@ public class VisualFragment extends Fragment {
     ColorSetting[] colorSettings = new ColorSetting[]{
             /*new ColorSetting("Main Background", new String[]{"white"}, "#ffffffff"),
             new ColorSetting("Chat Background", new String[]{"chat_background_color","chat_info_background"},"#ffeeeeee"),*/
-            new ColorSetting("Primary Text","gray_6","#ff373a4b"),
-            new ColorSetting("Secondary Text","gray_5","#ff7a7d8e"),
-            new ColorSetting("Tertiary Text","gray_4","#ffa9adc1"),
-            new ColorSetting("App Bar Background","gray_1","#fffafafa")
+            new ColorSetting("Primary Text", "gray_6", "#ff373a4b"),
+            new ColorSetting("Secondary Text", "gray_5", "#ff7a7d8e"),
+            new ColorSetting("Tertiary Text", "gray_4", "#ffa9adc1"),
+            new ColorSetting("App Bar Background", "gray_1", "#fffafafa")
 
     };
 
     StringSetting[] stringSettings = new StringSetting[]{
-            new StringSetting("Type Message Text","activity_new_message_hint","Type a message..."),
-            new StringSetting("Typing message","is_typing_","is typing...")
+            new StringSetting("Type Message Text", "activity_new_message_hint", "Type a message..."),
+            new StringSetting("Typing message", "is_typing_", "is typing...")
     };
 
     public VisualFragment() {
@@ -71,14 +71,14 @@ public class VisualFragment extends Fragment {
             string_tl.addView(genStringTweak(inflater, c.label, c.id, c.defval));
         }
 
-        accdate=(Switch) view.findViewById(R.id.accdate_switch);
-        accdate.setChecked(settings.getDateFormat()==1);
+        accdate = (Switch) view.findViewById(R.id.accdate_switch);
+        accdate.setChecked(settings.getDateFormat() == 1);
         accdate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
+                if (isChecked) {
                     settings.setDateFormat(1); // exact
-                }else{
+                } else {
                     settings.setDateFormat(0); // no change
                 }
             }
@@ -87,6 +87,12 @@ public class VisualFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Get a configured color
+     * @param colorcode Color ID/Code
+     * @param def Default
+     * @return The color, default if not set
+     */
     int getColor(String colorcode, int def) {
         int col;
         if (settings.getColors().containsKey(colorcode)) {
@@ -97,24 +103,30 @@ public class VisualFragment extends Fragment {
         return col;
     }
 
-    String getString(String id,String def){
-        if (settings.getStrings().containsKey(id)){
+    /**
+     * Get a configured string
+     * @param id String ID
+     * @param def Default
+     * @return The string, default if not set
+     */
+    String getString(String id, String def) {
+        if (settings.getStrings().containsKey(id)) {
             return settings.getStrings().get(id);
-        }else{
+        } else {
             return def;
         }
     }
 
-    View genStringTweak(LayoutInflater inflater,String label, final String val_id, final String orig){
+    View genStringTweak(LayoutInflater inflater, String label, final String val_id, final String orig) {
         View v = inflater.inflate(R.layout.string_change_tweak, null, false);
         Button b = (Button) v.findViewById(R.id.set_button);
         final EditText txt = (EditText) v.findViewById(R.id.string_et);
         txt.setHint(orig);
-        txt.setText(getString(val_id,orig));
+        txt.setText(getString(val_id, orig));
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                settings.setString(val_id,txt.getText().toString());
+                settings.setString(val_id, txt.getText().toString());
             }
         });
         b.setOnLongClickListener(new View.OnLongClickListener() {
@@ -146,7 +158,7 @@ public class VisualFragment extends Fragment {
                             @Override
                             public void onColorSelected(@ColorInt int color) {
                                 iv.setBackgroundColor(color);
-                                for (String c : colorcode){
+                                for (String c : colorcode) {
                                     settings.setColor(c, color);
                                 }
 
@@ -160,7 +172,7 @@ public class VisualFragment extends Fragment {
             @Override
             public boolean onLongClick(View v) {
                 iv.setBackgroundColor(default_color);
-                for (String c : colorcode){
+                for (String c : colorcode) {
                     settings.resetColor(c);
                 }
                 return true;

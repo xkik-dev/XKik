@@ -1,7 +1,5 @@
 package com.xkikdev.xkik;
 
-import de.robv.android.xposed.XposedBridge;
-
 public class kikSmiley {
 
     String title;
@@ -25,7 +23,7 @@ public class kikSmiley {
         return idate;
     }
 
-    public kikSmiley(String title, String text, String id, long installdate){
+    public kikSmiley(String title, String text, String id, long installdate) {
         this.title = title;
         this.text = text;
         this.id = id;

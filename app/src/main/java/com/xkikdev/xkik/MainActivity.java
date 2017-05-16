@@ -57,6 +57,12 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+
+    /**
+     * Navbar item chosen
+     * @param item Item chosen
+     * @return Success yes/no
+     */
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.

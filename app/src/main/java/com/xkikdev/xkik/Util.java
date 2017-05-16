@@ -7,7 +7,6 @@ import android.os.Environment;
 import android.widget.Toast;
 
 import java.io.DataOutputStream;
-import java.io.File;
 import java.io.IOException;
 
 import de.robv.android.xposed.XposedBridge;
@@ -22,6 +21,7 @@ public class Util {
 
     /**
      * Prints stacktrace - useful for debugging
+     *
      * @param prefix Prefix to use for each line
      */
     public static void printStack(String prefix) {
@@ -33,6 +33,7 @@ public class Util {
 
     /**
      * Gat a field from an object
+     *
      * @param obj The object
      * @param fld The field
      * @return The field, or null if it doesn't exist
@@ -48,6 +49,7 @@ public class Util {
 
     /**
      * Prints all declared fields of a object
+     *
      * @param start Object to analyze
      */
     public static void printDeclaredFields(Object start) {
@@ -64,7 +66,6 @@ public class Util {
 
         }
     }
-
 
 
     /**
@@ -87,7 +88,7 @@ public class Util {
         }
     }
 
-    public static String getKikVersion(XC_LoadPackage.LoadPackageParam lpparam,PackageManager pm) {
+    public static String getKikVersion(XC_LoadPackage.LoadPackageParam lpparam, PackageManager pm) {
         String apkName = lpparam.appInfo.sourceDir;
         String fullPath = Environment.getExternalStorageDirectory() + "/" + apkName;
         PackageInfo info = pm.getPackageArchiveInfo(fullPath, 0);

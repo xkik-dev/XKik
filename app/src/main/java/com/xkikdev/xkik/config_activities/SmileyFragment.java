@@ -12,14 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridLayout;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.xkikdev.xkik.R;
 import com.xkikdev.xkik.Settings;
 import com.xkikdev.xkik.kikSmiley;
@@ -42,7 +40,6 @@ public class SmileyFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
 
     }
@@ -72,23 +69,23 @@ public class SmileyFragment extends Fragment {
                             @Override
                             public void onInput(MaterialDialog dialog, final CharSequence input) {
                                 // Do something
-                                new Thread(){
+                                new Thread() {
                                     @Override
                                     public void run() {
                                         super.run();
                                         Looper.prepare();
                                         try {
                                             kikSmiley ks = kikUtil.smileyFromID(input.toString());
-                                            if (ks!=null){
-                                                settings.addSmiley(ks,true);
+                                            if (ks != null) {
+                                                settings.addSmiley(ks, true);
                                                 renderSmiley(ks);
-                                                Toast.makeText(c,"Added!",Toast.LENGTH_SHORT).show();
-                                            }else{
-                                                Toast.makeText(c,"Error - Check internet connection or smiley ID",Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(c, "Added!", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(c, "Error - Check internet connection or smiley ID", Toast.LENGTH_SHORT).show();
                                             }
                                         } catch (IOException e) {
                                             e.printStackTrace();
-                                            Toast.makeText(c,"Error - Check internet connection",Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(c, "Error - Check internet connection", Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 }.start();
@@ -97,7 +94,7 @@ public class SmileyFragment extends Fragment {
             }
         });
 
-        for (kikSmiley s : settings.getSmileys()){
+        for (kikSmiley s : settings.getSmileys()) {
             renderSmiley(s);
 
         }
@@ -105,6 +102,10 @@ public class SmileyFragment extends Fragment {
         return v;
     }
 
+    /**
+     * Render a smiley in the grid
+     * @param s Smiley to render
+     */
     private void renderSmiley(final kikSmiley s) {
         final Context c = this.getContext();
         final String sname = s.getTitle();
@@ -117,15 +118,15 @@ public class SmileyFragment extends Fragment {
                     public void onClick(View v) {
                         new MaterialDialog.Builder(c)
                                 .title("Delete Smiley")
-                                .content("Are you sure you want to delete \""+sname+"\"?")
+                                .content("Are you sure you want to delete \"" + sname + "\"?")
                                 .positiveText("Yes")
                                 .negativeText("No")
                                 .onAny(new MaterialDialog.SingleButtonCallback() {
                                     @Override
                                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                        if (which == DialogAction.POSITIVE){
+                                        if (which == DialogAction.POSITIVE) {
                                             dialog.cancel();
-                                            settings.deleteSmiley(s,true);
+                                            settings.deleteSmiley(s, true);
                                             gv.removeView(iv);
                                         }
                                     }
@@ -134,7 +135,7 @@ public class SmileyFragment extends Fragment {
                     }
                 });
                 gv.addView(iv);
-                imageLoader.displayImage("https://smiley-cdn.kik.com/smileys/"+s.getId()+"/96x96.png",iv);
+                imageLoader.displayImage("https://smiley-cdn.kik.com/smileys/" + s.getId() + "/96x96.png", iv);
             }
         });
 

@@ -35,29 +35,29 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
     private Pattern useridPattern = Pattern.compile("(.*)_[^_]*");
     public Settings settings = null;
     public static DateFormat format = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
-    private Object smileyManager =null;
+    private Object smileyManager = null;
     Activity chatContext = null;
     private Class smileyClass;
 
 
-    public void updateSmileys(Class smileyClass){
-        if (smileyManager ==null || smileyClass == null){
+    public void updateSmileys(Class smileyClass) {
+        if (smileyManager == null || smileyClass == null) {
             return;
         }
         List<Object> e = new ArrayList<>();
-        for (kikSmiley s : settings.getSmileys()){
-            e.add(kikUtil.gen_smiley(smileyClass,s.title,s.text,s.id,s.idate));
+        for (kikSmiley s : settings.getSmileys()) {
+            e.add(kikUtil.gen_smiley(smileyClass, s.title, s.text, s.id, s.idate));
         }
-        XposedHelpers.callMethod(smileyManager,"a",e);
+        XposedHelpers.callMethod(smileyManager, "a", e);
     }
 
-    public void updateSmileys(Class smileyClass,kikSmiley smiley){
-        if (smileyManager ==null || smileyClass == null || smiley==null){
+    public void updateSmileys(Class smileyClass, kikSmiley smiley) {
+        if (smileyManager == null || smileyClass == null || smiley == null) {
             return;
         }
         List<Object> e = new ArrayList<>();
-        e.add(kikUtil.gen_smiley(smileyClass,smiley));
-        XposedHelpers.callMethod(smileyManager,"a",e);
+        e.add(kikUtil.gen_smiley(smileyClass, smiley));
+        XposedHelpers.callMethod(smileyManager, "a", e);
     }
 
     @Override
@@ -74,13 +74,13 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
         XposedHelpers.findAndHookMethod(Application.class, "attach", Context.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                smileyClass = XposedHelpers.findClass("com.kik.android.b.f",loadPackageParam.classLoader);
+                smileyClass = XposedHelpers.findClass("com.kik.android.b.f", loadPackageParam.classLoader);
                 Class recpt_mgr = XposedHelpers.findClass(hooks.kikRecptMgr, loadPackageParam.classLoader);
 
                 XposedHelpers.findAndHookMethod("kik.android.util.r", loadPackageParam.classLoader, "a", Activity.class, new XC_MethodHook() {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        chatContext= ((Activity) param.args[0]);
+                        chatContext = ((Activity) param.args[0]);
                         super.afterHookedMethod(param);
                     }
                 });
@@ -92,16 +92,16 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                     @Override
                     protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                         //String type = (String) Util.getObjField(param.thisObject,"f");
-                        final String id = (String) Util.getObjField(param.thisObject,"b");
-                        new Thread(){
+                        final String id = (String) Util.getObjField(param.thisObject, "b");
+                        new Thread() {
                             @Override
                             public void run() {
                                 try {
                                     kikSmiley ks = kikUtil.smileyFromID(id);
-                                    settings.addSmiley(ks,false);
-                                    updateSmileys(smileyClass,ks);
-                                    if (ks!=null){
-                                        kikToast("Smiley \""+ks.title+"\" Added!");
+                                    settings.addSmiley(ks, false);
+                                    updateSmileys(smileyClass, ks);
+                                    if (ks != null) {
+                                        kikToast("Smiley \"" + ks.title + "\" Added!");
                                     }
                                 } catch (IOException e) {
                                     e.printStackTrace();
@@ -149,36 +149,36 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                 /*
                     Who's lurking feature
                  */
-                if (settings.getWhosLurking()){ // using this before hooking since it's very intensive when receiving a receipt
+                if (settings.getWhosLurking()) { // using this before hooking since it's very intensive when receiving a receipt
                     XposedHelpers.findAndHookMethod(hooks.KIK_RECEIPT_RECV, loadPackageParam.classLoader, "a", "kik.core.net.g", new XC_MethodHook() {
                         @Override
                         protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                            char[] txtBuf = (char[]) XposedHelpers.getObjectField(param.args[0],"srcBuf");
+                            char[] txtBuf = (char[]) XposedHelpers.getObjectField(param.args[0], "srcBuf");
                             String resp = String.valueOf(txtBuf);
-                            if (resp.contains("type=\"read\"")){
+                            if (resp.contains("type=\"read\"")) {
                                 Matcher fromMch = fromPattern.matcher(resp);
                                 Matcher uuidMch = msgIdPattern.matcher(resp);
                                 String from = null;
                                 String uuid = null; // currently no use for this, but eventually will map a seen receipt to a specific message
-                                if (fromMch.find()){
+                                if (fromMch.find()) {
                                     from = fromMch.group(1);
                                     Matcher userMatcher = useridPattern.matcher(from);
-                                    if (userMatcher.find()){
-                                        from=userMatcher.group(1);
+                                    if (userMatcher.find()) {
+                                        from = userMatcher.group(1);
                                     }
                                 }
-                                if (uuidMch.find()){
+                                if (uuidMch.find()) {
                                     uuid = uuidMch.group(1);
                                 }
-                                if (chatContext!=null){
+                                if (chatContext != null) {
 
                                     final String finalFrom = from;
-                                    if (from!=null && !from.equals("warehouse@talk.kik.com")){ // avoids some of the internal kik classes
-                                        kikToast(finalFrom +" saw your message!");
+                                    if (from != null && !from.equals("warehouse@talk.kik.com")) { // avoids some of the internal kik classes
+                                        kikToast(finalFrom + " saw your message!");
                                     }
 
                                 }
-                                XposedBridge.log("from: "+from);
+                                XposedBridge.log("from: " + from);
                             }
                             super.beforeHookedMethod(param);
                         }
@@ -261,11 +261,13 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
     }
 
     public void kikToast(final String text) {
-        if (chatContext==null){return;}
+        if (chatContext == null) {
+            return;
+        }
         chatContext.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(chatContext.getApplicationContext(), text,Toast.LENGTH_SHORT).show();
+                Toast.makeText(chatContext.getApplicationContext(), text, Toast.LENGTH_SHORT).show();
             }
         });
     }

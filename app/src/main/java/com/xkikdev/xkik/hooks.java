@@ -6,7 +6,6 @@ package com.xkikdev.xkik;
 
 public class hooks {
 
-
     public static final String kikRecptMgr = "kik.core.net.h";
     public static final String kikContentMessage = "kik.core.datatypes.messageExtensions.ContentMessage";
     public static final String kikDeviceUtils = "kik.android.util.DeviceUtils";

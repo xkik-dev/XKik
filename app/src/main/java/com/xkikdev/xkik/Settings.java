@@ -15,8 +15,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import de.robv.android.xposed.XposedBridge;
-
 /**
  * Settings class
  */
@@ -32,7 +30,7 @@ public class Settings {
 
     /**
      * Checks if the app has permission to write to device storage
-     *
+     * <p>
      * If the app does not has permission then the user will be prompted to grant permissions
      *
      * @param activity
@@ -78,15 +76,24 @@ public class Settings {
         }
     }
 
+    /**
+     * Get currently added smileys
+     * @return currently added smileys
+     */
     public ArrayList<kikSmiley> getSmileys() {
         return smileys;
     }
 
-    public void addSmiley(kikSmiley ks,boolean kill){
-        if (ks==null){
+    /**
+     * Add a smiley
+     * @param ks The smiley
+     * @param kill Kill kik once added?
+     */
+    public void addSmiley(kikSmiley ks, boolean kill) {
+        if (ks == null) {
             return;
         }
-        if (!containsSmiley(ks)){
+        if (!containsSmiley(ks)) {
             smileys.add(ks);
             try {
                 save(kill);
@@ -96,11 +103,16 @@ public class Settings {
         }
     }
 
-    public void deleteSmiley(kikSmiley ks,boolean kill){
-        if (ks==null){
+    /**
+     * Remove a smiley
+     * @param ks The smiley
+     * @param kill Kill kik once removed?
+     */
+    public void deleteSmiley(kikSmiley ks, boolean kill) {
+        if (ks == null) {
             return;
         }
-        if (containsSmiley(ks)){
+        if (containsSmiley(ks)) {
             smileys.remove(ks);
             try {
                 save(kill);
@@ -110,9 +122,14 @@ public class Settings {
         }
     }
 
-    public boolean containsSmiley(kikSmiley ks){
-        for (kikSmiley smil : getSmileys()){
-            if (smil.id.equals(ks.id)){
+    /**
+     * Checks if smiley is already added
+     * @param ks The smiley
+     * @return If it exists or not
+     */
+    public boolean containsSmiley(kikSmiley ks) {
+        for (kikSmiley smil : getSmileys()) {
+            if (smil.id.equals(ks.id)) {
                 return true;
             }
         }
@@ -136,11 +153,11 @@ public class Settings {
         }
     }
 
-    public boolean getWhosLurking(){
+    public boolean getWhosLurking() {
         return whosLurking;
     }
 
-    public void setWhosLurking(boolean b){
+    public void setWhosLurking(boolean b) {
         whosLurking = b;
         try {
             save(true);
@@ -170,7 +187,7 @@ public class Settings {
         return dateFormat;
     }
 
-    public void setFakeCam(boolean b){
+    public void setFakeCam(boolean b) {
         fakeCamera = b;
         try {
             save(true);
@@ -206,6 +223,10 @@ public class Settings {
         }
     }
 
+    /**
+     * Reset a color to it's default value
+     * @param id Color ID
+     */
     public void resetColor(String id) {
         if (colors.containsKey(id)) {
             colors.remove(id);
@@ -226,6 +247,10 @@ public class Settings {
         }
     }
 
+    /**
+     * Reset a string to it's default value
+     * @param id String ID
+     */
     public void resetString(String id) {
         if (strings.containsKey(id)) {
             strings.remove(id);
@@ -251,7 +276,7 @@ public class Settings {
      * @return Save directory as file
      */
     public static File getSaveDir() {
-        File savedir = new File(Environment.getExternalStorageDirectory().getPath() + File.separator + "XKik"+File.separator);
+        File savedir = new File(Environment.getExternalStorageDirectory().getPath() + File.separator + "XKik" + File.separator);
         if (!savedir.exists()) {
             savedir.mkdir();
         }
@@ -269,7 +294,7 @@ public class Settings {
 
     public void save(boolean kill) throws IOException {
         FileUtils.writeStringToFile(getSaveFile(), new Gson().toJson(this).toString(), "UTF-8", false);
-        if (kill){
+        if (kill) {
             Util.killKik(null);
         }
     }

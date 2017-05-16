@@ -54,16 +54,16 @@ public class kikUtil {
 
     public static kikSmiley smileyFromID(final String id) throws IOException {
         Request request = new Request.Builder()
-                .url("https://sticker-service.appspot.com/v2/smiley/"+id)
+                .url("https://sticker-service.appspot.com/v2/smiley/" + id)
                 .build();
 
         Response response = client.newCall(request).execute();
         String resp = response.body().string();
-        if (resp.equals("not found")){
+        if (resp.equals("not found")) {
             return null;
         }
         try {
-            return getSmileyFromJSON(id,new JSONObject(resp));
+            return getSmileyFromJSON(id, new JSONObject(resp));
         } catch (JSONException e) {
             e.printStackTrace();
             return null;

@@ -26,8 +26,8 @@
                 <GridLayout
                     android:id="@+id/smileyGrid"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:columnCount="4">
+                    android:layout_height="wrap_content"
+                    android:columnCount="5">
 
                 </GridLayout>
             </ScrollView>
@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/smil_title"
                 android:layout_centerHorizontal="true"
-                android:text="(Internet connection required to view/add smileys)"
+                android:text="@string/inet_required"
                 android:textAlignment="center" />
 
             <Button
@@ -68,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/autosmiley"
                 android:layout_centerHorizontal="true"
-                android:text="Add Smiley By ID" />
+                android:text="@string/add_smiley_by_id" />
 
         </RelativeLayout>
     </android.support.v7.widget.CardView>

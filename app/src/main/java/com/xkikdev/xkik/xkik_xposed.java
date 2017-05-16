@@ -30,13 +30,13 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPackageResources {
 
+    public static DateFormat format = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
+    public Settings settings = null;
+    Activity chatContext = null;
     private Pattern fromPattern = Pattern.compile("from=\"(.*?)\"");
     private Pattern msgIdPattern = Pattern.compile("msgid id=\"(.*?)\"");
     private Pattern useridPattern = Pattern.compile("(.*)_[^_]*");
-    public Settings settings = null;
-    public static DateFormat format = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
     private Object smileyManager = null;
-    Activity chatContext = null;
     private Class smileyClass;
 
 

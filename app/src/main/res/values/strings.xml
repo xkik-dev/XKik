@@ -16,7 +16,7 @@
     <string name="disable_typing_receipts">Disable Typing Receipts</string>
     <string name="warning_disclaimer">Changing settings automatically kills Kik in the background\n\nKIK is the property of KIK INTERACTIVE INC. XKik is in no way affiliated with, authorized, maintained, sponsored or endorsed by KIK INTERACTIVE INC or any of its affiliates or subsidiaries. This is an independent application.</string>
     <string name="compability">Compatible with Kik 11.15.0.15115</string>
-    <string name="version">Version 0.1 BETA</string>
+    <string name="version">Version 0.3 BETA</string>
     <string name="welcome_to_xkik">Welcome to XKik!</string>
     <string name="xkik_logo">XKik Logo</string>
     <string name="enable_dev_mode">Enable Dev Mode</string>
@@ -26,5 +26,9 @@
     <string name="reset_tip">Long-Clicking on a button resets it\'s respective value</string>
     <string name="text_tweaks">Text Tweaks</string>
     <string name="smiley_settings">Smiley Settings</string>
-    <string name="auto_add_smiley">Automatically add smiley when tapped in chat</string>
+    <string name="auto_add_smiley">Automatically add smiley when tapped in chat message</string>
+    <string name="inet_required">(Internet connection required to view/add smileys)</string>
+    <string name="add_smiley_by_id">Add Smiley By ID</string>
+    <string name="license_text">XKik is licenced under GNU General Public License v3.0\n\nLibraries used:\n\nokhttp - Apache \n2.0\ncommons-io - Apache 2.0\ngxson - Apache 2.0\nmaterial-dialogs - MIT\nVintageChroma - Apache 2.0\nuniversalimageloader - Apache 2.0</string>
+    <string name="whos_reading">Who\'s reading</string>
 </resources>

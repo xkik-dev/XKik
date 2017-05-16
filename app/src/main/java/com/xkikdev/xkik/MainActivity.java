@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity
 
     /**
      * Navbar item chosen
+     *
      * @param item Item chosen
      * @return Success yes/no
      */

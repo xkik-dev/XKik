@@ -27,6 +27,17 @@ public class Settings {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
+    int save_version = 1;
+    boolean devMode = false; // devMode mode enabled
+    private boolean noReadreceipt = false; // read receipt allowed
+    private boolean noTyping = false; // typing blocked
+    private boolean fakeCamera = false; // fake camera enabled
+    private boolean whosLurking = false;
+    private boolean autoSmiley = false;
+    private int dateFormat = 0; // date format, currently only 0 and 1
+    private HashMap<String, Integer> colors = new HashMap<String, Integer>(); // color settings
+    private HashMap<String, String> strings = new HashMap<String, String>(); // string settings
+    private ArrayList<kikSmiley> smileys = new ArrayList<>();
 
     /**
      * Checks if the app has permission to write to device storage
@@ -49,32 +60,6 @@ public class Settings {
         }
     }
 
-    int save_version = 1;
-    private boolean noReadreceipt = false; // read receipt allowed
-    private boolean noTyping = false; // typing blocked
-    private boolean fakeCamera = false; // fake camera enabled
-    private boolean whosLurking = false;
-
-    public boolean getAutoSmiley() {
-        return autoSmiley;
-    }
-
-    public void setAutoSmiley(boolean autoSmiley) {
-        this.autoSmiley = autoSmiley;
-        try {
-            save(true);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private boolean autoSmiley = false;
-    private int dateFormat = 0; // date format, currently only 0 and 1
-    boolean devMode = false; // devMode mode enabled
-    private HashMap<String, Integer> colors = new HashMap<String, Integer>(); // color settings
-    private HashMap<String, String> strings = new HashMap<String, String>(); // string settings
-    private ArrayList<kikSmiley> smileys = new ArrayList<>();
-
     /**
      * Loads settings
      *
@@ -92,7 +77,43 @@ public class Settings {
     }
 
     /**
+     * Gets save directory
+     *
+     * @return Save directory as file
+     */
+    public static File getSaveDir() {
+        File savedir = new File(Environment.getExternalStorageDirectory().getPath() + File.separator + "XKik" + File.separator);
+        if (!savedir.exists()) {
+            savedir.mkdir();
+        }
+        return savedir;
+    }
+
+    /**
+     * Gets save file
+     *
+     * @return save file
+     */
+    public static File getSaveFile() {
+        return new File(getSaveDir().getPath() + File.separator + "config.json");
+    }
+
+    public boolean getAutoSmiley() {
+        return autoSmiley;
+    }
+
+    public void setAutoSmiley(boolean autoSmiley) {
+        this.autoSmiley = autoSmiley;
+        try {
+            save(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Get currently added smileys
+     *
      * @return currently added smileys
      */
     public ArrayList<kikSmiley> getSmileys() {
@@ -101,7 +122,8 @@ public class Settings {
 
     /**
      * Add a smiley
-     * @param ks The smiley
+     *
+     * @param ks   The smiley
      * @param kill Kill kik once added?
      */
     public void addSmiley(kikSmiley ks, boolean kill) {
@@ -120,7 +142,8 @@ public class Settings {
 
     /**
      * Remove a smiley
-     * @param ks The smiley
+     *
+     * @param ks   The smiley
      * @param kill Kill kik once removed?
      */
     public void deleteSmiley(kikSmiley ks, boolean kill) {
@@ -139,6 +162,7 @@ public class Settings {
 
     /**
      * Checks if smiley is already added
+     *
      * @param ks The smiley
      * @return If it exists or not
      */
@@ -155,12 +179,21 @@ public class Settings {
         return noReadreceipt;
     }
 
+    public void setNoReadreceipt(boolean value) {
+        noReadreceipt = value;
+        try {
+            save(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public boolean getNoTyping() {
         return noTyping;
     }
 
-    public void setDev(boolean b) {
-        devMode = b;
+    public void setNoTyping(boolean value) {
+        noTyping = value;
         try {
             save(true);
         } catch (IOException e) {
@@ -185,12 +218,8 @@ public class Settings {
         return this.devMode;
     }
 
-    public boolean getFakeCam() {
-        return fakeCamera;
-    }
-
-    public void setDateFormat(int fmt) {
-        dateFormat = fmt;
+    public void setDev(boolean b) {
+        devMode = b;
         try {
             save(true);
         } catch (IOException e) {
@@ -198,8 +227,8 @@ public class Settings {
         }
     }
 
-    public int getDateFormat() {
-        return dateFormat;
+    public boolean getFakeCam() {
+        return fakeCamera;
     }
 
     public void setFakeCam(boolean b) {
@@ -211,17 +240,12 @@ public class Settings {
         }
     }
 
-    public void setNoReadreceipt(boolean value) {
-        noReadreceipt = value;
-        try {
-            save(true);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public int getDateFormat() {
+        return dateFormat;
     }
 
-    public void setNoTyping(boolean value) {
-        noTyping = value;
+    public void setDateFormat(int fmt) {
+        dateFormat = fmt;
         try {
             save(true);
         } catch (IOException e) {
@@ -240,6 +264,7 @@ public class Settings {
 
     /**
      * Reset a color to it's default value
+     *
      * @param id Color ID
      */
     public void resetColor(String id) {
@@ -264,6 +289,7 @@ public class Settings {
 
     /**
      * Reset a string to it's default value
+     *
      * @param id String ID
      */
     public void resetString(String id) {
@@ -283,28 +309,6 @@ public class Settings {
 
     public HashMap<String, Integer> getColors() {
         return colors;
-    }
-
-    /**
-     * Gets save directory
-     *
-     * @return Save directory as file
-     */
-    public static File getSaveDir() {
-        File savedir = new File(Environment.getExternalStorageDirectory().getPath() + File.separator + "XKik" + File.separator);
-        if (!savedir.exists()) {
-            savedir.mkdir();
-        }
-        return savedir;
-    }
-
-    /**
-     * Gets save file
-     *
-     * @return save file
-     */
-    public static File getSaveFile() {
-        return new File(getSaveDir().getPath() + File.separator + "config.json");
     }
 
     public void save(boolean kill) throws IOException {

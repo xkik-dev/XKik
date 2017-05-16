@@ -17,11 +17,11 @@ import java.io.IOException;
 
 public class TechnicalFragment extends Fragment {
 
+    Settings settings;
+
     public TechnicalFragment() {
         // Required empty public constructor
     }
-
-    Settings settings;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

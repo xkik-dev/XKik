@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:text="XKik is licenced under GNU General Public License v3.0\n\nLibraries used:\n\nokhttp - Apache \n2.0\ncommons-io - Apache 2.0\ngson - Apache 2.0\nmaterial-dialogs - MIT\nVintageChroma - Apache 2.0\nuniversalimageloader - Apache 2.0" />
+            android:text="@string/license_text" />
     </ScrollView>
 
 </RelativeLayout>

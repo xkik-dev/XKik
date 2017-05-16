@@ -89,8 +89,9 @@ public class VisualFragment extends Fragment {
 
     /**
      * Get a configured color
+     *
      * @param colorcode Color ID/Code
-     * @param def Default
+     * @param def       Default
      * @return The color, default if not set
      */
     int getColor(String colorcode, int def) {
@@ -105,7 +106,8 @@ public class VisualFragment extends Fragment {
 
     /**
      * Get a configured string
-     * @param id String ID
+     *
+     * @param id  String ID
      * @param def Default
      * @return The string, default if not set
      */

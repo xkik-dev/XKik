@@ -2,7 +2,6 @@ package com.xkikdev.xkik.config_activities;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Icon;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -121,6 +120,7 @@ public class SmileyFragment extends Fragment {
 
     /**
      * Render a smiley in the grid
+     *
      * @param s Smiley to render
      */
     private void renderSmiley(final kikSmiley s) {

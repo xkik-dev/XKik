@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.xkikdev.xkik.config_activities.ChatFragment;
+import com.xkikdev.xkik.config_activities.LicensesFragment;
 import com.xkikdev.xkik.config_activities.SmileyFragment;
 import com.xkikdev.xkik.config_activities.TechnicalFragment;
 import com.xkikdev.xkik.config_activities.VisualFragment;
@@ -56,7 +57,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -73,6 +73,8 @@ public class MainActivity extends AppCompatActivity
             fm.beginTransaction().replace(R.id.contentframe, new TechnicalFragment()).commit(); // tech manager
         } else if (id == R.id.nav_xkik_smiley) {
             fm.beginTransaction().replace(R.id.contentframe, new SmileyFragment()).commit(); // smiley manager
+        } else if (id == R.id.nav_xkik_license) {
+            fm.beginTransaction().replace(R.id.contentframe, new LicensesFragment()).commit(); // licences / credits
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

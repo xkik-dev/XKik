@@ -24,8 +24,8 @@ android {
         pickFirst 'META-INF/LICENSE'
     }
 
-    repositories{
-        maven{
+    repositories {
+        maven {
             url 'https://raw.github.com/zeeshanejaz/unirest-android/mvn-repo'
         }
     }
@@ -46,4 +46,5 @@ dependencies {
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     testCompile 'junit:junit:4.12'
 }
+
 

@@ -96,6 +96,20 @@ public class Settings {
         }
     }
 
+    public void deleteSmiley(kikSmiley ks,boolean kill){
+        if (ks==null){
+            return;
+        }
+        if (containsSmiley(ks)){
+            smileys.remove(ks);
+            try {
+                save(kill);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public boolean containsSmiley(kikSmiley ks){
         for (kikSmiley smil : getSmileys()){
             if (smil.id.equals(ks.id)){

@@ -3,6 +3,7 @@ package com.xkikdev.xkik.config_activities;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
@@ -15,6 +16,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -105,10 +107,32 @@ public class SmileyFragment extends Fragment {
 
     private void renderSmiley(final kikSmiley s) {
         final Context c = this.getContext();
+        final String sname = s.getTitle();
         this.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                ImageView iv = new ImageView(c);
+                final ImageView iv = new ImageView(c);
+                iv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new MaterialDialog.Builder(c)
+                                .title("Delete Smiley")
+                                .content("Are you sure you want to delete \""+sname+"\"?")
+                                .positiveText("Yes")
+                                .negativeText("No")
+                                .onAny(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        if (which == DialogAction.POSITIVE){
+                                            dialog.cancel();
+                                            settings.deleteSmiley(s,true);
+                                            gv.removeView(iv);
+                                        }
+                                    }
+                                })
+                                .build().show();
+                    }
+                });
                 gv.addView(iv);
                 imageLoader.displayImage("https://smiley-cdn.kik.com/smileys/"+s.getId()+"/96x96.png",iv);
             }

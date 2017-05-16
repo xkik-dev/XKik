@@ -22,6 +22,10 @@
             android:id="@+id/nav_xkik_smiley"
             android:icon="@drawable/ic_insert_emoticon_black_24dp"
             android:title="Smiley Manager" />
+        <item
+            android:id="@+id/nav_xkik_license"
+            android:icon="@drawable/ic_description_black_24dp"
+            android:title="Licenses" />
     </group>
 
     <!--<item android:title="Communicate">

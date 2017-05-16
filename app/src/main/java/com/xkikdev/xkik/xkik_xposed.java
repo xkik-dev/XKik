@@ -100,6 +100,9 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                                     kikSmiley ks = kikUtil.smileyFromID(id);
                                     settings.addSmiley(ks,false);
                                     updateSmileys(smileyClass,ks);
+                                    if (ks!=null){
+                                        kikToast("Smiley \""+ks.title+"\" Added!");
+                                    }
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
@@ -171,12 +174,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
 
                                     final String finalFrom = from;
                                     if (from!=null && !from.equals("warehouse@talk.kik.com")){ // avoids some of the internal kik classes
-                                        chatContext.runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Toast.makeText(chatContext.getApplicationContext(), finalFrom +" saw your message!",Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
+                                        kikToast(finalFrom +" saw your message!");
                                     }
 
                                 }
@@ -260,6 +258,16 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
             }
         });
 
+    }
+
+    public void kikToast(final String text) {
+        if (chatContext==null){return;}
+        chatContext.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(chatContext.getApplicationContext(), text,Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 

@@ -32,7 +32,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
 
     public static DateFormat format = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
     public Settings settings = null;
-    Activity chatContext = null;
+    Context chatContext = null;
     private Pattern fromPattern = Pattern.compile("from=\"(.*?)\"");
     private Pattern msgIdPattern = Pattern.compile("msgid id=\"(.*?)\"");
     private Pattern useridPattern = Pattern.compile("(.*)_[^_]*");
@@ -76,10 +76,10 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 smileyClass = XposedHelpers.findClass(hooks.kikSmileyObj, loadPackageParam.classLoader);
 
-                XposedHelpers.findAndHookMethod(hooks.kikActivityInit, loadPackageParam.classLoader, "a", Activity.class, new XC_MethodHook() {
+                XposedHelpers.findAndHookMethod(hooks.kikActivityInit, loadPackageParam.classLoader, "a", Context.class, new XC_MethodHook() {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        chatContext = ((Activity) param.args[0]);
+                        chatContext = ((Context) param.args[0]);
                         super.afterHookedMethod(param);
                     }
                 });
@@ -118,7 +118,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                 /*
                 Smiley Manager
                  */
-                XposedHelpers.findAndHookConstructor(hooks.kikSmileyManager, loadPackageParam.classLoader, Context.class, "kik.core.interfaces.ad", new XC_MethodHook() {
+                XposedHelpers.findAndHookConstructor(hooks.kikSmileyManager, loadPackageParam.classLoader, Context.class, "kik.core.interfaces.ac", new XC_MethodHook() {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                         smileyManager = param.thisObject;
@@ -230,14 +230,14 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                 /*
                 Receipt blocker
                  */
-                XposedHelpers.findAndHookMethod(hooks.kikRecptMgr,loadPackageParam.classLoader, "a", String.class, String.class, new XC_MethodHook() {
+                XposedHelpers.findAndHookMethod(hooks.kikRecptMgr, loadPackageParam.classLoader, "d", String.class, String.class, new XC_MethodHook() {
                     @Override
                     protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+
                         String key = (String) param.args[0];
                         String value = (String) param.args[1];
-
                         if (key.equalsIgnoreCase("type")) { // receipt type
-                            XposedBridge.log("type: " + value);
+                            //XposedBridge.log("type: " + value);
 
                             if (value.equalsIgnoreCase("read")) { // read receipt
                                 if (settings != null && settings.getNoReadreceipt()) {
@@ -264,7 +264,8 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
         if (chatContext == null) {
             return;
         }
-        chatContext.runOnUiThread(new Runnable() {
+
+        ((Activity) chatContext).runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 Toast.makeText(chatContext.getApplicationContext(), text, Toast.LENGTH_SHORT).show();

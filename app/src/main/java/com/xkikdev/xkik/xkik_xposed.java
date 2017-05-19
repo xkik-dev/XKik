@@ -2,7 +2,6 @@ package com.xkikdev.xkik;
 
 import android.app.Activity;
 import android.app.Application;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.XModuleResources;
@@ -12,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.xkikdev.xkik.config_activities.quickConfig;
 
 import java.io.IOException;
@@ -37,7 +35,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
  * Main xposed class
  */
 
-public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPackageResources,IXposedHookZygoteInit {
+public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPackageResources, IXposedHookZygoteInit {
 
     public static DateFormat format = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
     public static Settings settings = null;
@@ -101,22 +99,22 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                 /*
                 Settings button create; Hook onLongClick
                  */
-                XposedHelpers.findAndHookMethod("kik.android.chat.fragment.KikConversationsFragment", loadPackageParam.classLoader,"onCreateView", LayoutInflater.class
+                XposedHelpers.findAndHookMethod("kik.android.chat.fragment.KikConversationsFragment", loadPackageParam.classLoader, "onCreateView", LayoutInflater.class
                         , ViewGroup.class, Bundle.class, new XC_MethodHook() {
-                    @Override
-                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        View v = (View) XposedHelpers.getObjectField(param.thisObject,"_settingsButton");
-                        v.setOnLongClickListener(new View.OnLongClickListener() {
                             @Override
-                            public boolean onLongClick(View v) {
-                                quickConfig qc = new quickConfig();
-                                qc.show(((Activity)v.getContext()).getFragmentManager(),"fragment_smiley");
-                                return true;
+                            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                                View v = (View) XposedHelpers.getObjectField(param.thisObject, "_settingsButton");
+                                v.setOnLongClickListener(new View.OnLongClickListener() {
+                                    @Override
+                                    public boolean onLongClick(View v) {
+                                        quickConfig qc = new quickConfig();
+                                        qc.show(((Activity) v.getContext()).getFragmentManager(), "fragment_smiley");
+                                        return true;
+                                    }
+                                });
+                                super.afterHookedMethod(param);
                             }
                         });
-                        super.afterHookedMethod(param);
-                    }
-                });
 
 
 
@@ -185,10 +183,10 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                 /*
                     Who's lurking feature
                  */
-                if (settings.getWhosLurking()) { // using this before hooking since it's very intensive when receiving a receipt
-                    XposedHelpers.findAndHookMethod(hooks.KIK_RECEIPT_RECV, loadPackageParam.classLoader, "a", "kik.core.net.g", new XC_MethodHook() {
-                        @Override
-                        protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                XposedHelpers.findAndHookMethod(hooks.KIK_RECEIPT_RECV, loadPackageParam.classLoader, "a", "kik.core.net.g", new XC_MethodHook() {
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                        if (settings.getWhosLurking()) {
                             char[] txtBuf = (char[]) XposedHelpers.getObjectField(param.args[0], "srcBuf");
                             String resp = String.valueOf(txtBuf);
                             if (resp.contains("type=\"read\"")) {
@@ -216,10 +214,11 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                                 }
                                 XposedBridge.log("from: " + from);
                             }
-                            super.beforeHookedMethod(param);
                         }
-                    });
-                }
+                        super.beforeHookedMethod(param);
+                    }
+                });
+
 
                 /*
                 Dev mode
@@ -316,7 +315,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
             return;
         }
 
-        resources = XModuleResources.createInstance(MODULE_PATH,resParam.res);
+        resources = XModuleResources.createInstance(MODULE_PATH, resParam.res);
 
         if (settings == null) {
             return;

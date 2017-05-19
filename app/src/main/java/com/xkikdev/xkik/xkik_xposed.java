@@ -2,10 +2,18 @@ package com.xkikdev.xkik;
 
 import android.app.Activity;
 import android.app.Application;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.res.Resources;
+import android.content.res.XModuleResources;
+import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
+
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.xkikdev.xkik.config_activities.quickConfig;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -18,6 +26,7 @@ import java.util.regex.Pattern;
 
 import de.robv.android.xposed.IXposedHookInitPackageResources;
 import de.robv.android.xposed.IXposedHookLoadPackage;
+import de.robv.android.xposed.IXposedHookZygoteInit;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
@@ -28,16 +37,18 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
  * Main xposed class
  */
 
-public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPackageResources {
+public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPackageResources,IXposedHookZygoteInit {
 
     public static DateFormat format = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
-    public Settings settings = null;
+    public static Settings settings = null;
     Context chatContext = null;
     private Pattern fromPattern = Pattern.compile("from=\"(.*?)\"");
     private Pattern msgIdPattern = Pattern.compile("msgid id=\"(.*?)\"");
     private Pattern useridPattern = Pattern.compile("(.*)_[^_]*");
     private Object smileyManager = null;
     private Class smileyClass;
+    public static XModuleResources resources;
+    private String MODULE_PATH;
 
 
     public void updateSmileys(Class smileyClass) {
@@ -76,6 +87,9 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 smileyClass = XposedHelpers.findClass(hooks.kikSmileyObj, loadPackageParam.classLoader);
 
+                /*
+                Get KIK context
+                 */
                 XposedHelpers.findAndHookMethod(hooks.kikActivityInit, loadPackageParam.classLoader, "a", Context.class, new XC_MethodHook() {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
@@ -83,6 +97,28 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                         super.afterHookedMethod(param);
                     }
                 });
+
+                /*
+                Settings button create; Hook onLongClick
+                 */
+                XposedHelpers.findAndHookMethod("kik.android.chat.fragment.KikConversationsFragment", loadPackageParam.classLoader,"onCreateView", LayoutInflater.class
+                        , ViewGroup.class, Bundle.class, new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        View v = (View) XposedHelpers.getObjectField(param.thisObject,"_settingsButton");
+                        v.setOnLongClickListener(new View.OnLongClickListener() {
+                            @Override
+                            public boolean onLongClick(View v) {
+                                quickConfig qc = new quickConfig();
+                                qc.show(((Activity)v.getContext()).getFragmentManager(),"fragment_smiley");
+                                return true;
+                            }
+                        });
+                        super.afterHookedMethod(param);
+                    }
+                });
+
+
 
                 /*
                 On smiley click
@@ -280,6 +316,8 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
             return;
         }
 
+        resources = XModuleResources.createInstance(MODULE_PATH,resParam.res);
+
         if (settings == null) {
             return;
         }
@@ -302,4 +340,11 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
         }
 
     }
+
+    @Override
+    public void initZygote(StartupParam startupParam) throws Throwable {
+        MODULE_PATH = startupParam.modulePath;
+    }
+
+
 }

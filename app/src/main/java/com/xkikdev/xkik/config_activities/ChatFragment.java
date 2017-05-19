@@ -54,28 +54,28 @@ public class ChatFragment extends Fragment {
         readRecpt.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                settings.setNoReadreceipt(isChecked);
+                settings.setNoReadreceipt(isChecked,true);
             }
         });
 
         typingRecpt.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                settings.setNoTyping(isChecked);
+                settings.setNoTyping(isChecked,true);
             }
         });
 
         fakeCam.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                settings.setFakeCam(isChecked);
+                settings.setFakeCam(isChecked,true);
             }
         });
 
         lurkDetector.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                settings.setWhosLurking(isChecked);
+                settings.setWhosLurking(isChecked,true);
             }
         });
 

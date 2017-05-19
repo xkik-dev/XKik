@@ -102,10 +102,10 @@ public class Settings {
         return autoSmiley;
     }
 
-    public void setAutoSmiley(boolean autoSmiley) {
+    public void setAutoSmiley(boolean autoSmiley,boolean kill) {
         this.autoSmiley = autoSmiley;
         try {
-            save(true);
+            save(kill);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -179,10 +179,10 @@ public class Settings {
         return noReadreceipt;
     }
 
-    public void setNoReadreceipt(boolean value) {
+    public void setNoReadreceipt(boolean value,boolean kill) {
         noReadreceipt = value;
         try {
-            save(true);
+            save(kill);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -192,10 +192,10 @@ public class Settings {
         return noTyping;
     }
 
-    public void setNoTyping(boolean value) {
+    public void setNoTyping(boolean value,boolean kill) {
         noTyping = value;
         try {
-            save(true);
+            save(kill);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -205,10 +205,10 @@ public class Settings {
         return whosLurking;
     }
 
-    public void setWhosLurking(boolean b) {
+    public void setWhosLurking(boolean b,boolean kill) {
         whosLurking = b;
         try {
-            save(true);
+            save(kill);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -218,10 +218,10 @@ public class Settings {
         return this.devMode;
     }
 
-    public void setDev(boolean b) {
+    public void setDev(boolean b,boolean kill) {
         devMode = b;
         try {
-            save(true);
+            save(kill);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -231,10 +231,10 @@ public class Settings {
         return fakeCamera;
     }
 
-    public void setFakeCam(boolean b) {
+    public void setFakeCam(boolean b,boolean kill) {
         fakeCamera = b;
         try {
-            save(true);
+            save(kill);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -244,19 +244,19 @@ public class Settings {
         return dateFormat;
     }
 
-    public void setDateFormat(int fmt) {
+    public void setDateFormat(int fmt,boolean kill) {
         dateFormat = fmt;
         try {
-            save(true);
+            save(kill);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void setColor(String id, int color) {
+    public void setColor(String id, int color,boolean kill) {
         colors.put(id, color);
         try {
-            save(true);
+            save(kill);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -267,21 +267,21 @@ public class Settings {
      *
      * @param id Color ID
      */
-    public void resetColor(String id) {
+    public void resetColor(String id,boolean kill) {
         if (colors.containsKey(id)) {
             colors.remove(id);
         }
         try {
-            save(true);
+            save(kill);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void setString(String id, String val) {
+    public void setString(String id, String val,boolean kill) {
         strings.put(id, val);
         try {
-            save(true);
+            save(kill);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -292,12 +292,12 @@ public class Settings {
      *
      * @param id String ID
      */
-    public void resetString(String id) {
+    public void resetString(String id,boolean kill) {
         if (strings.containsKey(id)) {
             strings.remove(id);
         }
         try {
-            save(true);
+            save(kill);
         } catch (IOException e) {
             e.printStackTrace();
         }

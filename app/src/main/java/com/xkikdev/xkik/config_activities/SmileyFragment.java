@@ -70,7 +70,7 @@ public class SmileyFragment extends Fragment {
         addTap.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                settings.setAutoSmiley(isChecked);
+                settings.setAutoSmiley(isChecked,true);
             }
         });
 

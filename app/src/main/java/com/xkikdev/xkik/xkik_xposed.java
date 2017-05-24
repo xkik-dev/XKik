@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.XModuleResources;
+import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,6 +28,7 @@ import de.robv.android.xposed.IXposedHookInitPackageResources;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.IXposedHookZygoteInit;
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_InitPackageResources;
@@ -37,6 +40,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPackageResources, IXposedHookZygoteInit {
 
+    public static final String kikCamObj = "kik.android.c.d";
     public static DateFormat format = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
     public static Settings settings = null;
     Context chatContext = null;
@@ -47,6 +51,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
     private Class smileyClass;
     public static XModuleResources resources;
     private String MODULE_PATH;
+    private final int longvidTime = (int) TimeUnit.MINUTES.toMillis(2);
 
 
     public void updateSmileys(Class smileyClass) {
@@ -71,18 +76,23 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
 
     @Override
     public void handleLoadPackage(final XC_LoadPackage.LoadPackageParam loadPackageParam) throws Throwable {
+        final xposedObject[] camObj = new xposedObject[1];
+        if (loadPackageParam.packageName.equals("android")) {
+            return;
+        }
         if (!loadPackageParam.packageName.equals("kik.android")) {
             return;
         }
         settings = Settings.load(); // load settings
         format.setTimeZone(TimeZone.getDefault()); // set timezone, to keep accurate date correct
 
+
         /*
          * Since kik has classes & classes2.dex, this fixes it
          */
         XposedHelpers.findAndHookMethod(Application.class, "attach", Context.class, new XC_MethodHook() {
             @Override
-            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+            protected void afterHookedMethod(final MethodHookParam aparam) throws Throwable {
                 smileyClass = XposedHelpers.findClass(hooks.kikSmileyObj, loadPackageParam.classLoader);
 
                 /*
@@ -95,6 +105,82 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                         super.afterHookedMethod(param);
                     }
                 });
+
+                if (settings.getLongCam()) { // In order to avoid checking in each method, this is set
+                    /*
+                This sets camObj so it doesn't interfere with any other apps that use MediaRecorder
+                 */
+                    XposedHelpers.findAndHookMethod(kikCamObj, loadPackageParam.classLoader, "a", String.class, new XC_MethodHook() {
+
+                        @Override
+                        protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                            camObj[0] = new xposedObject(param.thisObject);
+                            super.beforeHookedMethod(param);
+                        }
+                    });
+
+                    //TODO: Possibly implement setMaxFileSize, since long videos can be > 5mb
+
+                /*
+                Sets camera max duration to longvidTime
+                 */
+                    XposedHelpers.findAndHookMethod(MediaRecorder.class, "setMaxDuration", int.class, new XC_MethodHook() {
+                        @Override
+                        protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                            if (param.thisObject == null || camObj[0] == null) {
+                                return;
+                            }
+                            if (param.thisObject.equals
+                                    (camObj[0].get("i"))) {
+                                param.args[0] = longvidTime;
+                            } else {
+                                XposedBridge.log("not obj");
+                            }
+                            super.beforeHookedMethod(param);
+                        }
+                    });
+
+                /*
+                Modifies the circle progress bar while recording to be correct with the modified
+                time
+                 */
+                    XposedHelpers.findAndHookMethod(hooks.kikCircleBar, loadPackageParam.classLoader, "a", int.class, new XC_MethodReplacement() {
+                        @Override
+                        protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
+                            float f = ((int) methodHookParam.args[0]) * 1F;
+                            float calc = 360.0f * ((f) / ((float) longvidTime));
+                            xposedObject thiso = new xposedObject(methodHookParam.thisObject);
+                            XposedBridge.log(thiso.toString());
+                            thiso.getXObj("_shutterButton").call("a", calc);
+                            thiso.getXObj("_videoTime").call("setText", XposedHelpers.callStaticMethod(XposedHelpers.findClass("kik.android.util.cd", loadPackageParam.classLoader), "a", methodHookParam.args[0]));
+                            return null;
+                        }
+                    });
+
+                /*
+                Adjusts the onTick method to calculte with the new, modified time
+                 */
+                    XposedHelpers.findAndHookMethod(hooks.kikCameraTimer, loadPackageParam.classLoader, "onTick", long.class, new XC_MethodReplacement() {
+                        @Override
+                        protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
+                            int tim = (int) Math.max(0, longvidTime - ((long) methodHookParam.args[0]));
+                            new xposedObject(methodHookParam.thisObject).getXObj("a").set("h", tim);
+                            new xposedObject(methodHookParam.thisObject).getXObj("a").getXObj("r").call("b", tim);
+                            return null;
+                        }
+                    });
+
+                /*
+                Modifis the CountDownTimer to use the modded time
+                 */
+                    XposedHelpers.findAndHookConstructor(hooks.kikCameraTimer, loadPackageParam.classLoader, kikCamObj, new XC_MethodHook() {
+                        @Override
+                        protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                            new xposedObject(param.thisObject).set("mMillisInFuture", longvidTime);
+                            super.afterHookedMethod(param);
+                        }
+                    });
+                }
 
                 /*
                 Settings button create; Hook onLongClick

@@ -34,6 +34,16 @@ public class Settings {
     private boolean fakeCamera = false; // fake camera enabled
     private boolean whosLurking = false;
     private boolean autoSmiley = false;
+
+    public boolean getLongCam() {
+        return longCam;
+    }
+
+    public void setLongCam(boolean longCam) {
+        this.longCam = longCam;
+    }
+
+    private boolean longCam = false;
     private int dateFormat = 0; // date format, currently only 0 and 1
     private HashMap<String, Integer> colors = new HashMap<String, Integer>(); // color settings
     private HashMap<String, String> strings = new HashMap<String, String>(); // string settings

@@ -15,4 +15,6 @@ public class hooks {
     public static final String smileyView = "com.kik.android.b.c";
     public static final String kikSmileyObj = "com.kik.android.b.f";
     public static final String kikActivityInit = "kik.android.util.r";
+    public static final String kikCameraTimer = "kik.android.c.d.5";
+    public static final String kikCircleBar = "kik.android.chat.view.CameraIconBarViewImpl";
 }

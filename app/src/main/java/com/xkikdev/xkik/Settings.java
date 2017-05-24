@@ -41,6 +41,11 @@ public class Settings {
 
     public void setLongCam(boolean longCam) {
         this.longCam = longCam;
+        try {
+            save(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private boolean longCam = false;

@@ -19,6 +19,7 @@ public class ChatFragment extends Fragment {
     Switch typingRecpt;
     Switch fakeCam;
     Switch lurkDetector;
+    Switch longCam;
     Settings settings;
 
     public ChatFragment() {
@@ -47,35 +48,46 @@ public class ChatFragment extends Fragment {
         typingRecpt = (Switch) rootView.findViewById(R.id.typing_recpt_switch);
         fakeCam = (Switch) rootView.findViewById(R.id.fake_cam_switch);
         lurkDetector = (Switch) rootView.findViewById(R.id.lurk_detector);
+        longCam = (Switch) rootView.findViewById(R.id.long_cam);
+
         readRecpt.setChecked(settings.getNoReadreceipt());
         typingRecpt.setChecked(settings.getNoTyping());
         fakeCam.setChecked(settings.getFakeCam());
+        longCam.setChecked(settings.getLongCam());
+
         lurkDetector.setChecked(settings.getWhosLurking());
         readRecpt.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                settings.setNoReadreceipt(isChecked,true);
+                settings.setNoReadreceipt(isChecked, true);
             }
         });
 
         typingRecpt.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                settings.setNoTyping(isChecked,true);
+                settings.setNoTyping(isChecked, true);
             }
         });
 
         fakeCam.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                settings.setFakeCam(isChecked,true);
+                settings.setFakeCam(isChecked, true);
             }
         });
 
         lurkDetector.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                settings.setWhosLurking(isChecked,true);
+                settings.setWhosLurking(isChecked, true);
+            }
+        });
+
+        longCam.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                settings.setLongCam(isChecked);
             }
         });
 

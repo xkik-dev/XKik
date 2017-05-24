@@ -30,5 +30,6 @@
     <string name="license_text">XKik is licenced under GNU General Public License v3.0\n\nLibraries used:\n\nokhttp - Apache \n2.0\ncommons-io - Apache 2.0\ngxson - Apache 2.0\nmaterial-dialogs - MIT\nVintageChroma - Apache 2.0\nuniversalimageloader - Apache 2.0</string>
     <string name="whos_reading">Who\'s reading</string>
     <string name="done">Done</string>
-    <string name="quicksettings_tip">These Settings can be accessed and changed quickly by holding down the settings button in the main KIK screen</string>
+    <string name="quicksettings_tip">Some of these Settings can be accessed and changed quickly by holding down the settings button in the main KIK screen</string>
+    <string name="longer_camera_record">Longer camera record time</string>
 </resources>

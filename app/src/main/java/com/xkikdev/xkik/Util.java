@@ -17,7 +17,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
  * Various utilities
  */
 
-public class Util {
+class Util {
 
     /**
      * Prints stacktrace - useful for debugging
@@ -38,7 +38,7 @@ public class Util {
      * @param fld The field
      * @return The field, or null if it doesn't exist
      */
-    public static Object getObjField(Object obj, String fld) {
+    static Object getObjField(Object obj, String fld) {
         try {
             return XposedHelpers.getObjectField(obj, fld);
         } catch (NoSuchFieldError e) {
@@ -58,7 +58,9 @@ public class Util {
             try {
                 String name = start.getClass().getDeclaredFields()[i].getName();
                 Object found = getObjField(start, name);
-                XposedBridge.log("Declared field " + i + "(" + name + "): " + found.toString());
+                if (found != null) {
+                    XposedBridge.log("Declared field " + i + "(" + name + "): " + found.toString());
+                }
 
             } catch (Exception ignored) {
 
@@ -72,9 +74,9 @@ public class Util {
      * Kills Kik
      *
      * @param activity Activity to display toast on; null for no toast
-     * @throws IOException
+     * @throws IOException If killing failed
      */
-    public static void killKik(Activity activity) throws IOException {
+    static void killKik(Activity activity) throws IOException {
         Process p = Runtime.getRuntime().exec("su");
         DataOutputStream os = new DataOutputStream(p.getOutputStream());
 

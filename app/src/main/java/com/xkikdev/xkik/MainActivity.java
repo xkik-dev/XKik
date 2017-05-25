@@ -1,6 +1,7 @@
 package com.xkikdev.xkik;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity
      * @return Success yes/no
      */
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         FragmentManager fm = getSupportFragmentManager();
         int id = item.getItemId();

@@ -18,9 +18,9 @@ import okhttp3.Response;
 
 public class kikUtil {
 
-    static OkHttpClient client = new OkHttpClient();
+    private static OkHttpClient client = new OkHttpClient();
 
-    public static Object gen_smiley(Class smiley_class, kikSmiley smiley) {
+    static Object gen_smiley(Class smiley_class, kikSmiley smiley) {
         return gen_smiley(smiley_class, smiley.title, smiley.text, smiley.id, smiley.idate);
     }
 
@@ -34,7 +34,7 @@ public class kikUtil {
      * @param installdate  smiley install ID
      * @return a smiley object
      */
-    public static Object gen_smiley(Class smiley_class, String title, String text, String id, long installdate) {
+    static Object gen_smiley(Class smiley_class, String title, String text, String id, long installdate) {
         /*
         a = name
         b = id

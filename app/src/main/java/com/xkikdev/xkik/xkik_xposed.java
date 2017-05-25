@@ -40,10 +40,10 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPackageResources, IXposedHookZygoteInit {
 
-    public static final String kikCamObj = "kik.android.c.d";
-    public static DateFormat format = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
+    private static final String kikCamObj = "kik.android.c.d";
+    private static DateFormat format = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
     public static Settings settings = null;
-    Context chatContext = null;
+    private Context chatContext = null;
     private Pattern fromPattern = Pattern.compile("from=\"(.*?)\"");
     private Pattern msgIdPattern = Pattern.compile("msgid id=\"(.*?)\"");
     private Pattern useridPattern = Pattern.compile("(.*)_[^_]*");
@@ -54,7 +54,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
     private final int longvidTime = (int) TimeUnit.MINUTES.toMillis(2);
 
 
-    public void updateSmileys(Class smileyClass) {
+    private void updateSmileys(Class smileyClass) {
         if (smileyManager == null || smileyClass == null) {
             return;
         }
@@ -65,7 +65,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
         XposedHelpers.callMethod(smileyManager, "a", e);
     }
 
-    public void updateSmileys(Class smileyClass, kikSmiley smiley) {
+    private void updateSmileys(Class smileyClass, kikSmiley smiley) {
         if (smileyManager == null || smileyClass == null || smiley == null) {
             return;
         }
@@ -292,9 +292,8 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                                 }
                                 if (chatContext != null) {
 
-                                    final String finalFrom = from;
                                     if (from != null && !from.equals("warehouse@talk.kik.com")) { // avoids some of the internal kik classes
-                                        kikToast(finalFrom + " saw your message!");
+                                        kikToast(from + " saw your message!");
                                     }
 
                                 }
@@ -381,7 +380,12 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
 
     }
 
-    public void kikToast(final String text) {
+    /**
+     * Generates a toast using KIK's context
+     *
+     * @param text Text to display on toast
+     */
+    private void kikToast(final String text) {
         if (chatContext == null) {
             return;
         }
@@ -407,8 +411,10 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
             return;
         }
 
-
-        for (String c : settings.getColors().keySet()) { // replace colors
+        /*
+        Replaces colors
+         */
+        for (String c : settings.getColors().keySet()) {
             try {
                 resParam.res.setReplacement("kik.android", "color", c, settings.getColors().get(c));
             } catch (android.content.res.Resources.NotFoundException ex) {
@@ -416,7 +422,10 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
             }
         }
 
-        for (String s : settings.getStrings().keySet()) { // replace strings
+        /*
+        Replaces strings
+         */
+        for (String s : settings.getStrings().keySet()) {
             try {
                 resParam.res.setReplacement("kik.android", "string", s, settings.getStrings().get(s));
             } catch (android.content.res.Resources.NotFoundException ex) {

@@ -28,7 +28,7 @@ public class Settings {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
     int save_version = 1;
-    boolean devMode = false; // devMode mode enabled
+    private boolean devMode = false; // devMode mode enabled
     private boolean noReadreceipt = false; // read receipt allowed
     private boolean noTyping = false; // typing blocked
     private boolean fakeCamera = false; // fake camera enabled
@@ -59,9 +59,9 @@ public class Settings {
      * <p>
      * If the app does not has permission then the user will be prompted to grant permissions
      *
-     * @param activity
+     * @param activity app activity
      */
-    public static void verifyStoragePermissions(Activity activity) {
+    static void verifyStoragePermissions(Activity activity) {
         // Check if we have write permission
         int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
@@ -96,7 +96,7 @@ public class Settings {
      *
      * @return Save directory as file
      */
-    public static File getSaveDir() {
+    private static File getSaveDir() {
         File savedir = new File(Environment.getExternalStorageDirectory().getPath() + File.separator + "XKik" + File.separator);
         if (!savedir.exists()) {
             savedir.mkdir();
@@ -109,7 +109,7 @@ public class Settings {
      *
      * @return save file
      */
-    public static File getSaveFile() {
+    private static File getSaveFile() {
         return new File(getSaveDir().getPath() + File.separator + "config.json");
     }
 
@@ -117,7 +117,7 @@ public class Settings {
         return autoSmiley;
     }
 
-    public void setAutoSmiley(boolean autoSmiley,boolean kill) {
+    public void setAutoSmiley(boolean autoSmiley, boolean kill) {
         this.autoSmiley = autoSmiley;
         try {
             save(kill);
@@ -181,7 +181,7 @@ public class Settings {
      * @param ks The smiley
      * @return If it exists or not
      */
-    public boolean containsSmiley(kikSmiley ks) {
+    private boolean containsSmiley(kikSmiley ks) {
         for (kikSmiley smil : getSmileys()) {
             if (smil.id.equals(ks.id)) {
                 return true;
@@ -194,7 +194,7 @@ public class Settings {
         return noReadreceipt;
     }
 
-    public void setNoReadreceipt(boolean value,boolean kill) {
+    public void setNoReadreceipt(boolean value, boolean kill) {
         noReadreceipt = value;
         try {
             save(kill);
@@ -207,7 +207,7 @@ public class Settings {
         return noTyping;
     }
 
-    public void setNoTyping(boolean value,boolean kill) {
+    public void setNoTyping(boolean value, boolean kill) {
         noTyping = value;
         try {
             save(kill);
@@ -220,7 +220,7 @@ public class Settings {
         return whosLurking;
     }
 
-    public void setWhosLurking(boolean b,boolean kill) {
+    public void setWhosLurking(boolean b, boolean kill) {
         whosLurking = b;
         try {
             save(kill);
@@ -233,7 +233,7 @@ public class Settings {
         return this.devMode;
     }
 
-    public void setDev(boolean b,boolean kill) {
+    public void setDev(boolean b, boolean kill) {
         devMode = b;
         try {
             save(kill);
@@ -246,7 +246,7 @@ public class Settings {
         return fakeCamera;
     }
 
-    public void setFakeCam(boolean b,boolean kill) {
+    public void setFakeCam(boolean b, boolean kill) {
         fakeCamera = b;
         try {
             save(kill);
@@ -259,7 +259,7 @@ public class Settings {
         return dateFormat;
     }
 
-    public void setDateFormat(int fmt,boolean kill) {
+    public void setDateFormat(int fmt, boolean kill) {
         dateFormat = fmt;
         try {
             save(kill);
@@ -268,7 +268,7 @@ public class Settings {
         }
     }
 
-    public void setColor(String id, int color,boolean kill) {
+    public void setColor(String id, int color, boolean kill) {
         colors.put(id, color);
         try {
             save(kill);
@@ -282,7 +282,7 @@ public class Settings {
      *
      * @param id Color ID
      */
-    public void resetColor(String id,boolean kill) {
+    public void resetColor(String id, boolean kill) {
         if (colors.containsKey(id)) {
             colors.remove(id);
         }
@@ -293,7 +293,7 @@ public class Settings {
         }
     }
 
-    public void setString(String id, String val,boolean kill) {
+    public void setString(String id, String val, boolean kill) {
         strings.put(id, val);
         try {
             save(kill);
@@ -307,7 +307,7 @@ public class Settings {
      *
      * @param id String ID
      */
-    public void resetString(String id,boolean kill) {
+    public void resetString(String id, boolean kill) {
         if (strings.containsKey(id)) {
             strings.remove(id);
         }

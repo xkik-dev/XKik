@@ -11,10 +11,7 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import com.xkikdev.xkik.R;
-import com.xkikdev.xkik.Settings;
 import com.xkikdev.xkik.xkik_xposed;
-
-import java.io.IOException;
 
 /**
  * Class for managing quick toggleable settings

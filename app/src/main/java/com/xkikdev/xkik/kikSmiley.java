@@ -7,7 +7,7 @@ public class kikSmiley {
     String id;
     long idate;
 
-    public kikSmiley(String title, String text, String id, long installdate) {
+    kikSmiley(String title, String text, String id, long installdate) {
         this.title = title;
         this.text = text;
         this.id = id;

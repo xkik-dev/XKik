@@ -119,7 +119,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                         }
                     });
 
-                    //TODO: Possibly implement setMaxFileSize, since long videos can be > 5mb
+
 
                 /*
                 Sets camera max duration to longvidTime
@@ -133,8 +133,23 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                             if (param.thisObject.equals
                                     (camObj[0].get("i"))) {
                                 param.args[0] = longvidTime;
-                            } else {
-                                XposedBridge.log("not obj");
+                            }
+                            super.beforeHookedMethod(param);
+                        }
+                    });
+
+                    /*
+                Sets camera max file size to 20mb
+                 */
+                    XposedHelpers.findAndHookMethod(MediaRecorder.class, "setMaxFileSize", long.class, new XC_MethodHook() {
+                        @Override
+                        protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                            if (param.thisObject == null || camObj[0] == null) {
+                                return;
+                            }
+                            if (param.thisObject.equals
+                                    (camObj[0].get("i"))) {
+                                param.args[0] = 20971520L; // 20mb is the max KIK file size playable
                             }
                             super.beforeHookedMethod(param);
                         }

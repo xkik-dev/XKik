@@ -8,6 +8,7 @@ Current tweaks available:
 
 Chat
 * Fake Camera
+* Longer Camera record time
 * Block Read Receipts
 * Block Typing Receipts
 * See who's reading your messages in group chats

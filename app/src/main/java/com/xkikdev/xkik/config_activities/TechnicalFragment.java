@@ -29,7 +29,7 @@ public class TechnicalFragment extends Fragment {
         final View v = inflater.inflate(R.layout.fragment_technical, container, false);
 
         try {
-            settings = Settings.load();
+            settings = Settings.load(this.getActivity());
         } catch (IOException e) {
             e.printStackTrace();
         }

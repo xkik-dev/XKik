@@ -39,7 +39,7 @@ public class ChatFragment extends Fragment {
         // Inflate the layout for this fragment
 
         try {
-            settings = Settings.load();
+            settings = Settings.load(this.getActivity());
         } catch (IOException e) {
             e.printStackTrace();
         }

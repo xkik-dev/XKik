@@ -1,6 +1,8 @@
 package com.xkikdev.xkik;
 
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Environment;
@@ -8,6 +10,7 @@ import android.widget.Toast;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
@@ -73,22 +76,35 @@ class Util {
     /**
      * Kills Kik
      *
-     * @param activity Activity to display toast on; null for no toast
+     * @param activity Activity to use for killing KIK
      * @throws IOException If killing failed
      */
     static void killKik(Activity activity) throws IOException {
-        Process p = Runtime.getRuntime().exec("su");
-        DataOutputStream os = new DataOutputStream(p.getOutputStream());
-
-        os.writeBytes("am force-stop kik.android\n");
-        os.writeBytes("exit\n");
-        os.flush();
-
-
         if (activity != null) {
-            Toast.makeText(activity.getApplicationContext(), "Killed Kik", Toast.LENGTH_SHORT).show();
+            if (killKIKService(activity)){
+                Toast.makeText(activity.getApplicationContext(), "Killed Kik in background.", Toast.LENGTH_SHORT).show();
+            }
         }
     }
+
+    private static boolean killKIKService(Activity activity) throws IOException {
+        ActivityManager activityManager = (ActivityManager) activity.getSystemService(Context.ACTIVITY_SERVICE);
+        for(ActivityManager.RunningServiceInfo serviceInfo : activityManager.getRunningServices(Integer.MAX_VALUE)) {
+            String packageName = serviceInfo.service.getPackageName();
+
+            if(packageName.equals("kik.android")) {
+                Process suProcess = Runtime.getRuntime().exec("su");
+                DataOutputStream os = new DataOutputStream(suProcess.getOutputStream());
+                os.writeBytes("adb shell" + "\n");
+                os.flush();
+                os.writeBytes("am force-stop kik.android" + "\n");
+                os.flush();
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public static String getKikVersion(XC_LoadPackage.LoadPackageParam lpparam, PackageManager pm) {
         String apkName = lpparam.appInfo.sourceDir;

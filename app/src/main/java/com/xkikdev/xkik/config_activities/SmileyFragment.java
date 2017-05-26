@@ -61,7 +61,7 @@ public class SmileyFragment extends Fragment {
         final Context c = this.getContext();
 
         try {
-            settings = Settings.load();
+            settings = Settings.load(this.getActivity());
             addTap.setChecked(settings.getAutoSmiley());
         } catch (IOException e) {
             e.printStackTrace();

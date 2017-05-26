@@ -56,7 +56,7 @@ public class VisualFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_visual, container, false);// Inflate the layout for this fragment
         try {
-            settings = Settings.load();
+            settings = Settings.load(this.getActivity());
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -34,6 +34,20 @@ public class Settings {
     private boolean fakeCamera = false; // fake camera enabled
     private boolean whosLurking = false;
     private boolean autoSmiley = false;
+    private transient Activity creator;
+    private boolean longCam = false;
+    private int dateFormat = 0; // date format, currently only 0 and 1
+    private HashMap<String, Integer> colors = new HashMap<String, Integer>(); // color settings
+    private HashMap<String, String> strings = new HashMap<String, String>(); // string settings
+    private ArrayList<kikSmiley> smileys = new ArrayList<>();
+
+    public Activity getCreator() {
+        return creator;
+    }
+
+    public void setCreator(Activity creator) {
+        this.creator = creator;
+    }
 
     public boolean getLongCam() {
         return longCam;
@@ -47,12 +61,6 @@ public class Settings {
             e.printStackTrace();
         }
     }
-
-    private boolean longCam = false;
-    private int dateFormat = 0; // date format, currently only 0 and 1
-    private HashMap<String, Integer> colors = new HashMap<String, Integer>(); // color settings
-    private HashMap<String, String> strings = new HashMap<String, String>(); // string settings
-    private ArrayList<kikSmiley> smileys = new ArrayList<>();
 
     /**
      * Checks if the app has permission to write to device storage
@@ -89,6 +97,12 @@ public class Settings {
             set.save(true);
             return set;
         }
+    }
+
+    public static Settings load(Activity creator) throws IOException {
+        Settings s = load();
+        s.setCreator(creator);
+        return s;
     }
 
     /**
@@ -329,7 +343,7 @@ public class Settings {
     public void save(boolean kill) throws IOException {
         FileUtils.writeStringToFile(getSaveFile(), new Gson().toJson(this).toString(), "UTF-8", false);
         if (kill) {
-            Util.killKik(null);
+            Util.killKik(creator);
         }
     }
 

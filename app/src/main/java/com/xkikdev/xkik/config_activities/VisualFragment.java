@@ -33,8 +33,8 @@ public class VisualFragment extends Fragment {
             new ColorSetting("Primary Text", "gray_6", "#ff373a4b"),
             new ColorSetting("Secondary Text", "gray_5", "#ff7a7d8e"),
             new ColorSetting("Tertiary Text", "gray_4", "#ffa9adc1"),
-            new ColorSetting("App Bar Background", "gray_1", "#fffafafa")
-
+            new ColorSetting("App Bar Background", "gray_1", "#fffafafa"),
+            new ColorSetting("White", "white", "#ffeeeeee")
     };
 
     StringSetting[] stringSettings = new StringSetting[]{
@@ -77,9 +77,9 @@ public class VisualFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    settings.setDateFormat(1,true); // exact
+                    settings.setDateFormat(1, true); // exact
                 } else {
-                    settings.setDateFormat(0,true); // no change
+                    settings.setDateFormat(0, true); // no change
                 }
             }
         });
@@ -128,14 +128,14 @@ public class VisualFragment extends Fragment {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                settings.setString(val_id, txt.getText().toString(),true);
+                settings.setString(val_id, txt.getText().toString(), true);
             }
         });
         b.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 txt.setText(orig);
-                settings.resetString(val_id,true);
+                settings.resetString(val_id, true);
                 return true;
             }
         });
@@ -161,7 +161,7 @@ public class VisualFragment extends Fragment {
                             public void onColorSelected(@ColorInt int color) {
                                 iv.setBackgroundColor(color);
                                 for (String c : colorcode) {
-                                    settings.setColor(c, color,true);
+                                    settings.setColor(c, color, true);
                                 }
 
                             }
@@ -175,7 +175,7 @@ public class VisualFragment extends Fragment {
             public boolean onLongClick(View v) {
                 iv.setBackgroundColor(default_color);
                 for (String c : colorcode) {
-                    settings.resetColor(c,true);
+                    settings.resetColor(c, true);
                 }
                 return true;
             }

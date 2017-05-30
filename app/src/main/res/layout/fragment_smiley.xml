@@ -20,8 +20,9 @@
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/addbyid"
-                android:layout_marginTop="12dp">
+                android:layout_below="@+id/importbutton"
+                android:layout_marginTop="12dp"
+                android:id="@+id/smileyScroll">
 
                 <GridLayout
                     android:id="@+id/smileyGrid"
@@ -69,6 +70,14 @@
                 android:layout_below="@+id/autosmiley"
                 android:layout_centerHorizontal="true"
                 android:text="@string/add_smiley_by_id" />
+
+            <Button
+                android:id="@+id/importbutton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/import_export"
+                android:layout_below="@+id/addbyid"
+                android:layout_centerHorizontal="true" />
 
         </RelativeLayout>
     </android.support.v7.widget.CardView>

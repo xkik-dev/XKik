@@ -1,6 +1,7 @@
 package com.xkikdev.xkik.config_activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Looper;
@@ -37,6 +38,7 @@ public class SmileyFragment extends Fragment {
     ImageLoader imageLoader = ImageLoader.getInstance(); // Get singleton instance
     GridLayout gv;
     Button addb;
+    Button impexp;
     Switch addTap;
     Settings settings;
 
@@ -57,6 +59,7 @@ public class SmileyFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_smiley, container, false);
         gv = (GridLayout) v.findViewById(R.id.smileyGrid);
         addb = (Button) v.findViewById(R.id.addbyid);
+        impexp = (Button) v.findViewById(R.id.importbutton);
         addTap = (Switch) v.findViewById(R.id.autosmiley);
         final Context c = this.getContext();
 
@@ -71,6 +74,17 @@ public class SmileyFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 settings.setAutoSmiley(isChecked,true);
+            }
+        });
+
+        impexp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.contentframe,new SmileyImportFragment(),null)
+                        .addToBackStack(null)
+                        .commit();
+
             }
         });
 

@@ -1,0 +1,55 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    tools:context="com.xkikdev.xkik.config_activities.SmileyImportFragment">
+
+
+    <TextView
+        android:id="@+id/titletv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="11dp"
+        android:text="@string/import_export"
+        android:textAlignment="center"
+        android:textSize="24sp" />
+
+    <com.dd.processbutton.iml.ActionProcessButton
+        android:id="@+id/exptxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="11dp"
+        android:text="@string/export_to_text_file"
+        android:textColor="@android:color/white"
+        custom:pb_colorNormal="@android:color/holo_blue_light"
+        custom:pb_colorPressed="@android:color/holo_blue_dark"
+        android:layout_below="@+id/impdb"
+        android:layout_centerHorizontal="true" />
+
+    <com.dd.processbutton.iml.ActionProcessButton
+        android:id="@+id/impdb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imptxt"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="@string/import_from_public_database"
+        android:textColor="@android:color/white"
+        custom:pb_colorNormal="@android:color/holo_blue_light"
+        custom:pb_colorPressed="@android:color/holo_blue_dark" />
+
+    <com.dd.processbutton.iml.ActionProcessButton
+        android:id="@+id/imptxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/titletv"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="22dp"
+        android:text="@string/import_from_text_file"
+        android:textColor="@android:color/white"
+        custom:pb_colorNormal="@android:color/holo_blue_light"
+        custom:pb_colorPressed="@android:color/holo_blue_dark" />
+</RelativeLayout>

@@ -110,7 +110,7 @@ public class Settings {
      *
      * @return Save directory as file
      */
-    private static File getSaveDir() {
+    public static File getSaveDir() {
         File savedir = new File(Environment.getExternalStorageDirectory().getPath() + File.separator + "XKik" + File.separator);
         if (!savedir.exists()) {
             savedir.mkdir();
@@ -195,9 +195,24 @@ public class Settings {
      * @param ks The smiley
      * @return If it exists or not
      */
-    private boolean containsSmiley(kikSmiley ks) {
+    public boolean containsSmiley(kikSmiley ks) {
         for (kikSmiley smil : getSmileys()) {
             if (smil.id.equals(ks.id)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Checks if smiley is already added
+     *
+     * @param id The smiley ID
+     * @return If it exists or not
+     */
+    public boolean containsSmiley(String id) {
+        for (kikSmiley smil : getSmileys()) {
+            if (smil.id.equals(id)) {
                 return true;
             }
         }
@@ -346,6 +361,7 @@ public class Settings {
             Util.killKik(creator);
         }
     }
+
 
 
 }

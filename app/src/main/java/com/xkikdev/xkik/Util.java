@@ -20,7 +20,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
  * Various utilities
  */
 
-class Util {
+public class Util {
 
     /**
      * Prints stacktrace - useful for debugging
@@ -79,7 +79,7 @@ class Util {
      * @param activity Activity to use for killing KIK
      * @throws IOException If killing failed
      */
-    static void killKik(Activity activity) throws IOException {
+    public static void killKik(Activity activity) throws IOException {
         if (activity != null) {
             if (killKIKService(activity)){
                 Toast.makeText(activity.getApplicationContext(), "Killed Kik in background.", Toast.LENGTH_SHORT).show();

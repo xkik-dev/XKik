@@ -9,7 +9,10 @@ import android.os.Environment;
 import android.widget.Toast;
 
 import java.io.DataOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.logging.Logger;
 
 import de.robv.android.xposed.XposedBridge;
@@ -111,5 +114,11 @@ public class Util {
         String fullPath = Environment.getExternalStorageDirectory() + "/" + apkName;
         PackageInfo info = pm.getPackageArchiveInfo(fullPath, 0);
         return info.versionName;
+    }
+
+    public static void writeToFile(String out, String savedir) throws FileNotFoundException, UnsupportedEncodingException {
+        PrintWriter writer = new PrintWriter(savedir, "UTF-8");
+        writer.print(out);
+        writer.close();
     }
 }

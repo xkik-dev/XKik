@@ -5,25 +5,32 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.dd.processbutton.iml.ActionProcessButton;
 import com.xkikdev.xkik.R;
 import com.xkikdev.xkik.Settings;
+import com.xkikdev.xkik.Util;
 import com.xkikdev.xkik.kikSmiley;
 import com.xkikdev.xkik.kikUtil;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.URL;
 import java.util.List;
 
@@ -114,9 +121,10 @@ public class SmileyImportFragment extends Fragment {
      * @param mode     button mode
      * @param b        button
      */
-    private void updateImportProgress(int progress, ActionProcessButton.Mode mode, ActionProcessButton b) {
+    private void updateImportProgress(int progress, ActionProcessButton.Mode mode, ActionProcessButton b, String text) {
         b.setMode(mode);
         b.setProgress(progress);
+        b.setText(text);
     }
 
     /**
@@ -127,11 +135,11 @@ public class SmileyImportFragment extends Fragment {
      * @param mode     button mode
      * @param b        button
      */
-    private void updateImportProgress(Activity main, final int progress, final ActionProcessButton.Mode mode, final ActionProcessButton b) {
+    private void updateImportProgress(Activity main, final int progress, final ActionProcessButton.Mode mode, final ActionProcessButton b, final String text) {
         main.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                updateImportProgress(progress, mode, b);
+                updateImportProgress(progress, mode, b, text);
             }
         });
     }
@@ -211,13 +219,64 @@ public class SmileyImportFragment extends Fragment {
                 }
                 try {
                     String savedir = Settings.getSaveDir().getPath() + File.separator + "out.xsmileydb";
-                    PrintWriter writer = new PrintWriter(savedir, "UTF-8");
-                    writer.print(out);
-                    writer.close();
+                    Util.writeToFile(out, savedir);
                     Toast.makeText(v.getContext(), "Saved to " + savedir, Toast.LENGTH_LONG).show();
                 } catch (IOException e) {
                     // do something
                 }
+            }
+        });
+
+        exptxt.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(final View v) {
+                new MaterialDialog.Builder(v.getContext())
+                        .title("Store export")
+                        .content("Are you sure?")
+                        .positiveText("Yes")
+                        .negativeText("No")
+                        .onAny(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                if (which.equals(DialogAction.POSITIVE)) {
+                                    new Thread() {
+                                        @Override
+                                        public void run() {
+                                            int count = 0;
+                                            Looper.prepare();
+                                            try {
+                                                String out = "xsmileys:";
+                                                JSONObject shoplist = new JSONObject(IOUtils.toString(new URL("https://sticker-service.appspot.com/v1/home?debug=false"), "UTF-8"));
+                                                JSONArray collections = shoplist.getJSONArray("collections");
+                                                boolean first = false;
+                                                for (int i = 0; i < collections.length(); i++) {
+                                                    JSONArray smileys = collections.getJSONObject(i).getJSONArray("smileys");
+                                                    for (int j = 0; j < smileys.length(); j++) {
+                                                        String id = smileys.getJSONObject(j).getString("id");
+                                                        count++;
+                                                        if (!first) {
+                                                            first = true;
+                                                        } else {
+                                                            out += ",";
+                                                        }
+                                                        out += id;
+                                                        Log.i("xkik", "loaded smiley " + id);
+                                                    }
+                                                }
+                                                Util.writeToFile(out, Settings.getSaveDir().getPath() + File.separator + "shop.xsmileydb");
+                                                Toast.makeText(v.getContext(), "import " + count + " smileys from shop complete", Toast.LENGTH_SHORT).show();
+                                            } catch (JSONException | IOException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }.start();
+                                } else {
+                                    dialog.cancel();
+                                }
+                            }
+                        })
+                        .show();
+                return true;
             }
         });
 
@@ -236,7 +295,7 @@ public class SmileyImportFragment extends Fragment {
         Looper.prepare();
         try {
 
-            updateImportProgress(activity, 1, ActionProcessButton.Mode.ENDLESS, b);
+            updateImportProgress(activity, 1, ActionProcessButton.Mode.ENDLESS, b, "Loading..");
             if (settings == null) {
                 buttonError(b, v.getContext(), "Failed to load settings");
                 return;
@@ -244,17 +303,17 @@ public class SmileyImportFragment extends Fragment {
             if (finalData.startsWith("xsmileys:") && finalData.contains(",")) { // simple check, just to prevent loading in the wrong file
                 String dta = finalData.substring(9);
                 String[] ids = dta.split(",");
-                updateImportProgress(activity, 1, ActionProcessButton.Mode.PROGRESS, b);
+                updateImportProgress(activity, 1, ActionProcessButton.Mode.PROGRESS, b, "Loading...");
                 setAllButtons(false, activity);
                 for (int i = 0; i < ids.length; i++) {
                     Float pct = (i / (ids.length * 1.0F)) * 100;
-                    updateImportProgress(activity, (int) Math.floor(pct), ActionProcessButton.Mode.PROGRESS, b);
+                    updateImportProgress(activity, (int) Math.floor(pct), ActionProcessButton.Mode.PROGRESS, b, "Import " + i + "/" + ids.length);
                     if (!settings.containsSmiley(ids[i])) {
                         settings.addSmiley(kikUtil.smileyFromID(ids[i]), false);
                     }
                 }
                 settings.save(true);
-                updateImportProgress(activity, 100, ActionProcessButton.Mode.PROGRESS, b);
+                updateImportProgress(activity, 100, ActionProcessButton.Mode.PROGRESS, b, "Done :)");
                 setAllButtons(true, activity);
             } else {
                 buttonError(activity, b, v.getContext(), "Invalid File");

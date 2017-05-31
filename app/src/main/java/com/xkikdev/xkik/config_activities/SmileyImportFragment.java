@@ -291,7 +291,7 @@ public class SmileyImportFragment extends Fragment {
      * @param b        button to update progress on
      */
     private void importFromString(String data, final Activity activity, final View v, final ActionProcessButton b) {
-        final String finalData = data;
+        final String finalData = data.replace("%0A", "").replace("%0D", "");
         Looper.prepare();
         try {
 

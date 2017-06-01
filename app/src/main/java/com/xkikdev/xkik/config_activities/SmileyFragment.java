@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
@@ -41,9 +42,14 @@ public class SmileyFragment extends Fragment {
     Button impexp;
     Switch addTap;
     Settings settings;
+    DisplayImageOptions iop;
 
     public SmileyFragment() {
         // Required empty public constructor
+        iop= new DisplayImageOptions.Builder()
+                .cacheOnDisk(true)
+                .bitmapConfig(Bitmap.Config.RGB_565) // not much quality needed
+                .build();
     }
 
     @Override
@@ -146,6 +152,7 @@ public class SmileyFragment extends Fragment {
                 final ImageView iv = new ImageView(c);
                 iv.setMinimumWidth(96);
                 iv.setMinimumHeight(96);
+
                 final ProgressBar loadingBar = new ProgressBar(c);
                 iv.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -168,9 +175,11 @@ public class SmileyFragment extends Fragment {
                                 .build().show();
                     }
                 });
+                loadingBar.setMinimumWidth(96);
+                loadingBar.setMinimumHeight(96);
                 gv.addView(iv);
                 gv.addView(loadingBar);
-                imageLoader.displayImage("https://smiley-cdn.kik.com/smileys/" + s.getId() + "/96x96.png", iv, new ImageLoadingListener() {
+                imageLoader.displayImage("https://smiley-cdn.kik.com/smileys/" + s.getId() + "/96x96.png", iv,iop, new ImageLoadingListener() {
                     @Override
                     public void onLoadingStarted(String imageUri, View view) {
 

@@ -291,7 +291,6 @@ public class SmileyImportFragment extends Fragment {
      * @param b        button to update progress on
      */
     private void importFromString(String data, final Activity activity, final View v, final ActionProcessButton b) {
-        final String finalData = data.replace("%0A", "").replace("%0D", "");
         Looper.prepare();
         try {
 
@@ -300,14 +299,18 @@ public class SmileyImportFragment extends Fragment {
                 buttonError(b, v.getContext(), "Failed to load settings");
                 return;
             }
-            if (finalData.startsWith("xsmileys:") && finalData.contains(",")) { // simple check, just to prevent loading in the wrong file
-                String dta = finalData.substring(9);
+            if (data.startsWith("xsmileys:") && data.contains(",")) { // simple check, just to prevent loading in the wrong file
+                String dta = data.substring(9);
                 String[] ids = dta.split(",");
                 updateImportProgress(activity, 1, ActionProcessButton.Mode.PROGRESS, b, "Loading...");
                 setAllButtons(false, activity);
                 for (int i = 0; i < ids.length; i++) {
                     Float pct = (i / (ids.length * 1.0F)) * 100;
                     updateImportProgress(activity, (int) Math.floor(pct), ActionProcessButton.Mode.PROGRESS, b, "Import " + i + "/" + ids.length);
+                    if (ids[i].contains("%0A") || ids[i].contains("%0a")) {
+                        Log.i("xposed","replaced");
+                        ids[i] = ids[i].replace("%0A", "").replace("%0a", "");
+                    }
                     if (!settings.containsSmiley(ids[i])) {
                         settings.addSmiley(kikUtil.smileyFromID(ids[i]), false);
                     }

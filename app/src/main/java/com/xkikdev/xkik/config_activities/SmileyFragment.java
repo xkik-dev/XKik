@@ -144,6 +144,8 @@ public class SmileyFragment extends Fragment {
             @Override
             public void run() {
                 final ImageView iv = new ImageView(c);
+                iv.setMinimumWidth(96);
+                iv.setMinimumHeight(96);
                 final ProgressBar loadingBar = new ProgressBar(c);
                 iv.setOnClickListener(new View.OnClickListener() {
                     @Override

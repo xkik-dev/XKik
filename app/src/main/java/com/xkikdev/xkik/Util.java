@@ -8,12 +8,15 @@ import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.logging.Logger;
+import java.net.URL;
 
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
@@ -84,7 +87,7 @@ public class Util {
      */
     public static void killKik(Activity activity) throws IOException {
         if (activity != null) {
-            if (killKIKService(activity)){
+            if (killKIKService(activity)) {
                 Toast.makeText(activity.getApplicationContext(), "Killed Kik in background.", Toast.LENGTH_SHORT).show();
             }
         }
@@ -92,10 +95,10 @@ public class Util {
 
     private static boolean killKIKService(Activity activity) throws IOException {
         ActivityManager activityManager = (ActivityManager) activity.getSystemService(Context.ACTIVITY_SERVICE);
-        for(ActivityManager.RunningServiceInfo serviceInfo : activityManager.getRunningServices(Integer.MAX_VALUE)) {
+        for (ActivityManager.RunningServiceInfo serviceInfo : activityManager.getRunningServices(Integer.MAX_VALUE)) {
             String packageName = serviceInfo.service.getPackageName();
 
-            if(packageName.equals("kik.android")) {
+            if (packageName.equals("kik.android")) {
                 Process suProcess = Runtime.getRuntime().exec("su");
                 DataOutputStream os = new DataOutputStream(suProcess.getOutputStream());
                 os.writeBytes("adb shell" + "\n");
@@ -120,5 +123,31 @@ public class Util {
         PrintWriter writer = new PrintWriter(savedir, "UTF-8");
         writer.print(out);
         writer.close();
+    }
+
+    /**
+     * Reads a url to a string, ignoring newlines
+     *
+     * @param url the url
+     * @return the url contents
+     */
+    public static String urlToString(String url) {
+        try {
+            String out = "";
+            URL urlo = new URL(url);
+            InputStream is = urlo.openStream();
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+
+            String line;
+            while ((line = br.readLine()) != null)
+                out += line;
+
+            br.close();
+            is.close();
+            return out;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

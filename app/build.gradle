@@ -29,6 +29,11 @@ android {
             url 'https://raw.github.com/zeeshanejaz/unirest-android/mvn-repo'
         }
     }
+
+    repositories {
+        maven { url "https://jitpack.io" }
+    }
+
 }
 
 

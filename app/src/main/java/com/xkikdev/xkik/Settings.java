@@ -34,6 +34,21 @@ public class Settings {
     private boolean fakeCamera = false; // fake camera enabled
     private boolean whosLurking = false;
     private boolean autoSmiley = false;
+
+    public boolean getDarkBg() {
+        return darkBg;
+    }
+
+    public void setDarkBg(boolean darkBg) {
+        this.darkBg = darkBg;
+        try {
+            save(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean darkBg = false;
     private transient Activity creator;
     private boolean longCam = false;
     private int dateFormat = 0; // date format, currently only 0 and 1

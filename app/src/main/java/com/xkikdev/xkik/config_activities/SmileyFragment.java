@@ -1,7 +1,6 @@
 package com.xkikdev.xkik.config_activities;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Looper;
@@ -46,7 +45,7 @@ public class SmileyFragment extends Fragment {
 
     public SmileyFragment() {
         // Required empty public constructor
-        iop= new DisplayImageOptions.Builder()
+        iop = new DisplayImageOptions.Builder()
                 .cacheOnDisk(true)
                 .bitmapConfig(Bitmap.Config.RGB_565) // not much quality needed
                 .build();
@@ -79,7 +78,7 @@ public class SmileyFragment extends Fragment {
         addTap.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                settings.setAutoSmiley(isChecked,true);
+                settings.setAutoSmiley(isChecked, true);
             }
         });
 
@@ -87,7 +86,7 @@ public class SmileyFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.contentframe,new SmileyImportFragment(),null)
+                        .replace(R.id.contentframe, new SmileyImportFragment(), null)
                         .addToBackStack(null)
                         .commit();
 
@@ -179,7 +178,7 @@ public class SmileyFragment extends Fragment {
                 loadingBar.setMinimumHeight(96);
                 gv.addView(iv);
                 gv.addView(loadingBar);
-                imageLoader.displayImage("https://smiley-cdn.kik.com/smileys/" + s.getId() + "/96x96.png", iv,iop, new ImageLoadingListener() {
+                imageLoader.displayImage("https://smiley-cdn.kik.com/smileys/" + s.getId() + "/96x96.png", iv, iop, new ImageLoadingListener() {
                     @Override
                     public void onLoadingStarted(String imageUri, View view) {
 

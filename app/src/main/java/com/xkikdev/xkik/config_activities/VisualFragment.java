@@ -27,6 +27,7 @@ public class VisualFragment extends Fragment {
 
     Settings settings;
     Switch accdate;
+    Switch darkbg;
     ColorSetting[] colorSettings = new ColorSetting[]{
             /*new ColorSetting("Main Background", new String[]{"white"}, "#ffffffff"),
             new ColorSetting("Chat Background", new String[]{"chat_background_color","chat_info_background"},"#ffeeeeee"),*/
@@ -34,7 +35,7 @@ public class VisualFragment extends Fragment {
             new ColorSetting("Secondary Text", "gray_5", "#ff7a7d8e"),
             new ColorSetting("Tertiary Text", "gray_4", "#ffa9adc1"),
             new ColorSetting("App Bar Background", "gray_1", "#fffafafa"),
-            new ColorSetting("White", "white", "#ffeeeeee")
+            new ColorSetting("White", "white", "#ffeeeeee"),
     };
 
     StringSetting[] stringSettings = new StringSetting[]{
@@ -72,7 +73,9 @@ public class VisualFragment extends Fragment {
         }
 
         accdate = (Switch) view.findViewById(R.id.accdate_switch);
+        darkbg = (Switch) view.findViewById(R.id.darkbg_switch);
         accdate.setChecked(settings.getDateFormat() == 1);
+        darkbg.setChecked(settings.getDarkBg());
         accdate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -81,6 +84,12 @@ public class VisualFragment extends Fragment {
                 } else {
                     settings.setDateFormat(0, true); // no change
                 }
+            }
+        });
+        darkbg.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                settings.setDarkBg(isChecked);
             }
         });
 

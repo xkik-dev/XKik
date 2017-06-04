@@ -5,11 +5,17 @@ import android.app.Application;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.XModuleResources;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.xkikdev.xkik.config_activities.quickConfig;
@@ -32,6 +38,7 @@ import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_InitPackageResources;
+import de.robv.android.xposed.callbacks.XC_LayoutInflated;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 /**
@@ -390,6 +397,18 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                         super.beforeHookedMethod(param);
                     }
                 });
+
+                /*
+                Sets all incoming messages to white to fix the transparency issue
+                 */
+                XposedBridge.hookAllConstructors(XposedHelpers.findClass("kik.android.widget.BubbleFramelayout",loadPackageParam.classLoader), new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        super.afterHookedMethod(param);
+                        XposedHelpers.callMethod(param.thisObject,"setBackground",new ColorDrawable(Color.WHITE));
+                    }
+                });
+
             }
         });
 
@@ -419,6 +438,32 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
         if (!resParam.packageName.equals("kik.android")) {
             return;
         }
+        XModuleResources modRes = XModuleResources.createInstance(MODULE_PATH, resParam.res);
+
+        if (settings.getDarkBg()){
+            resParam.res.setReplacement("kik.android","drawable","bottom_incoming_bubble_mask",modRes.fwd(R.drawable.bottom_incoming_bubble_mask));
+            resParam.res.setReplacement("kik.android","drawable","bottom_outgoing_bubble_mask",modRes.fwd(R.drawable.bottom_outgoing_bubble_mask));
+            resParam.res.setReplacement("kik.android","drawable","bottom_outgoing_image_bubble_mask",modRes.fwd(R.drawable.bottom_outgoing_image_bubble_mask));
+            resParam.res.setReplacement("kik.android","drawable","middle_incoming_bubble_mask",modRes.fwd(R.drawable.middle_incoming_bubble_mask));
+            resParam.res.setReplacement("kik.android","drawable","middle_outgoing_bubble_mask",modRes.fwd(R.drawable.middle_outgoing_bubble_mask));
+            resParam.res.setReplacement("kik.android","drawable","middle_outgoing_image_bubble_mask",modRes.fwd(R.drawable.middle_outgoing_image_bubble_mask));
+            resParam.res.setReplacement("kik.android","drawable","outgoing_top_round_bubble_mask",modRes.fwd(R.drawable.outgoing_top_round_bubble_mask));
+            resParam.res.setReplacement("kik.android","drawable","outgoing_top_square_bubble_mask",modRes.fwd(R.drawable.outgoing_top_square_bubble_mask));
+            resParam.res.setReplacement("kik.android","drawable","single_incoming_bubble_mask",modRes.fwd(R.drawable.single_incoming_bubble_mask));
+            resParam.res.setReplacement("kik.android","drawable","single_outgoing_bubble_mask",modRes.fwd(R.drawable.single_outgoing_bubble_mask));
+            resParam.res.setReplacement("kik.android","drawable","single_outgoing_image_bubble_mask",modRes.fwd(R.drawable.single_outgoing_image_bubble_mask));
+            resParam.res.setReplacement("kik.android","drawable","top_incoming_bubble_mask",modRes.fwd(R.drawable.top_incoming_bubble_mask));
+            resParam.res.setReplacement("kik.android","drawable","top_outgoing_bubble_mask",modRes.fwd(R.drawable.top_outgoing_bubble_mask));
+            resParam.res.setReplacement("kik.android","drawable","top_outgoing_image_bubble_mask",modRes.fwd(R.drawable.top_outgoing_image_bubble_mask));
+
+            resParam.res.hookLayout("kik.android", "layout", "activity_chat", new XC_LayoutInflated() {
+                @Override
+                public void handleLayoutInflated(LayoutInflatedParam layoutInflatedParam) throws Throwable {
+                    View rv = layoutInflatedParam.view.findViewById(layoutInflatedParam.res.getIdentifier("messages_list", "id", "kik.android"));
+                    rv.setBackgroundColor(Color.rgb(43,43,43));
+                }
+            });
+        }
 
         resources = XModuleResources.createInstance(MODULE_PATH, resParam.res);
 
@@ -429,11 +474,15 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
         /*
         Replaces colors
          */
-        for (String c : settings.getColors().keySet()) {
-            try {
-                resParam.res.setReplacement("kik.android", "color", c, settings.getColors().get(c));
-            } catch (android.content.res.Resources.NotFoundException ex) {
-                XposedBridge.log("Skipping unknown resource " + c);
+        for (final String c : settings.getColors().keySet()) {
+            if (c.startsWith("#xkik")) {
+                // special conditions handled here
+            } else {
+                try {
+                    resParam.res.setReplacement("kik.android", "color", c, settings.getColors().get(c));
+                } catch (android.content.res.Resources.NotFoundException ex) {
+                    XposedBridge.log("Skipping unknown resource " + c);
+                }
             }
         }
 

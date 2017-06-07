@@ -38,28 +38,28 @@ public class quickConfig extends DialogFragment {
         fakeCam.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                xkik_xposed.settings.setFakeCam(isChecked,false);
+                xkik_xposed.settings.setFakeCam(isChecked, false);
             }
         });
 
         disableRead.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                xkik_xposed.settings.setNoReadreceipt(isChecked,false);
+                xkik_xposed.settings.setNoReadreceipt(isChecked, false);
             }
         });
 
         disableType.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                xkik_xposed.settings.setNoTyping(isChecked,false);
+                xkik_xposed.settings.setNoTyping(isChecked, false);
             }
         });
 
         whoLurk.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                xkik_xposed.settings.setWhosLurking(isChecked,false);
+                xkik_xposed.settings.setWhosLurking(isChecked, false);
             }
         });
 

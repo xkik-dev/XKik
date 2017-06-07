@@ -39,10 +39,10 @@ import easyfilepickerdialog.kingfisher.com.library.model.SupportFile;
 import easyfilepickerdialog.kingfisher.com.library.view.FilePickerDialogFragment;
 
 public class SmileyImportFragment extends Fragment {
-    private Settings settings;
     ActionProcessButton imptxt;
     ActionProcessButton impdb;
     ActionProcessButton exptxt;
+    private Settings settings;
 
 
     public SmileyImportFragment() {
@@ -308,7 +308,7 @@ public class SmileyImportFragment extends Fragment {
                     Float pct = (i / (ids.length * 1.0F)) * 100;
                     updateImportProgress(activity, (int) Math.floor(pct), ActionProcessButton.Mode.PROGRESS, b, "Import " + i + "/" + ids.length);
                     if (ids[i].contains("%0A") || ids[i].contains("%0a")) {
-                        Log.i("xposed","replaced");
+                        Log.i("xposed", "replaced");
                         ids[i] = ids[i].replace("%0A", "").replace("%0a", "");
                     }
                     if (!settings.containsSmiley(ids[i])) {

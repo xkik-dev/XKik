@@ -34,20 +34,6 @@ public class Settings {
     private boolean fakeCamera = false; // fake camera enabled
     private boolean whosLurking = false;
     private boolean autoSmiley = false;
-
-    public boolean getDarkBg() {
-        return darkBg;
-    }
-
-    public void setDarkBg(boolean darkBg) {
-        this.darkBg = darkBg;
-        try {
-            save(true);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     private boolean darkBg = false;
     private transient Activity creator;
     private boolean longCam = false;
@@ -55,27 +41,6 @@ public class Settings {
     private HashMap<String, Integer> colors = new HashMap<String, Integer>(); // color settings
     private HashMap<String, String> strings = new HashMap<String, String>(); // string settings
     private ArrayList<kikSmiley> smileys = new ArrayList<>();
-
-    public Activity getCreator() {
-        return creator;
-    }
-
-    public void setCreator(Activity creator) {
-        this.creator = creator;
-    }
-
-    public boolean getLongCam() {
-        return longCam;
-    }
-
-    public void setLongCam(boolean longCam) {
-        this.longCam = longCam;
-        try {
-            save(true);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * Checks if the app has permission to write to device storage
@@ -140,6 +105,40 @@ public class Settings {
      */
     private static File getSaveFile() {
         return new File(getSaveDir().getPath() + File.separator + "config.json");
+    }
+
+    public boolean getDarkBg() {
+        return darkBg;
+    }
+
+    public void setDarkBg(boolean darkBg) {
+        this.darkBg = darkBg;
+        try {
+            save(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Activity getCreator() {
+        return creator;
+    }
+
+    public void setCreator(Activity creator) {
+        this.creator = creator;
+    }
+
+    public boolean getLongCam() {
+        return longCam;
+    }
+
+    public void setLongCam(boolean longCam) {
+        this.longCam = longCam;
+        try {
+            save(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean getAutoSmiley() {
@@ -376,7 +375,6 @@ public class Settings {
             Util.killKik(creator);
         }
     }
-
 
 
 }

@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaRecorder;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,18 +45,17 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPackageResources, IXposedHookZygoteInit {
 
     private static final String kikCamObj = "kik.android.c.d";
-    private static DateFormat format = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
     public static Settings settings = null;
+    public static XModuleResources resources;
+    private static DateFormat format = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
+    private final int longvidTime = (int) TimeUnit.MINUTES.toMillis(2);
     private Context chatContext = null;
     private Pattern fromPattern = Pattern.compile("from=\"(.*?)\"");
     private Pattern msgIdPattern = Pattern.compile("msgid id=\"(.*?)\"");
     private Pattern useridPattern = Pattern.compile("(.*)_[^_]*");
     private Object smileyManager = null;
     private Class smileyClass;
-    public static XModuleResources resources;
     private String MODULE_PATH;
-    private final int longvidTime = (int) TimeUnit.MINUTES.toMillis(2);
-
 
     private void updateSmileys(Class smileyClass) {
         if (smileyManager == null || smileyClass == null) {
@@ -404,14 +402,10 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                     }
                 });
 
-                XposedBridge.hookAllMethods(RecyclerView.class, "onDraw", new XC_MethodHook() {
-                    @Override
-                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                        super.beforeHookedMethod(param);
-
-                    }
-                });
-
+                /*
+                Gets the chat fragment. Currently does nothing but
+                plans include adding animated backgrounds
+                 */
                 XposedHelpers.findAndHookMethod("kik.android.chat.fragment.KikChatFragment", loadPackageParam.classLoader, "onCreateView", LayoutInflater.class, ViewGroup.class, Bundle.class, new XC_MethodHook() {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {

@@ -22,6 +22,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -44,6 +45,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPackageResources, IXposedHookZygoteInit {
 
+    public static final String kikChatFragment = "kik.android.chat.fragment.KikChatFragment";
     private static final String kikCamObj = "kik.android.c.d";
     public static Settings settings = null;
     public static XModuleResources resources;
@@ -393,7 +395,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                 /*
                 Sets all incoming messages to white to fix the transparency issue
                  */
-                XposedBridge.hookAllConstructors(XposedHelpers.findClass("kik.android.widget.BubbleFramelayout", loadPackageParam.classLoader), new XC_MethodHook() {
+                XposedBridge.hookAllConstructors(XposedHelpers.findClass(hooks.kikBubbleFrameLayout, loadPackageParam.classLoader), new XC_MethodHook() {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                         super.afterHookedMethod(param);
@@ -405,12 +407,44 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                 Gets the chat fragment. Currently does nothing but
                 plans include adding animated backgrounds
                  */
-                XposedHelpers.findAndHookMethod("kik.android.chat.fragment.KikChatFragment", loadPackageParam.classLoader, "onCreateView", LayoutInflater.class, ViewGroup.class, Bundle.class, new XC_MethodHook() {
+                XposedHelpers.findAndHookMethod(kikChatFragment, loadPackageParam.classLoader, "onCreateView", LayoutInflater.class, ViewGroup.class, Bundle.class, new XC_MethodHook() {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                         super.afterHookedMethod(param);
                         FrameLayout fl = (FrameLayout) param.getResult();
 
+                    }
+                });
+
+                /*
+                Manages blocking forwarding / blocking saving
+                 */
+                XposedBridge.hookAllMethods(XposedHelpers.findClass(hooks.kikMsgClass, loadPackageParam.classLoader), "a", new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        if (param.getResult() != null && param.getResult().getClass().getName().equals(hooks.kikContentMessage)) {
+                            if (settings.getDisableFwd()) {
+                                XposedHelpers.callMethod(param.getResult(), "a", "allow-forward", "false");
+                            }
+                            if (settings.getDisableSave()) {
+                                XposedHelpers.callMethod(param.getResult(), "a", "disallow-save", "true");
+                            }
+                        }
+                        super.afterHookedMethod(param);
+                    }
+                });
+
+                /*
+                Changes GIF filter to "R"
+                 */
+                XposedHelpers.findAndHookMethod(hooks.kikGifApi, loadPackageParam.classLoader, "a", String.class, hooks.kikGifSearchRating, Locale.class, new XC_MethodHook() {
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                        if (settings.getUnfilterGIFs()) {
+                            Class c = param.args[1].getClass();
+                            param.args[1] = Enum.valueOf(c, "GifSearchRatingR");
+                            super.beforeHookedMethod(param);
+                        }
                     }
                 });
 

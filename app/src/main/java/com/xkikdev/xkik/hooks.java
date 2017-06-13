@@ -17,4 +17,8 @@ class hooks {
     static final String kikActivityInit = "kik.android.util.r";
     static final String kikCameraTimer = "kik.android.c.d.5";
     static final String kikCircleBar = "kik.android.chat.view.CameraIconBarViewImpl";
+    public static final String kikMsgClass = "kik.android.internal.platform.b";
+    public static final String kikGifApi = "kik.android.gifs.api.g";
+    public static final String kikGifSearchRating = "kik.android.gifs.api.GifApiProvider.GifSearchRating";
+    public static final String kikBubbleFrameLayout = "kik.android.widget.BubbleFramelayout";
 }

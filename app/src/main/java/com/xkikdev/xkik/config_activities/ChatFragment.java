@@ -20,6 +20,9 @@ public class ChatFragment extends Fragment {
     Switch fakeCam;
     Switch lurkDetector;
     Switch longCam;
+    Switch disableFwd;
+    Switch disableSave;
+    Switch disableFilter;
     Settings settings;
 
     public ChatFragment() {
@@ -49,11 +52,38 @@ public class ChatFragment extends Fragment {
         fakeCam = (Switch) rootView.findViewById(R.id.fake_cam_switch);
         lurkDetector = (Switch) rootView.findViewById(R.id.lurk_detector);
         longCam = (Switch) rootView.findViewById(R.id.long_cam);
+        disableFwd = (Switch) rootView.findViewById(R.id.disable_fwd);
+        disableSave = (Switch) rootView.findViewById(R.id.disable_save);
+        disableFilter = (Switch) rootView.findViewById(R.id.unfilter_gif);
 
         readRecpt.setChecked(settings.getNoReadreceipt());
         typingRecpt.setChecked(settings.getNoTyping());
         fakeCam.setChecked(settings.getFakeCam());
         longCam.setChecked(settings.getLongCam());
+
+        disableFwd.setChecked(settings.getDisableFwd());
+        disableFwd.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                settings.setDisableFwd(isChecked);
+            }
+        });
+
+        disableSave.setChecked(settings.getDisableSave());
+        disableSave.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                settings.setDisableSave(settings.getDisableSave());
+            }
+        });
+
+        disableFilter.setChecked(settings.getUnfilterGIFs());
+        disableFilter.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                settings.setUnfilterGIFs(isChecked);
+            }
+        });
 
         lurkDetector.setChecked(settings.getWhosLurking());
         readRecpt.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

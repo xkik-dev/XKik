@@ -35,6 +35,9 @@ public class Settings {
     private boolean whosLurking = false;
     private boolean autoSmiley = false;
     private boolean darkBg = false;
+    private boolean disableSave = false;
+    private boolean disableFwd = false;
+    private boolean unfilterGIFs = false;
     private transient Activity creator;
     private boolean longCam = false;
     private int dateFormat = 0; // date format, currently only 0 and 1
@@ -113,11 +116,11 @@ public class Settings {
 
     public void setDarkBg(boolean darkBg) {
         this.darkBg = darkBg;
-        try {
-            save(true);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        trySave();
+    }
+
+    private void trySave() {
+        trySave(true);
     }
 
     public Activity getCreator() {
@@ -134,11 +137,7 @@ public class Settings {
 
     public void setLongCam(boolean longCam) {
         this.longCam = longCam;
-        try {
-            save(true);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        trySave();
     }
 
     public boolean getAutoSmiley() {
@@ -147,6 +146,10 @@ public class Settings {
 
     public void setAutoSmiley(boolean autoSmiley, boolean kill) {
         this.autoSmiley = autoSmiley;
+        trySave(kill);
+    }
+
+    private void trySave(boolean kill) {
         try {
             save(kill);
         } catch (IOException e) {
@@ -175,11 +178,7 @@ public class Settings {
         }
         if (!containsSmiley(ks)) {
             smileys.add(ks);
-            try {
-                save(kill);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            trySave(kill);
         }
     }
 
@@ -195,11 +194,7 @@ public class Settings {
         }
         if (containsSmiley(ks)) {
             smileys.remove(ks);
-            try {
-                save(kill);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            trySave(kill);
         }
     }
 
@@ -239,11 +234,7 @@ public class Settings {
 
     public void setNoReadreceipt(boolean value, boolean kill) {
         noReadreceipt = value;
-        try {
-            save(kill);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        trySave(kill);
     }
 
     public boolean getNoTyping() {
@@ -252,11 +243,7 @@ public class Settings {
 
     public void setNoTyping(boolean value, boolean kill) {
         noTyping = value;
-        try {
-            save(kill);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        trySave(kill);
     }
 
     public boolean getWhosLurking() {
@@ -265,11 +252,7 @@ public class Settings {
 
     public void setWhosLurking(boolean b, boolean kill) {
         whosLurking = b;
-        try {
-            save(kill);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        trySave(kill);
     }
 
     public boolean getDev() {
@@ -278,11 +261,7 @@ public class Settings {
 
     public void setDev(boolean b, boolean kill) {
         devMode = b;
-        try {
-            save(kill);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        trySave(kill);
     }
 
     public boolean getFakeCam() {
@@ -291,11 +270,7 @@ public class Settings {
 
     public void setFakeCam(boolean b, boolean kill) {
         fakeCamera = b;
-        try {
-            save(kill);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        trySave(kill);
     }
 
     public int getDateFormat() {
@@ -304,20 +279,39 @@ public class Settings {
 
     public void setDateFormat(int fmt, boolean kill) {
         dateFormat = fmt;
-        try {
-            save(kill);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        trySave(kill);
     }
 
     public void setColor(String id, int color, boolean kill) {
         colors.put(id, color);
-        try {
-            save(kill);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        trySave(kill);
+    }
+
+    public boolean getDisableSave() {
+        return disableSave;
+    }
+
+    public void setDisableSave(boolean disableSave) {
+        this.disableSave = disableSave;
+        trySave();
+    }
+
+    public boolean getDisableFwd() {
+        return disableFwd;
+    }
+
+    public void setDisableFwd(boolean disableFwd) {
+        this.disableFwd = disableFwd;
+        trySave();
+    }
+
+    public boolean getUnfilterGIFs() {
+        return unfilterGIFs;
+    }
+
+    public void setUnfilterGIFs(boolean unfilterGIFs) {
+        this.unfilterGIFs = unfilterGIFs;
+        trySave();
     }
 
     /**
@@ -329,20 +323,12 @@ public class Settings {
         if (colors.containsKey(id)) {
             colors.remove(id);
         }
-        try {
-            save(kill);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        trySave(kill);
     }
 
     public void setString(String id, String val, boolean kill) {
         strings.put(id, val);
-        try {
-            save(kill);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        trySave(kill);
     }
 
     /**
@@ -354,11 +340,7 @@ public class Settings {
         if (strings.containsKey(id)) {
             strings.remove(id);
         }
-        try {
-            save(kill);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        trySave(kill);
     }
 
     public HashMap<String, String> getStrings() {

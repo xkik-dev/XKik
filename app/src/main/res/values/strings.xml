@@ -37,4 +37,7 @@
     <string name="import_from_public_database">Import from public database</string>
     <string name="import_from_text_file">Import from text file</string>
     <string name="dark_chat_background">Dark Chat Background</string>
+    <string name="disable_forwarding">Disable Forwarding</string>
+    <string name="disable_saving">Disable Saving</string>
+    <string name="unfilter_gifs">Unfilter GIFs</string>
 </resources>

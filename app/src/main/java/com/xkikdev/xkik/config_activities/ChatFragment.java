@@ -73,7 +73,7 @@ public class ChatFragment extends Fragment {
         disableSave.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                settings.setDisableSave(settings.getDisableSave());
+                settings.setDisableSave(isChecked);
             }
         });
 

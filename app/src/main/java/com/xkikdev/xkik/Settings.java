@@ -38,6 +38,7 @@ public class Settings {
     private boolean disableSave = false;
     private boolean disableFwd = false;
     private boolean unfilterGIFs = false;
+    private boolean BETA = false;
     private transient Activity creator;
     private boolean longCam = false;
     private int dateFormat = 0; // date format, currently only 0 and 1
@@ -108,6 +109,14 @@ public class Settings {
      */
     private static File getSaveFile() {
         return new File(getSaveDir().getPath() + File.separator + "config.json");
+    }
+
+    public boolean isBETA() {
+        return BETA;
+    }
+
+    public void setBETA(boolean BETA) {
+        this.BETA = BETA;
     }
 
     public boolean getDarkBg() {

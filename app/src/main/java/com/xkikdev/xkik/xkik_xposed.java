@@ -5,7 +5,10 @@ import android.app.Application;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.XModuleResources;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaRecorder;
 import android.os.Bundle;
@@ -409,10 +412,51 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                  */
                 XposedHelpers.findAndHookMethod(kikChatFragment, loadPackageParam.classLoader, "onCreateView", LayoutInflater.class, ViewGroup.class, Bundle.class, new XC_MethodHook() {
                     @Override
-                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
                         super.afterHookedMethod(param);
-                        FrameLayout fl = (FrameLayout) param.getResult();
+                        if (settings.isBETA()) {
+                            final Activity kact = (Activity) XposedHelpers.callMethod(param.thisObject, "getActivity");
+                            final FrameLayout fl = (FrameLayout) param.getResult();
 
+                            new Thread() {
+                                @Override
+                                public void run() {
+                                    final View v = (View) XposedHelpers.getObjectField(param.thisObject, "_messageRecyclerView");
+                                    final Bitmap b = Bitmap.createBitmap(768, 1280, Bitmap.Config.ARGB_8888);
+                                    final Canvas c = new Canvas(b);
+                                    final WaveView wv = new WaveView(768, 1280);
+                                    wv.setWaveColor(Color.RED, Color.GREEN);
+                                    wv.setShowWave(true);
+                                    int time = 0;
+                                    while (true) {
+                                        time++;
+                                        if (v != null) {
+                                            if (wv.getWaveShiftRatio() >= 1F) {
+                                                wv.setWaveShiftRatio(0F);
+                                            }
+
+                                            wv.setAmplitudeRatio((float) Math.abs(Math.sin(.04 * time) * .005));
+                                            wv.setWaveShiftRatio(wv.getWaveShiftRatio() + 0.01F);
+                                            wv.draw(c);
+
+                                            kact.runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    v.setBackground(new BitmapDrawable(v.getResources(), b));
+                                                }
+                                            });
+                                            try {
+                                                Thread.sleep(10);
+                                            } catch (InterruptedException e) {
+                                                e.printStackTrace();
+                                            }
+                                        } else {
+                                            break;
+                                        }
+                                    }
+                                }
+                            }.start();
+                        }
                     }
                 });
 

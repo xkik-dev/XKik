@@ -10,6 +10,10 @@ class xposedObject {
         this.obj = obj;
     }
 
+    Object getSelf(){
+        return obj;
+    }
+
     Object get(String var) {
         return Util.getObjField(obj, var);
     }

@@ -171,7 +171,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                             float calc = 360.0f * ((f) / ((float) longvidTime));
                             xposedObject thiso = new xposedObject(methodHookParam.thisObject);
                             thiso.getXObj("_shutterButton").call("a", calc);
-                            thiso.getXObj("_videoTime").call("setText", XposedHelpers.callStaticMethod(XposedHelpers.findClass("kik.android.util.cd", loadPackageParam.classLoader), "a", methodHookParam.args[0]));
+                            thiso.getXObj("_videoTime").call("setText", XposedHelpers.callStaticMethod(XposedHelpers.findClass(hooks.kikRecordTextMgr, loadPackageParam.classLoader), "a", methodHookParam.args[0]));
                             return null;
                         }
                     });

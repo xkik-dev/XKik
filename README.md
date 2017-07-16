@@ -2,9 +2,9 @@
 Tweaks for Kik using Xposed framework
 
 
-Stable: Currently Compatible with <b>KIK 11.21.0.15811</b>
+Stable: Currently Compatible with <b>KIK 11.26.0.16889</b> (latest)
 
-Beta: Currently Compatible with <b>KIK 11.22.1.16008</b>
+Beta: Currently Compatible with <b>KIK 11.22.1.1600</b> (old)
 
 Current tweaks available:
 

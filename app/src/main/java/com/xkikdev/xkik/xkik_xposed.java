@@ -85,7 +85,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
     @Override
     public void handleLoadPackage(final XC_LoadPackage.LoadPackageParam loadPackageParam) throws Throwable {
         final xposedObject[] camObj = new xposedObject[1];
-        if (!loadPackageParam.packageName.equals("kik.android")) {
+        if (!loadPackageParam.packageName.equals(hooks.kikPKG)) {
             return;
         }
         settings = Settings.load(); // load settings
@@ -545,32 +545,32 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
 
     @Override
     public void handleInitPackageResources(final XC_InitPackageResources.InitPackageResourcesParam resParam) throws Throwable {
-        if (!resParam.packageName.equals("kik.android")) {
+        if (!resParam.packageName.equals(hooks.kikPKG)) {
             return;
         }
         final XModuleResources modRes = XModuleResources.createInstance(MODULE_PATH, resParam.res);
 
         if (settings != null && settings.getDarkBg()) {
-            resParam.res.setReplacement("kik.android", "drawable", "bottom_incoming_bubble_mask", modRes.fwd(R.drawable.bottom_incoming_bubble_mask));
-            resParam.res.setReplacement("kik.android", "drawable", "bottom_outgoing_bubble_mask", modRes.fwd(R.drawable.bottom_outgoing_bubble_mask));
-            resParam.res.setReplacement("kik.android", "drawable", "bottom_outgoing_image_bubble_mask", modRes.fwd(R.drawable.bottom_outgoing_image_bubble_mask));
-            resParam.res.setReplacement("kik.android", "drawable", "middle_incoming_bubble_mask", modRes.fwd(R.drawable.middle_incoming_bubble_mask));
-            resParam.res.setReplacement("kik.android", "drawable", "middle_outgoing_bubble_mask", modRes.fwd(R.drawable.middle_outgoing_bubble_mask));
-            resParam.res.setReplacement("kik.android", "drawable", "middle_outgoing_image_bubble_mask", modRes.fwd(R.drawable.middle_outgoing_image_bubble_mask));
-            resParam.res.setReplacement("kik.android", "drawable", "outgoing_top_round_bubble_mask", modRes.fwd(R.drawable.outgoing_top_round_bubble_mask));
-            resParam.res.setReplacement("kik.android", "drawable", "outgoing_top_square_bubble_mask", modRes.fwd(R.drawable.outgoing_top_square_bubble_mask));
-            resParam.res.setReplacement("kik.android", "drawable", "single_incoming_bubble_mask", modRes.fwd(R.drawable.single_incoming_bubble_mask));
-            resParam.res.setReplacement("kik.android", "drawable", "single_outgoing_bubble_mask", modRes.fwd(R.drawable.single_outgoing_bubble_mask));
-            resParam.res.setReplacement("kik.android", "drawable", "single_outgoing_image_bubble_mask", modRes.fwd(R.drawable.single_outgoing_image_bubble_mask));
-            resParam.res.setReplacement("kik.android", "drawable", "top_incoming_bubble_mask", modRes.fwd(R.drawable.top_incoming_bubble_mask));
-            resParam.res.setReplacement("kik.android", "drawable", "top_outgoing_bubble_mask", modRes.fwd(R.drawable.top_outgoing_bubble_mask));
-            resParam.res.setReplacement("kik.android", "drawable", "top_outgoing_image_bubble_mask", modRes.fwd(R.drawable.top_outgoing_image_bubble_mask));
+            resParam.res.setReplacement(hooks.kikPKG, "drawable", "bottom_incoming_bubble_mask", modRes.fwd(R.drawable.bottom_incoming_bubble_mask));
+            resParam.res.setReplacement(hooks.kikPKG, "drawable", "bottom_outgoing_bubble_mask", modRes.fwd(R.drawable.bottom_outgoing_bubble_mask));
+            resParam.res.setReplacement(hooks.kikPKG, "drawable", "bottom_outgoing_image_bubble_mask", modRes.fwd(R.drawable.bottom_outgoing_image_bubble_mask));
+            resParam.res.setReplacement(hooks.kikPKG, "drawable", "middle_incoming_bubble_mask", modRes.fwd(R.drawable.middle_incoming_bubble_mask));
+            resParam.res.setReplacement(hooks.kikPKG, "drawable", "middle_outgoing_bubble_mask", modRes.fwd(R.drawable.middle_outgoing_bubble_mask));
+            resParam.res.setReplacement(hooks.kikPKG, "drawable", "middle_outgoing_image_bubble_mask", modRes.fwd(R.drawable.middle_outgoing_image_bubble_mask));
+            resParam.res.setReplacement(hooks.kikPKG, "drawable", "outgoing_top_round_bubble_mask", modRes.fwd(R.drawable.outgoing_top_round_bubble_mask));
+            resParam.res.setReplacement(hooks.kikPKG, "drawable", "outgoing_top_square_bubble_mask", modRes.fwd(R.drawable.outgoing_top_square_bubble_mask));
+            resParam.res.setReplacement(hooks.kikPKG, "drawable", "single_incoming_bubble_mask", modRes.fwd(R.drawable.single_incoming_bubble_mask));
+            resParam.res.setReplacement(hooks.kikPKG, "drawable", "single_outgoing_bubble_mask", modRes.fwd(R.drawable.single_outgoing_bubble_mask));
+            resParam.res.setReplacement(hooks.kikPKG, "drawable", "single_outgoing_image_bubble_mask", modRes.fwd(R.drawable.single_outgoing_image_bubble_mask));
+            resParam.res.setReplacement(hooks.kikPKG, "drawable", "top_incoming_bubble_mask", modRes.fwd(R.drawable.top_incoming_bubble_mask));
+            resParam.res.setReplacement(hooks.kikPKG, "drawable", "top_outgoing_bubble_mask", modRes.fwd(R.drawable.top_outgoing_bubble_mask));
+            resParam.res.setReplacement(hooks.kikPKG, "drawable", "top_outgoing_image_bubble_mask", modRes.fwd(R.drawable.top_outgoing_image_bubble_mask));
 
-            resParam.res.hookLayout("kik.android", "layout", "activity_chat", new XC_LayoutInflated() {
+            resParam.res.hookLayout(hooks.kikPKG, "layout", "activity_chat", new XC_LayoutInflated() {
                 @Override
                 public void handleLayoutInflated(LayoutInflatedParam layoutInflatedParam) throws Throwable {
 
-                    View rv = layoutInflatedParam.view.findViewById(layoutInflatedParam.res.getIdentifier("messages_list", "id", "kik.android"));
+                    View rv = layoutInflatedParam.view.findViewById(layoutInflatedParam.res.getIdentifier("messages_list", "id", hooks.kikPKG));
                     rv.setBackgroundColor(Color.rgb(43, 43, 43));
                 }
             });
@@ -590,7 +590,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                 // special conditions handled here
             } else {
                 try {
-                    resParam.res.setReplacement("kik.android", "color", c, settings.getColors().get(c));
+                    resParam.res.setReplacement(hooks.kikPKG, "color", c, settings.getColors().get(c));
                 } catch (android.content.res.Resources.NotFoundException ex) {
                     XposedBridge.log("Skipping unknown resource " + c);
                 }
@@ -602,7 +602,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
          */
         for (String s : settings.getStrings().keySet()) {
             try {
-                resParam.res.setReplacement("kik.android", "string", s, settings.getStrings().get(s));
+                resParam.res.setReplacement(hooks.kikPKG, "string", s, settings.getStrings().get(s));
             } catch (android.content.res.Resources.NotFoundException ex) {
                 XposedBridge.log("Skipping unknown resource " + s);
             }

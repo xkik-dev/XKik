@@ -23,4 +23,5 @@ class hooks {
     public static final String kikBubbleFrameLayout = "kik.android.widget.BubbleFramelayout";
     public static final String kikRecordTextMgr = "kik.android.util.ce";
     public static final String kikConversationFragment = "kik.android.chat.fragment.KikConversationsFragment";
+    public static final String kikPKG = "kik.android";
 }

@@ -213,41 +213,13 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                                     @Override
                                     public boolean onLongClick(View v) {
                                         quickConfig qc = new quickConfig();
-                                        qc.show(((Activity) v.getContext()).getFragmentManager(), "fragment_smiley");
+                                        qc.show(((Activity) v.getContext()).getFragmentManager(), "quick_config");
                                         return true;
                                     }
                                 });
                                 super.afterHookedMethod(param);
                             }
                         });
-
-
-                XposedHelpers.findAndHookConstructor("kik.core.manager.j", loadPackageParam.classLoader, "kik.core.interfaces.b", new XC_MethodHook() {
-                    @Override
-                    protected void afterHookedMethod(MethodHookParam methodHookParam) throws Throwable {
-                        xposedObject me = new xposedObject(methodHookParam.thisObject);
-                        me.set("b",methodHookParam.args[0]);
-                        xposedObject cacheBuilder = new xposedObject(XposedHelpers.callStaticMethod(XposedHelpers.findClass("com.google.common.cache.CacheBuilder",loadPackageParam.classLoader),"a"));
-                        Object b = new xposedObject(cacheBuilder.call("a",(long)15)).call("d");
-                        me.set("a",b);
-                        XposedBridge.log(cacheBuilder.getSelf().toString());
-                        super.afterHookedMethod(methodHookParam);
-                    }
-                });
-
-                XposedHelpers.findAndHookMethod("kik.android.gallery.vm.f", loadPackageParam.classLoader, "a",String.class,boolean.class,int.class, new XC_MethodHook() {
-                    @Override
-                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                        super.beforeHookedMethod(param);
-                    }
-                });
-
-                XposedHelpers.findAndHookMethod("kik.android.d.ab$b", loadPackageParam.classLoader, "a","kik.android.gallery.vm.m", new XC_MethodHook() {
-                    @Override
-                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                        super.beforeHookedMethod(param);
-                    }
-                });
 
                 /*
                 On smiley click

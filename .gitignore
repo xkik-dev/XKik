@@ -1,6 +1,9 @@
 
 # Created by https://www.gitignore.io/api/java,gradle,android,androidstudio
 
+### API KEYS ###
+**/*/res/values/secrets.xml
+
 ### Android ###
 # Built application files
 *.apk

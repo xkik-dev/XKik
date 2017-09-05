@@ -401,7 +401,6 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                         super.afterHookedMethod(param);
                         XposedHelpers.callMethod(param.thisObject, "setBackground", new ColorDrawable(Color.WHITE));
-                        XposedHelpers.callMethod(param.thisObject, "setBackground", new ColorDrawable(Color.WHITE));
                     }
                 });
 

@@ -9,7 +9,7 @@ class hooks {
     static final String kikRecptMgr = "kik.core.net.c.a.b";
     static final String kikContentMessage = "kik.core.datatypes.messageExtensions.ContentMessage";
     static final String kikDeviceUtils = "kik.android.util.DeviceUtils";
-    static final String kikDateDisplayManager = "kik.android.util.bx";
+    static final String kikDateDisplayManager = "kik.android.util.ca";
     static final String KIK_RECEIPT_RECV = "kik.core.net.b.d";
     static final String kikSmileyManager = "com.kik.android.b.j";
     static final String smileyView = "com.kik.android.b.c";

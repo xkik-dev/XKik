@@ -255,7 +255,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                 /*
                 Smiley Manager
                  */
-                XposedHelpers.findAndHookConstructor(hooks.kikSmileyManager, loadPackageParam.classLoader, Context.class, "kik.core.interfaces.ac", new XC_MethodHook() {
+                XposedHelpers.findAndHookConstructor(hooks.kikSmileyManager, loadPackageParam.classLoader, Context.class, "kik.core.interfaces.ae", new XC_MethodHook() {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                         smileyManager = param.thisObject;

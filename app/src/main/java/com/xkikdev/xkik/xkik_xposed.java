@@ -183,8 +183,8 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                         @Override
                         protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
                             int tim = (int) Math.max(0, longvidTime - ((long) methodHookParam.args[0]));
-                            new xposedObject(methodHookParam.thisObject).getXObj("a").set("h", tim);
-                            new xposedObject(methodHookParam.thisObject).getXObj("a").getXObj("r").call("b", tim);
+                            new xposedObject(methodHookParam.thisObject).getXObj("a").set("h",tim);
+                            new xposedObject(methodHookParam.thisObject).getXObj("a").getXObj("r").call("b",tim);
                             return null;
                         }
                     });

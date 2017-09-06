@@ -2,11 +2,11 @@ package com.xkikdev.xkik.config_activities;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.Switch;
 
 import com.xkikdev.xkik.R;
 import com.xkikdev.xkik.Settings;
@@ -15,14 +15,14 @@ import java.io.IOException;
 
 public class ChatFragment extends Fragment {
 
-    Switch readRecpt;
-    Switch typingRecpt;
-    Switch fakeCam;
-    Switch lurkDetector;
-    Switch longCam;
-    Switch disableFwd;
-    Switch disableSave;
-    Switch disableFilter;
+    SwitchCompat readRecpt;
+    SwitchCompat typingRecpt;
+    SwitchCompat fakeCam;
+    SwitchCompat lurkDetector;
+    SwitchCompat longCam;
+    SwitchCompat disableFwd;
+    SwitchCompat disableSave;
+    SwitchCompat disableFilter;
     Settings settings;
 
     public ChatFragment() {
@@ -47,14 +47,13 @@ public class ChatFragment extends Fragment {
             e.printStackTrace();
         }
 
-        readRecpt = (Switch) rootView.findViewById(R.id.read_recpt_switch);
-        typingRecpt = (Switch) rootView.findViewById(R.id.typing_recpt_switch);
-        fakeCam = (Switch) rootView.findViewById(R.id.fake_cam_switch);
-        lurkDetector = (Switch) rootView.findViewById(R.id.lurk_detector);
-        longCam = (Switch) rootView.findViewById(R.id.long_cam);
-        disableFwd = (Switch) rootView.findViewById(R.id.disable_fwd);
-        disableSave = (Switch) rootView.findViewById(R.id.disable_save);
-        disableFilter = (Switch) rootView.findViewById(R.id.unfilter_gif);
+        readRecpt = (SwitchCompat) rootView.findViewById(R.id.read_recpt_switch);
+        typingRecpt = (SwitchCompat) rootView.findViewById(R.id.typing_recpt_switch);
+        fakeCam = (SwitchCompat) rootView.findViewById(R.id.fake_cam_switch);
+        lurkDetector = (SwitchCompat) rootView.findViewById(R.id.lurk_detector);
+        longCam = (SwitchCompat) rootView.findViewById(R.id.long_cam);
+        disableFwd = (SwitchCompat) rootView.findViewById(R.id.disable_save);
+        disableFilter = (SwitchCompat) rootView.findViewById(R.id.unfilter_gif);
 
         readRecpt.setChecked(settings.getNoReadreceipt());
         typingRecpt.setChecked(settings.getNoTyping());

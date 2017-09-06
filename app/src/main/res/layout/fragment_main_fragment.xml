@@ -10,14 +10,16 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/xkik_material_background"
         android:padding="6dp">
 
 
-        <android.support.v7.widget.CardView
+        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:id="@+id/recptcv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:cardElevation="4dp">
+            app:cardElevation="4dp"
+            card_view:cardBackgroundColor="@color/xkik_material_card">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -31,6 +33,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/welcome_to_xkik"
                     android:textAlignment="center"
+                    android:textColor="@color/xkik_material_text"
                     android:textSize="36sp" />
 
                 <ImageView
@@ -38,8 +41,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
                     android:layout_below="@+id/welcometv"
-                    app:srcCompat="@mipmap/ic_launcher"
-                    android:contentDescription="@string/xkik_logo" />
+                    android:contentDescription="@string/xkik_logo"
+                    android:textColor="@color/xkik_material_text"
+                    app:srcCompat="@mipmap/ic_launcher" />
 
                 <TextView
                     android:id="@+id/versiontv"
@@ -48,7 +52,8 @@
                     android:layout_below="@+id/logopicview"
                     android:layout_centerHorizontal="true"
                     android:text="@string/version"
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    android:textColor="@color/xkik_material_text" />
 
                 <TextView
                     android:id="@+id/compabilitytv"
@@ -58,6 +63,7 @@
                     android:layout_centerHorizontal="true"
                     android:text="@string/compability"
                     android:textAlignment="center"
+                    android:textColor="@color/xkik_material_text"
                     android:textSize="18sp"
                     android:textStyle="normal|bold" />
 
@@ -65,11 +71,12 @@
                     android:id="@+id/killwarn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/compabilitytv"
                     android:text="@string/warning_disclaimer"
                     android:textAlignment="center"
-                    android:layout_below="@+id/compabilitytv"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true" />
+                    android:textColor="@color/xkik_material_text" />
             </RelativeLayout>
         </android.support.v7.widget.CardView>
 

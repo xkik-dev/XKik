@@ -1,8 +1,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.xkikdev.xkik.config_activities.SmileyFragment">
 
     <android.support.v7.widget.CardView
@@ -15,14 +15,16 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/xkik_material_background"
             android:padding="16dp">
 
             <ScrollView
+                android:id="@+id/smileyScroll"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/importbutton"
-                android:layout_marginTop="12dp"
-                android:id="@+id/smileyScroll">
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true">
 
                 <GridLayout
                     android:id="@+id/smileyGrid"
@@ -33,7 +35,7 @@
                 </GridLayout>
             </ScrollView>
 
-            <Switch
+            <android.support.v7.widget.SwitchCompat
                 android:id="@+id/autosmiley"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -41,7 +43,8 @@
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/inet_warn"
                 android:layout_marginTop="12dp"
-                android:text="@string/auto_add_smiley" />
+                android:text="@string/auto_add_smiley"
+                android:textColor="@color/xkik_material_text" />
 
             <TextView
                 android:id="@+id/smil_title"
@@ -52,6 +55,7 @@
                 android:layout_alignParentTop="true"
                 android:text="@string/smiley_settings"
                 android:textAlignment="center"
+                android:textColor="@color/xkik_material_text"
                 android:textSize="18sp" />
 
             <TextView
@@ -61,10 +65,12 @@
                 android:layout_below="@+id/smil_title"
                 android:layout_centerHorizontal="true"
                 android:text="@string/inet_required"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textColor="@color/xkik_material_text" />
 
             <Button
                 android:id="@+id/addbyid"
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/autosmiley"
@@ -73,11 +79,12 @@
 
             <Button
                 android:id="@+id/importbutton"
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/import_export"
                 android:layout_below="@+id/addbyid"
-                android:layout_centerHorizontal="true" />
+                android:layout_centerHorizontal="true"
+                android:text="@string/import_export" />
 
         </RelativeLayout>
     </android.support.v7.widget.CardView>

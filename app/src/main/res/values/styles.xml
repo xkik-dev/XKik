@@ -1,20 +1,31 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+    <style name="xkik_drawer" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/xkik_material_grey</item>
+        <item name="colorPrimaryDark">@color/xkik_material_grey</item>
+        <item name="colorAccent">@color/nliveo_red_colorPrimaryDark</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+    <style name="xkik_Theme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/xkik_material_grey</item>
+        <item name="colorPrimaryDark">@color/xkik_material_grey</item>
+        <item name="colorAccent">@color/nliveo_red_colorPrimaryDark</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="CompoundButtonTheme" parent="@style/xkik_Theme">
+        <item name="android:textColorSecondary">@color/xkik_secondary_text</item>
+    </style>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="KikSwitchStyle" parent="@style/Widget.AppCompat.CompoundButton.Switch">
+        <item name="theme">@style/CompoundButtonTheme</item>
+    </style>
 
+    <style name="invisible">
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="KikSwitchStyle.List" parent="@style/KikSwitchStyle">
+        <item name="android:focusable">false</item>
+        <item name="android:clickable">false</item>
+    </style>
 </resources>

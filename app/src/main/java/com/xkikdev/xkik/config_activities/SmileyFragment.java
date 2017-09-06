@@ -7,6 +7,7 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.SwitchCompat;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +17,6 @@ import android.widget.CompoundButton;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -39,7 +39,7 @@ public class SmileyFragment extends Fragment {
     GridLayout gv;
     Button addb;
     Button impexp;
-    Switch addTap;
+    SwitchCompat addTap;
     Settings settings;
     DisplayImageOptions iop;
 
@@ -65,7 +65,7 @@ public class SmileyFragment extends Fragment {
         gv = (GridLayout) v.findViewById(R.id.smileyGrid);
         addb = (Button) v.findViewById(R.id.addbyid);
         impexp = (Button) v.findViewById(R.id.importbutton);
-        addTap = (Switch) v.findViewById(R.id.autosmiley);
+        addTap = (SwitchCompat) v.findViewById(R.id.autosmiley);
         final Context c = this.getContext();
 
         try {
@@ -102,7 +102,7 @@ public class SmileyFragment extends Fragment {
                         .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS)
                         .input("", "", new MaterialDialog.InputCallback() {
                             @Override
-                            public void onInput(MaterialDialog dialog, final CharSequence input) {
+                            public void onInput(@NonNull MaterialDialog dialog, final CharSequence input) {
                                 // Do something
                                 new Thread() {
                                     @Override

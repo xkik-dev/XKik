@@ -3,4 +3,10 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="xkik_material_grey">#262626</color>
+    <color name="xkik_material_grey_80">#80262626</color>
+    <color name="xkik_material_card">#424242</color>
+    <color name="xkik_material_text">#c7c7c7</color>
+    <color name="xkik_secondary_text">#ff0000</color>
+    <color name="xkik_material_background">#303030</color>
 </resources>

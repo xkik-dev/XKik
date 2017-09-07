@@ -1,5 +1,6 @@
 package com.xkikdev.xkik;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
@@ -46,6 +47,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
  * Main xposed class
  */
 
+@SuppressLint("SimpleDateFormat")
 public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPackageResources, IXposedHookZygoteInit {
 
     public static final String kikChatFragment = "kik.android.chat.fragment.KikChatFragment";

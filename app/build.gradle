@@ -34,6 +34,10 @@ android {
         maven { url "https://jitpack.io" }
     }
 
+    lintOptions {
+        disable 'GradleCompatible','InvalidPackage'
+    }
+
 }
 
 

@@ -39,8 +39,9 @@ android {
 
 dependencies {
     provided fileTree(include: ['*.jar'], dir: 'libs')
+    provided 'de.robv.android.xposed:api:82'
     compile 'commons-io:commons-io:2.5'
-    compile 'com.google.code.gson:gson:1.7.2'
+    compile 'com.google.code.gson:gson:2.8.1'
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.github.dmytrodanylyk.android-process-button:library:1.0.4'
     compile 'com.kingfisherphuoc:easy-file-folder-picker-dialog:1.2'

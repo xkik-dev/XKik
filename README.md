@@ -1,4 +1,4 @@
-# XKik
+# XKik [![Build Status](https://travis-ci.org/xkik-dev/XKik.svg?branch=master)](https://travis-ci.org/xkik-dev/XKik)
 Tweaks for Kik using Xposed framework
 
 

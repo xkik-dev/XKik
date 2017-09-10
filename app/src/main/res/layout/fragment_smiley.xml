@@ -75,7 +75,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/autosmiley"
                 android:layout_centerHorizontal="true"
-                android:text="@string/add_smiley_by_id" />
+                android:text="@string/add_smiley_by_id"
+                android:textColor="@android:color/white" />
 
             <Button
                 android:id="@+id/importbutton"
@@ -84,7 +85,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/addbyid"
                 android:layout_centerHorizontal="true"
-                android:text="@string/import_export" />
+                android:text="@string/import_export"
+                android:textColor="@android:color/white" />
 
         </RelativeLayout>
     </android.support.v7.widget.CardView>

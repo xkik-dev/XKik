@@ -52,7 +52,8 @@ public class ChatFragment extends Fragment {
         fakeCam = (SwitchCompat) rootView.findViewById(R.id.fake_cam_switch);
         lurkDetector = (SwitchCompat) rootView.findViewById(R.id.lurk_detector);
         longCam = (SwitchCompat) rootView.findViewById(R.id.long_cam);
-        disableFwd = (SwitchCompat) rootView.findViewById(R.id.disable_save);
+        disableFwd = (SwitchCompat) rootView.findViewById(R.id.disable_fwd);
+        disableSave = (SwitchCompat) rootView.findViewById(R.id.disable_save);
         disableFilter = (SwitchCompat) rootView.findViewById(R.id.unfilter_gif);
 
         readRecpt.setChecked(settings.getNoReadreceipt());

@@ -3,6 +3,7 @@ package com.xkikdev.xkik.config_activities;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,6 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Switch;
 
 import com.pavelsikun.vintagechroma.ChromaDialog;
 import com.pavelsikun.vintagechroma.OnColorSelectedListener;
@@ -26,8 +26,8 @@ import java.io.IOException;
 public class VisualFragment extends Fragment {
 
     Settings settings;
-    Switch accdate;
-    Switch darkbg;
+    SwitchCompat accdate;
+    SwitchCompat darkbg;
     ColorSetting[] colorSettings = new ColorSetting[]{
             /*new ColorSetting("Main Background", new String[]{"white"}, "#ffffffff"),
             new ColorSetting("Chat Background", new String[]{"chat_background_color","chat_info_background"},"#ffeeeeee"),*/
@@ -72,8 +72,8 @@ public class VisualFragment extends Fragment {
             string_tl.addView(genStringTweak(inflater, c.label, c.id, c.defval));
         }
 
-        accdate = (Switch) view.findViewById(R.id.accdate_switch);
-        darkbg = (Switch) view.findViewById(R.id.darkbg_switch);
+        accdate = (SwitchCompat) view.findViewById(R.id.accdate_switch);
+        darkbg = (SwitchCompat) view.findViewById(R.id.darkbg_switch);
         accdate.setChecked(settings.getDateFormat() == 1);
         darkbg.setChecked(settings.getDarkBg());
         accdate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

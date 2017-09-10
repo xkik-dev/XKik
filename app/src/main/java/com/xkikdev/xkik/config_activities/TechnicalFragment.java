@@ -4,11 +4,11 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.Switch;
 
 import com.xkikdev.xkik.R;
 import com.xkikdev.xkik.Settings;
@@ -34,7 +34,7 @@ public class TechnicalFragment extends Fragment {
             e.printStackTrace();
         }
 
-        final Switch dmode_switch = (Switch) v.findViewById(R.id.devmode_switch);
+        final SwitchCompat dmode_switch = (SwitchCompat) v.findViewById(R.id.devmode_switch);
         dmode_switch.setChecked(settings.getDev());
         dmode_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

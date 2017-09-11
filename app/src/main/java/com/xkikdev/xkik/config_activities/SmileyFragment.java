@@ -86,7 +86,7 @@ public class SmileyFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.contentframe, new SmileyImportFragment(), null)
+                        .replace(R.id.container, new SmileyImportFragment(), null)
                         .addToBackStack(null)
                         .commit();
 

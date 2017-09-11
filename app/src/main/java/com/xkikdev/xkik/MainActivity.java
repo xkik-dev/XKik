@@ -3,6 +3,8 @@ package com.xkikdev.xkik;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.xkikdev.xkik.config_activities.ChatFragment;
 import com.xkikdev.xkik.config_activities.LicensesFragment;
 import com.xkikdev.xkik.config_activities.SmileyFragment;
@@ -38,6 +40,10 @@ public class MainActivity extends NavigationLiveo implements OnItemClickListener
                 .colorItemSelected(R.color.nliveo_red_colorPrimary)
                 .colorLineSeparator(R.color.nliveo_transparent)
                 .build();
+        Settings.verifyStoragePermissions(this); // make sure we can access settings
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
+                .build();
+        ImageLoader.getInstance().init(config);
     }
     @Override
     public void onItemClick(int position) {

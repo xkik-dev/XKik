@@ -14,7 +14,7 @@
     <string name="disable_typing_receipts">Disable Typing Receipts</string>
     <string name="warning_disclaimer">Changing settings automatically kills Kik in the background\n\nKIK is the property of KIK INTERACTIVE INC. XKik is in no way affiliated with, authorized, maintained, sponsored or endorsed by KIK INTERACTIVE INC or any of its affiliates or subsidiaries. This is an independent application.</string>
     <string name="compability">Compatible with Kik 11.33.0.18125</string>
-    <string name="version">Version 1.1.0</string>
+    <string name="version">Version 1.1.1</string>
     <string name="welcome_to_xkik">Welcome to XKik!</string>
     <string name="xkik_logo">XKik Logo</string>
     <string name="enable_dev_mode">Enable Dev Mode</string>
@@ -40,4 +40,6 @@
     <string name="disable_forwarding">Disable Forwarding</string>
     <string name="disable_saving">Disable Saving</string>
     <string name="unfilter_gifs">Unfilter GIFs</string>
+    <string name="current_status">Current Status</string>
+    <string name="loading">Loading...</string>
 </resources>

@@ -2,7 +2,7 @@ package com.xkikdev.xkik;
 
 import de.robv.android.xposed.XposedHelpers;
 
-class xposedObject {
+public class xposedObject {
 
     private Object obj;
 

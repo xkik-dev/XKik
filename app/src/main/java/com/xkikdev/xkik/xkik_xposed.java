@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -491,6 +492,28 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                         }
                     }
                 });
+                //~~~~~~~~~~~~~~~~~~~~~BETA~~~~~~~~~~~~~~~~~~~~~~~//
+                /*XposedBridge.hookAllConstructors(XposedHelpers.findClass("kik.core.datatypes.Message", loadPackageParam.classLoader), new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        String args = "";
+                        for (Object arg : param.args){
+                            args+=arg.toString()+"\n";
+                        }
+                        XposedBridge.log("Got msg\n"+args+"\n\n"+param.thisObject);
+                    }
+                });*/
+
+                XposedHelpers.findAndHookMethod("kik.android.chat.KikApplication", loadPackageParam.classLoader, "a", "kik.core.datatypes.Message", new XC_MethodHook() {
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                        //Util.printDeclaredFields(param.args[0]);
+                        xposedObject msg = new xposedObject(param.args[0]);
+                        XposedBridge.log(((Vector)msg.get("i")).get(1).getClass().getName());
+                        super.beforeHookedMethod(param);
+                    }
+                });
+
 
             }
         });

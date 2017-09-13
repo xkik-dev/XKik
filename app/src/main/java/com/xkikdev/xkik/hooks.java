@@ -6,6 +6,10 @@ package com.xkikdev.xkik;
 
 class hooks {
 
+    static final String DATATYPE_MSG_TEXT = "kik.core.datatypes.messageExtensions.g";
+    static final String DATATYPE_MSG_CONTENT = "kik.core.datatypes.messageExtensions.ContentMessage";
+
+
     static final String kikRecptMgr = "kik.core.net.c.a.b";
     static final String kikContentMessage = "kik.core.datatypes.messageExtensions.ContentMessage";
     static final String kikDeviceUtils = "kik.android.util.DeviceUtils";

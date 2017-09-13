@@ -512,7 +512,6 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                         //xposedObject msg = new xposedObject(param.args[0]);
                         //XposedBridge.log(((Vector)msg.get("i")).get(1).getClass().getName());
                         msgText mt = new msgText(param.args[0]);
-                        XposedBridge.log("got message "+mt.getContent()+" from "+mt.getFromUser());
                     }
                 });
 

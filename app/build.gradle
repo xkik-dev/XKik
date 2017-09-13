@@ -44,6 +44,8 @@ android {
 dependencies {
     provided fileTree(include: ['*.jar'], dir: 'libs')
     provided 'de.robv.android.xposed:api:82'
+    compile 'com.github.flipkart-incubator:springy-heads:run_in_service-SNAPSHOT'
+    compile 'com.github.flipkart-incubator:circular-image:1.0'
     compile 'commons-io:commons-io:2.5'
     compile 'com.google.code.gson:gson:2.8.1'
     compile 'com.android.support:appcompat-v7:24.2.1'

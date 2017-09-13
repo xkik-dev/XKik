@@ -4,9 +4,9 @@ package com.xkikdev.xkik;
  * Hooks all kept in one place to make changes easier
  */
 
-class hooks {
+public class hooks {
 
-    static final String DATATYPE_MSG_TEXT = "kik.core.datatypes.messageExtensions.g";
+    public static final String DATATYPE_MSG_TEXT = "kik.core.datatypes.messageExtensions.g";
     static final String DATATYPE_MSG_CONTENT = "kik.core.datatypes.messageExtensions.ContentMessage";
 
 

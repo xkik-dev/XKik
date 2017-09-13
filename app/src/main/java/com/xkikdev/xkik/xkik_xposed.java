@@ -20,6 +20,7 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.xkikdev.xkik.config_activities.quickConfig;
+import com.xkikdev.xkik.datatype_parsers.msgText;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -508,9 +509,10 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                     @Override
                     protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                         //Util.printDeclaredFields(param.args[0]);
-                        xposedObject msg = new xposedObject(param.args[0]);
-                        XposedBridge.log(((Vector)msg.get("i")).get(1).getClass().getName());
-                        super.beforeHookedMethod(param);
+                        //xposedObject msg = new xposedObject(param.args[0]);
+                        //XposedBridge.log(((Vector)msg.get("i")).get(1).getClass().getName());
+                        msgText mt = new msgText(param.args[0]);
+                        XposedBridge.log("got message "+mt.getContent()+" from "+mt.getFromUser());
                     }
                 });
 

@@ -5,7 +5,10 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Environment;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -16,7 +19,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
@@ -27,6 +33,8 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
  */
 
 public class Util {
+
+    static Pattern pfpgtr = Pattern.compile("<meta property=\"og:image\".*?content=\"(.*?)\"\\/>");
 
     /**
      * Prints stacktrace - useful for debugging
@@ -147,6 +155,36 @@ public class Util {
             return out;
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static Bitmap getUserProfilePicture(String uname){
+        String in = urlToString("http://kik.me/"+uname);
+        Matcher m = pfpgtr.matcher(in);
+        if (m.find()){
+            String pfpurl = m.group(1);
+            if (pfpurl.equals("")){
+                return null;
+            }else{
+                return getBitmapFromURL(pfpurl);
+            }
+
+        }
+        return null;
+    }
+
+    public static Bitmap getBitmapFromURL(String src) {
+        try {
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (IOException e) {
+            // Log exception
             return null;
         }
     }

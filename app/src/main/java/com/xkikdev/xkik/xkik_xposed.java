@@ -3,7 +3,9 @@ package com.xkikdev.xkik;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.XModuleResources;
 import android.graphics.Bitmap;
@@ -19,6 +21,8 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.xkikdev.xkik.chathead.chatheadReceiver;
 import com.xkikdev.xkik.config_activities.quickConfig;
 import com.xkikdev.xkik.datatype_parsers.msgText;
 
@@ -29,7 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
-import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -187,8 +190,8 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                         @Override
                         protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
                             int tim = (int) Math.max(0, longvidTime - ((long) methodHookParam.args[0]));
-                            new xposedObject(methodHookParam.thisObject).getXObj("a").set("h",tim);
-                            new xposedObject(methodHookParam.thisObject).getXObj("a").getXObj("r").call("b",tim);
+                            new xposedObject(methodHookParam.thisObject).getXObj("a").set("h", tim);
+                            new xposedObject(methodHookParam.thisObject).getXObj("a").getXObj("r").call("b", tim);
                             return null;
                         }
                     });
@@ -494,24 +497,19 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                     }
                 });
                 //~~~~~~~~~~~~~~~~~~~~~BETA~~~~~~~~~~~~~~~~~~~~~~~//
-                /*XposedBridge.hookAllConstructors(XposedHelpers.findClass("kik.core.datatypes.Message", loadPackageParam.classLoader), new XC_MethodHook() {
-                    @Override
-                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        String args = "";
-                        for (Object arg : param.args){
-                            args+=arg.toString()+"\n";
-                        }
-                        XposedBridge.log("Got msg\n"+args+"\n\n"+param.thisObject);
-                    }
-                });*/
 
                 XposedHelpers.findAndHookMethod("kik.android.chat.KikApplication", loadPackageParam.classLoader, "a", "kik.core.datatypes.Message", new XC_MethodHook() {
                     @Override
                     protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                        //Util.printDeclaredFields(param.args[0]);
-                        //xposedObject msg = new xposedObject(param.args[0]);
-                        //XposedBridge.log(((Vector)msg.get("i")).get(1).getClass().getName());
-                        msgText mt = new msgText(param.args[0]);
+                        if (chatContext != null) {
+                            msgText mt = new msgText(param.args[0]);
+                            final Intent intent = new Intent();
+                            intent.setAction("com.xkikdev.xkik.msgget");
+                            intent.putExtra("KeyName", "code1id");
+                            intent.putExtra("msg", new Gson().toJson(mt));
+                            intent.setComponent(new ComponentName("com.xkikdev.xkik", chatheadReceiver.class.getName()));
+                            chatContext.sendBroadcast(intent);
+                        }
                     }
                 });
 

@@ -4,46 +4,45 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
-import android.util.Log;
+import android.os.Looper;
+import android.support.v7.app.NotificationCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.flipkart.chatheads.ChatHead;
-import com.flipkart.chatheads.ChatHeadContainer;
-import com.flipkart.chatheads.ChatHeadListener;
-import com.flipkart.chatheads.ChatHeadManager;
 import com.flipkart.chatheads.ChatHeadViewAdapter;
-import com.flipkart.chatheads.arrangement.ChatHeadArrangement;
 import com.flipkart.chatheads.arrangement.MaximizedArrangement;
 import com.flipkart.chatheads.arrangement.MinimizedArrangement;
 import com.flipkart.chatheads.container.DefaultChatHeadManager;
 import com.flipkart.chatheads.container.WindowManagerContainer;
 import com.flipkart.circularImageView.CircularDrawable;
-import com.flipkart.circularImageView.TextDrawer;
-import com.flipkart.circularImageView.notification.CircularNotificationDrawer;
+import com.github.bassaer.chatmessageview.models.Message;
+import com.github.bassaer.chatmessageview.models.User;
+import com.github.bassaer.chatmessageview.views.ChatView;
+import com.xkikdev.xkik.MainActivity;
 import com.xkikdev.xkik.R;
+import com.xkikdev.xkik.Util;
+import com.xkikdev.xkik.datatype_parsers.msgText;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
-public class ChatHeadService extends Service {
+public class chatheadService extends Service {
 
-    private static final String TAG = "ChatHeadService";
+    final Handler mainHandler = new Handler(Looper.getMainLooper());
     private final IBinder mBinder = new LocalBinder();
     private DefaultChatHeadManager<String> chatHeadManager;
-    private int chatHeadIdentifier = 0;
     private WindowManagerContainer windowManagerContainer;
     private Map<String, View> viewCache = new HashMap<>();
-
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -62,15 +61,38 @@ public class ChatHeadService extends Service {
 
             @Override
             public View attachView(String key, ChatHead chatHead, ViewGroup parent) {
-                // You can return the view which is shown when the arrangement changes to maximized.
-                // The passed "key" param is the same key which was used when adding the chat head.
 
                 View cachedView = viewCache.get(key);
                 if (cachedView == null) {
                     LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-                    View view = inflater.inflate(R.layout.fragment_test, parent, false);
-                    TextView identifier = (TextView) view.findViewById(R.id.identifier);
-                    identifier.setText(key);
+                    View view = inflater.inflate(R.layout.fragment_bubblechat, parent, false);
+                    //TextView identifier = (TextView) view.findViewById(R.id.identifier);
+                    //identifier.setText(key);
+                    ChatView mChatView = (ChatView) view.findViewById(R.id.chat_view);
+                    mChatView.setRightBubbleColor(Color.RED);
+                    mChatView.setLeftBubbleColor(Color.WHITE);
+                    mChatView.setBackgroundColor(Color.rgb(50, 50, 50));
+                    mChatView.setSendButtonColor(Color.rgb(70, 70, 90));
+                    mChatView.setSendIcon(R.drawable.ic_action_send);
+                    mChatView.setRightMessageTextColor(Color.WHITE);
+                    mChatView.setLeftMessageTextColor(Color.BLACK);
+                    mChatView.setUsernameTextColor(Color.WHITE);
+                    mChatView.setSendTimeTextColor(Color.WHITE);
+                    mChatView.setDateSeparatorColor(Color.WHITE);
+                    mChatView.setInputTextHint("new message...");
+                    mChatView.setMessageMarginTop(5);
+                    mChatView.setMessageMarginBottom(5);
+
+                    final User me = new User(1, "xk_dev", BitmapFactory.decodeResource(getResources(), R.drawable.face_1));
+                    mChatView.send(new Message.Builder()
+                            .setUser(me)
+                            .setRightMessage(true)
+                            .setMessageText("test")
+                            .hideIcon(true)
+                            .build()
+                    );
+
+
                     cachedView = view;
                     viewCache.put(key, view);
                 }
@@ -97,116 +119,69 @@ public class ChatHeadService extends Service {
 
             @Override
             public Drawable getChatHeadDrawable(String key) {
-                // this is where you return a drawable for the chat head itself based on the key. Typically you return a circular shape
-                // you may want to checkout circular image library https://github.com/flipkart-incubator/circular-image
-                return ChatHeadService.this.getChatHeadDrawable(key);
+                return chatheadService.this.getChatHeadDrawable();
             }
         });
 
-        chatHeadManager.setListener(new ChatHeadListener() {
-            @Override
-            public void onChatHeadAdded(Object key) {
-                //called whenever a new chat head with the specified 'key' has been added
-                Log.d(TAG, "onChatHeadAdded() called with: key = [" + key + "]");
-            }
-
-            @Override
-            public void onChatHeadRemoved(Object key, boolean userTriggered) {
-                //called whenever a new chat head with the specified 'key' has been removed.
-                // userTriggered: 'true' says whether the user removed the chat head, 'false' says that the code triggered it
-                Log.d(TAG, "onChatHeadRemoved() called with: key = [" + key + "], userTriggered = [" + userTriggered + "]");
-            }
-
-            @Override
-            public void onChatHeadArrangementChanged(ChatHeadArrangement oldArrangement, ChatHeadArrangement newArrangement) {
-                //called whenever the chat head arrangement changed. For e.g minimized to maximized or vice versa.
-                Log.d(TAG, "onChatHeadArrangementChanged() called with: oldArrangement = [" + oldArrangement + "], newArrangement = [" + newArrangement + "]");
-            }
-
-            @Override
-            public void onChatHeadAnimateStart(ChatHead chatHead) {
-                //called when the chat head has started moving (
-                Log.d(TAG, "onChatHeadAnimateStart() called with: chatHead = [" + chatHead + "]");
-            }
-
-            @Override
-            public void onChatHeadAnimateEnd(ChatHead chatHead) {
-                //called when the chat head has settled after moving
-                Log.d(TAG, "onChatHeadAnimateEnd() called with: chatHead = [" + chatHead + "]");
-            }
-        });
-
-        chatHeadManager.setOnItemSelectedListener(new ChatHeadManager.OnItemSelectedListener<String>() {
-            @Override
-            public boolean onChatHeadSelected(String key, ChatHead chatHead) {
-                if (chatHeadManager.getArrangementType() == MaximizedArrangement.class) {
-                    Log.d(TAG, "chat head got selected in maximized arrangement");
-                }
-                return false; //returning true will mean that you have handled the behaviour and the default behaviour will be skipped
-            }
-
-            @Override
-            public void onChatHeadRollOver(String key, ChatHead chatHead) {
-                Log.d(TAG, "onChatHeadRollOver() called with: key = [" + key + "], chatHead = [" + chatHead + "]");
-            }
-
-            @Override
-            public void onChatHeadRollOut(String key, ChatHead chatHead) {
-                Log.d(TAG, "onChatHeadRollOut() called with: key = [" + key + "], chatHead = [" + chatHead + "]");
-            }
-        });
-        addChatHead();
-        addChatHead();
-        addChatHead();
-        addChatHead();
         chatHeadManager.setArrangement(MinimizedArrangement.class, null);
         moveToForeground();
 
     }
 
-    private Drawable getChatHeadDrawable(String key) {
-        Random rnd = new Random();
-        int randomColor = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+    private Drawable getChatHeadDrawable(Bitmap icon) {
         CircularDrawable circularDrawable = new CircularDrawable();
-        circularDrawable.setBitmapOrTextOrIcon(new TextDrawer().setText("C" + key).setBackgroundColor(randomColor));
-        int badgeCount = (int) (Math.random() * 10f);
-        circularDrawable.setNotificationDrawer(new CircularNotificationDrawer().setNotificationText(String.valueOf(badgeCount)).setNotificationAngle(135).setNotificationColor(Color.WHITE, Color.RED));
-        circularDrawable.setBorder(Color.WHITE, 3);
+        circularDrawable.setBitmapOrTextOrIcon(icon);
         return circularDrawable;
+    }
 
+    private Drawable getChatHeadDrawable() {
+        return getChatHeadDrawable(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
     }
 
     private void moveToForeground() {
         Notification notification = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.notification_template_icon_bg)
-                .setContentTitle("Springy heads")
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("XKik heads")
                 .setContentText("Click to configure.")
-                .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, FloatingActivity.class), 0))
+                .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0))
                 .build();
 
         startForeground(1, notification);
     }
 
-    public void addChatHead() {
-        chatHeadIdentifier++;
-        // you can even pass a custom object instead of "head0"
-        // a sticky chat head (passed as 'true') cannot be closed and will remain when all other chat heads are closed.
-        /**
-         * In this example a String object (identified by chatHeadIdentifier) is attached to each chat head.
-         * You can instead attach any custom object, for e.g a Conversation object to denote each chat head.
-         * This object will represent a chat head uniquely and will be passed back in all callbacks.
-         */
-        chatHeadManager.addChatHead(String.valueOf(chatHeadIdentifier), false, true);
-        chatHeadManager.bringToFront(chatHeadManager.findChatHeadByKey(String.valueOf(chatHeadIdentifier)));
+    public void handleRecvMsg(msgText msg) {
+        if (chatHeadManager.findChatHeadByKey(msg.getFromUserParsed()) == null) {
+            addChatHead(msg.getFromUserParsed());
+        }
     }
 
-    public void removeChatHead() {
-        chatHeadManager.removeChatHead(String.valueOf(chatHeadIdentifier), true);
-        chatHeadIdentifier--;
+    public void addChatHead(final String uname) {
+        chatHeadManager.addChatHead(uname, false, true);
+        chatHeadManager.bringToFront(chatHeadManager.findChatHeadByKey(uname));
+        new Thread() {
+            @Override
+            public void run() {
+                final Bitmap pfp = Util.getUserProfilePicture(uname);
+                if (pfp == null) {
+                    return;
+                }
+                mainHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        CircularDrawable circularDrawable = new CircularDrawable();
+                        circularDrawable.setBitmapOrTextOrIcon(pfp);
+                        chatHeadManager.findChatHeadByKey(uname).setImageDrawable(circularDrawable);
+                    }
+                });
+            }
+        }.start();
+    }
+
+    public void removeChatHead(String uname) {
+        chatHeadManager.removeChatHead(uname, true);
     }
 
     public void removeAllChatHeads() {
-        chatHeadIdentifier = 0;
         chatHeadManager.removeAllChatHeads(true);
     }
 
@@ -218,8 +193,8 @@ public class ChatHeadService extends Service {
         }
     }
 
-    public void updateBadgeCount() {
-        chatHeadManager.reloadDrawable(String.valueOf(chatHeadIdentifier));
+    public void updateBadgeCount(String uname) {
+        chatHeadManager.reloadDrawable(uname);
     }
 
     @Override
@@ -237,9 +212,9 @@ public class ChatHeadService extends Service {
      * runs in the same process as its clients, we don't need to deal with IPC.
      */
     public class LocalBinder extends Binder {
-        ChatHeadService getService() {
+        public chatheadService getService() {
             // Return this instance of LocalService so clients can call public methods
-            return ChatHeadService.this;
+            return chatheadService.this;
         }
     }
 }

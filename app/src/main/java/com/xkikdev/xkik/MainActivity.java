@@ -1,6 +1,12 @@
 package com.xkikdev.xkik;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -13,6 +19,8 @@ import android.view.MenuItem;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.xkikdev.xkik.chathead.chatheadReceiver;
+import com.xkikdev.xkik.chathead.chatheadService;
 import com.xkikdev.xkik.config_activities.ChatFragment;
 import com.xkikdev.xkik.config_activities.LicensesFragment;
 import com.xkikdev.xkik.config_activities.SmileyFragment;
@@ -21,10 +29,42 @@ import com.xkikdev.xkik.config_activities.VisualFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    chatheadService chs;
+    chatheadReceiver chr = new chatheadReceiver();
+    private boolean bound;
+    /**
+     * Defines callbacks for service binding, passed to bindService()
+     */
+    private ServiceConnection mConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            chatheadService.LocalBinder binder = (chatheadService.LocalBinder) service;
+            chs = binder.getService();
+            bound = true;
+            chs.minimize();
+            chatheadReceiver.setService(chs);
+
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            bound = false;
+            chatheadReceiver.setService(null);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent intent = new Intent(this, chatheadService.class);
+        startService(intent);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        registerReceiver(chr, new IntentFilter("com.xkikdev.xkik.msgget"));
+
         setContentView(R.layout.activity_main); // main activity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar); // toolbar
         setSupportActionBar(toolbar);

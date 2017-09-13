@@ -4,9 +4,13 @@ import com.xkikdev.xkik.hooks;
 import com.xkikdev.xkik.xposedObject;
 
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class msgText {
+
+    static Pattern unameparser = Pattern.compile("(.*)_[^_]*");
 
     String content;
     String fromGroup;
@@ -46,6 +50,14 @@ public class msgText {
 
     public String getFromUser() {
         return fromUser;
+    }
+
+    public String getFromUserParsed() {
+        Matcher m = unameparser.matcher(getFromUser());
+        if (m.find()){
+            return m.group(1);
+        }
+        return null;
     }
 
     public String getUUID() {

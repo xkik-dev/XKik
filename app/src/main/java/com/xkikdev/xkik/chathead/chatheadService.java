@@ -33,6 +33,7 @@ import com.xkikdev.xkik.Util;
 import com.xkikdev.xkik.datatype_parsers.msgText;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,6 +41,7 @@ public class chatheadService extends Service {
 
     final Handler mainHandler = new Handler(Looper.getMainLooper());
     private final IBinder mBinder = new LocalBinder();
+    ArrayList<msgText> pendingMsgs = new ArrayList<>();
     private DefaultChatHeadManager<String> chatHeadManager;
     private WindowManagerContainer windowManagerContainer;
     private Map<String, View> viewCache = new HashMap<>();
@@ -83,19 +85,22 @@ public class chatheadService extends Service {
                     mChatView.setMessageMarginTop(5);
                     mChatView.setMessageMarginBottom(5);
 
-                    final User me = new User(1, "xk_dev", BitmapFactory.decodeResource(getResources(), R.drawable.face_1));
-                    mChatView.send(new Message.Builder()
-                            .setUser(me)
-                            .setRightMessage(true)
-                            .setMessageText("test")
-                            .hideIcon(true)
-                            .build()
-                    );
-
 
                     cachedView = view;
                     viewCache.put(key, view);
                 }
+                ChatView cv = (ChatView) viewCache.get(key).findViewById(R.id.chat_view);
+                final User me = new User(1, "test_usr", chatHead.getDrawingCache()); // TODO:  cache user profile pictures
+                for (msgText pendingMsg : pendingMsgs) {
+                    cv.send(new Message.Builder()
+                            .setMessageText(pendingMsg.getContent())
+                            .setUser(me)
+                            .setCreatedAt(Util.epoch2Calendar(pendingMsg.getTimestamp()))
+                            .build()
+                    );
+                }
+                pendingMsgs.clear();
+
                 parent.addView(cachedView);
                 return cachedView;
             }
@@ -122,7 +127,6 @@ public class chatheadService extends Service {
                 return chatheadService.this.getChatHeadDrawable();
             }
         });
-
         chatHeadManager.setArrangement(MinimizedArrangement.class, null);
         moveToForeground();
 
@@ -153,6 +157,7 @@ public class chatheadService extends Service {
         if (chatHeadManager.findChatHeadByKey(msg.getFromUserParsed()) == null) {
             addChatHead(msg.getFromUserParsed());
         }
+        pendingMsgs.add(msg);
     }
 
     public void addChatHead(final String uname) {

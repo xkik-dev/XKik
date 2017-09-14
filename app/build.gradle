@@ -43,7 +43,7 @@ android {
 
 dependencies {
     provided fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.github.flipkart-incubator:springy-heads:run_in_service-SNAPSHOT'
+    compile 'com.github.dylanpdx:springy-heads:run_in_service-SNAPSHOT'
     compile 'com.github.flipkart-incubator:circular-image:1.0'
     compile 'com.github.bassaer:chatmessageview:1.3.4'
     compile 'commons-io:commons-io:2.5'

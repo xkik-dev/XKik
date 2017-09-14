@@ -21,6 +21,7 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -157,6 +158,12 @@ public class Util {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static Calendar epoch2Calendar(long epoch){
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(epoch);
+        return c;
     }
 
     public static Bitmap getUserProfilePicture(String uname){

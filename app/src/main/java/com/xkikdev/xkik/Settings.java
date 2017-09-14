@@ -38,6 +38,7 @@ public class Settings {
     private boolean disableSave = false;
     private boolean disableFwd = false;
     private boolean unfilterGIFs = false;
+    private boolean mainacctenabled = true;
     private boolean BETA = false;
     private transient Activity creator;
     private boolean longCam = false;
@@ -45,6 +46,7 @@ public class Settings {
     private HashMap<String, Integer> colors = new HashMap<String, Integer>(); // color settings
     private HashMap<String, String> strings = new HashMap<String, String>(); // string settings
     private ArrayList<kikSmiley> smileys = new ArrayList<>();
+    private ArrayList<KikAccount> extraAccts = new ArrayList<>();
 
     /**
      * Checks if the app has permission to write to device storage
@@ -109,6 +111,14 @@ public class Settings {
      */
     private static File getSaveFile() {
         return new File(getSaveDir().getPath() + File.separator + "config.json");
+    }
+
+    public boolean getMainacctenabled() {
+        return mainacctenabled;
+    }
+
+    public void setMainacctenabled(boolean mainacctenabled) {
+        this.mainacctenabled = mainacctenabled;
     }
 
     public boolean isBETA() {

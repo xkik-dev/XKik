@@ -51,6 +51,13 @@ public class AccountFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 new MaterialDialog.Builder(getContext())
+                        .title("Warning!")
+                        .content("This feature is IN BETA!! It might cause issues with Kik or your device. ")
+                        .neutralText("Ok")
+                        .show();
+
+
+                new MaterialDialog.Builder(getContext())
                         .title("New Account")
                         .content("Enter a name for your new account profile")
                         .inputType(InputType.TYPE_CLASS_TEXT)

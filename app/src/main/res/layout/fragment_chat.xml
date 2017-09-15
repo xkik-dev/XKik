@@ -77,12 +77,42 @@
                         android:text="@string/disable_saving" />
 
                     <Switch
-                        android:id="@+id/unfilter_gif"
+                        android:id="@+id/auto_loop_video"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
                         android:layout_below="@+id/disable_save"
+                        android:layout_marginTop="11dp"
+                        android:text="@string/auto_loop_video" />
+
+                    <Switch
+                        android:id="@+id/auto_mute_video"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_below="@+id/auto_loop_video"
+                        android:layout_marginTop="11dp"
+                        android:text="@string/auto_mute_video" />
+
+                    <Switch
+                        android:id="@+id/auto_play_video"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_below="@+id/auto_mute_video"
+                        android:layout_marginTop="11dp"
+                        android:text="@string/auto_play_video" />
+
+                    <Switch
+                        android:id="@+id/unfilter_gif"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_below="@+id/auto_play_video"
                         android:layout_marginTop="11dp"
                         android:text="@string/unfilter_gifs" />
                 </RelativeLayout>

@@ -461,7 +461,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                 });
 
                 /*
-                Manages blocking forwarding / blocking saving
+                Manages most of the media options
                  */
                 XposedBridge.hookAllMethods(XposedHelpers.findClass(hooks.kikMsgClass, loadPackageParam.classLoader), "a", new XC_MethodHook() {
                     @Override
@@ -473,6 +473,16 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                             if (settings.getDisableSave()) {
                                 XposedHelpers.callMethod(param.getResult(), "a", "disallow-save", "true");
                             }
+                            if (settings.getAutoLoop()) {
+                                XposedHelpers.callMethod(param.getResult(), "a", "video-should-loop", "true");
+                            }
+                            if (settings.getAutoMute()) {
+                                XposedHelpers.callMethod(param.getResult(), "a", "video-should-be-muted", "true");
+                            }
+                            if (settings.getAutoPlay()) {
+                                XposedHelpers.callMethod(param.getResult(), "a", "video-should-autoplay", "true");
+                            }
+
                         }
                         super.afterHookedMethod(param);
                     }

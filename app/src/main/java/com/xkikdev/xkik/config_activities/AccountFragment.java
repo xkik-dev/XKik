@@ -54,28 +54,42 @@ public class AccountFragment extends Fragment {
                         .title("Warning!")
                         .content("This feature is IN BETA!! It might cause issues with Kik or your device. ")
                         .neutralText("Ok")
-                        .show();
-
-
-                new MaterialDialog.Builder(getContext())
-                        .title("New Account")
-                        .content("Enter a name for your new account profile")
-                        .inputType(InputType.TYPE_CLASS_TEXT)
-                        .input("A-Z 0-9", "", new MaterialDialog.InputCallback() {
+                        .onNeutral(new MaterialDialog.SingleButtonCallback() {
                             @Override
-                            public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-                                if (nopunct.matcher(input).find() || input.toString().equalsIgnoreCase("main")) {
-                                    new MaterialDialog.Builder(getContext())
-                                            .title("Error!")
-                                            .content("That name is not valid.")
-                                            .neutralText("Ok")
-                                            .show();
-                                } else {
-                                    settings.addExtraAcct(input.toString());
-                                    refreshAccts();
-                                }
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                new MaterialDialog.Builder(getContext())
+                                        .title("New Account")
+                                        .content("Enter a name for your new account profile")
+                                        .inputType(InputType.TYPE_CLASS_TEXT)
+                                        .input("A-Z 0-9", "", new MaterialDialog.InputCallback() {
+                                            @Override
+                                            public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+                                                if (nopunct.matcher(input).find() || input.toString().equalsIgnoreCase("main") || input.toString().isEmpty()) {
+                                                    new MaterialDialog.Builder(getContext())
+                                                            .title("Error!")
+                                                            .content("That name is not valid.")
+                                                            .neutralText("Ok")
+                                                            .show();
+                                                } else {
+
+                                                    if (settings.getAcct(input.toString()) != null) {
+                                                        new MaterialDialog.Builder(getContext())
+                                                                .title("Error!")
+                                                                .content("That name already exists.")
+                                                                .neutralText("Ok")
+                                                                .show();
+                                                    } else {
+                                                        settings.addExtraAcct(input.toString());
+                                                        refreshAccts();
+                                                    }
+
+
+                                                }
+                                            }
+                                        }).show();
                             }
-                        }).show();
+                        })
+                        .show();
             }
         });
 

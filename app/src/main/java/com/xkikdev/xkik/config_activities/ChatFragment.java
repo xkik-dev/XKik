@@ -23,6 +23,9 @@ public class ChatFragment extends Fragment {
     Switch disableFwd;
     Switch disableSave;
     Switch disableFilter;
+    Switch autoloop;
+    Switch automute;
+    Switch autoplay;
     Settings settings;
 
     public ChatFragment() {
@@ -55,6 +58,9 @@ public class ChatFragment extends Fragment {
         disableFwd = (Switch) rootView.findViewById(R.id.disable_fwd);
         disableSave = (Switch) rootView.findViewById(R.id.disable_save);
         disableFilter = (Switch) rootView.findViewById(R.id.unfilter_gif);
+        autoloop = (Switch) rootView.findViewById(R.id.auto_loop_video);
+        automute = (Switch) rootView.findViewById(R.id.auto_mute_video);
+        autoplay = (Switch) rootView.findViewById(R.id.auto_play_video);
 
         readRecpt.setChecked(settings.getNoReadreceipt());
         typingRecpt.setChecked(settings.getNoTyping());
@@ -68,7 +74,27 @@ public class ChatFragment extends Fragment {
                 settings.setDisableFwd(isChecked);
             }
         });
-
+        autoloop.setChecked(settings.getAutoLoop());
+        autoloop.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                settings.setAutoLoop(isChecked);
+            }
+        });
+        automute.setChecked(settings.getAutoMute());
+        automute.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                settings.setAutoMute(isChecked);
+            }
+        });
+        autoplay.setChecked(settings.getAutoPlay());
+        autoplay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                settings.setAutoplay(isChecked);
+            }
+        });
         disableSave.setChecked(settings.getDisableSave());
         disableSave.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

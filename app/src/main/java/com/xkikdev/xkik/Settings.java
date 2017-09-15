@@ -37,6 +37,9 @@ public class Settings {
     private boolean darkBg = false;
     private boolean disableSave = false;
     private boolean disableFwd = false;
+    private boolean autoloop = false;
+    private boolean autoplay = false;
+    private boolean automute = false;
     private boolean unfilterGIFs = false;
     private boolean BETA = false;
     private transient Activity creator;
@@ -314,6 +317,32 @@ public class Settings {
         trySave();
     }
 
+    public boolean getAutoLoop() {
+        return autoloop;
+    }
+
+    public void setAutoLoop(boolean AutoLoop) {
+        this.autoloop = AutoLoop;
+        trySave();
+    }
+
+    public boolean getAutoMute() {
+        return automute;
+    }
+
+    public void setAutoMute(boolean AutoMute) {
+        this.automute = AutoMute;
+        trySave();
+    }
+
+    public boolean getAutoPlay() {
+        return autoplay;
+    }
+
+    public void setAutoplay(boolean autoPlay) {
+        this.autoplay = autoPlay;
+        trySave();
+    }
     public boolean getUnfilterGIFs() {
         return unfilterGIFs;
     }

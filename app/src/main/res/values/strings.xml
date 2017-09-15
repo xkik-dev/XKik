@@ -43,4 +43,11 @@
     <string name="current_status">Current Status</string>
     <string name="loading">Loading...</string>
     <string name="account_manager">Account Manager</string>
+    <string name="xkik_main">XKik Main</string>
+    <string name="chat_tweaks">Chat Tweaks</string>
+    <string name="visual_tweaks">Visual Tweaks</string>
+    <string name="technical_tweaks">Technical Tweaks</string>
+    <string name="smiley_manager">Smiley Manager</string>
+    <string name="licenses">Licenses</string>
+    <string name="account_warnings">Hold down on an account to delete it\n\n\nWARNING: uninstalling XKik does not delete your accounts. Delete your accounts before uninstalling XKik to prevent storage usage.\nWARNING: Deleting your XKik config file will leave your accounts inaccessible - please delete your XKik accounts before deleting the config file</string>
 </resources>

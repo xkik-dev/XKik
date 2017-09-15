@@ -78,6 +78,29 @@ public class Util {
         }
     }
 
+    public static void sudo(String...strings) {
+        try{
+            Process su = Runtime.getRuntime().exec("su");
+            DataOutputStream outputStream = new DataOutputStream(su.getOutputStream());
+
+            for (String s : strings) {
+                outputStream.writeBytes(s+"\n");
+                outputStream.flush();
+            }
+
+            outputStream.writeBytes("exit\n");
+            outputStream.flush();
+            try {
+                su.waitFor();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            outputStream.close();
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      * Kills Kik

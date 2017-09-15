@@ -5,27 +5,33 @@
         <item
             android:id="@+id/nav_xkikmain"
             android:icon="@drawable/ic_xkik"
-            android:title="XKik Main" />
+            android:title="@string/xkik_main" />
         <item
             android:id="@+id/nav_xkik_recpt"
             android:icon="@drawable/ic_xkik_receipt"
-            android:title="Chat Tweaks" />
+            android:title="@string/chat_tweaks" />
         <item
             android:id="@+id/nav_xkik_visual"
             android:icon="@drawable/ic_remove_red_eye_black_24dp"
-            android:title="Visual Tweaks" />
+            android:title="@string/visual_tweaks" />
         <item
             android:id="@+id/nav_xkik_tech"
             android:icon="@drawable/ic_settings_applications_black_24dp"
-            android:title="Technical Tweaks" />
+            android:title="@string/technical_tweaks" />
         <item
             android:id="@+id/nav_xkik_smiley"
             android:icon="@drawable/ic_insert_emoticon_black_24dp"
-            android:title="Smiley Manager" />
+            android:title="@string/smiley_manager" />
+
+        <item
+            android:id="@+id/nav_xkik_acctmgr"
+            android:icon="@drawable/ic_people_black_24dp"
+            android:title="@string/account_manager" />
+
         <item
             android:id="@+id/nav_xkik_license"
             android:icon="@drawable/ic_description_black_24dp"
-            android:title="Licenses" />
+            android:title="@string/licenses" />
     </group>
 
     <!--<item android:title="Communicate">

@@ -37,6 +37,7 @@
                         android:textSize="18sp" />
 
                     <TableLayout
+                        android:id="@+id/acctTbl"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_below="@id/imgtitle"
@@ -54,6 +55,14 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/imgt"
                 android:text="Add Account" />
+
+            <TextView
+                android:id="@+id/acctWarn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/addAcct"
+                android:text="@string/account_warnings"
+                android:textAlignment="center" />
 
         </RelativeLayout>
 

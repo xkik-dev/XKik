@@ -113,6 +113,30 @@ public class Settings {
         return new File(getSaveDir().getPath() + File.separator + "config.json");
     }
 
+    public ArrayList<KikAccount> getExtraAccts() {
+        return extraAccts;
+    }
+
+    public KikAccount getAcct(String name){
+        for (KikAccount ka : getExtraAccts()){
+            if (ka.getName().equals(name)){
+                return ka;
+            }
+        }
+        return null;
+    }
+
+    public void addExtraAcct(String name){
+        extraAccts.add(new KikAccount(name));
+    }
+
+    public void removeExtraAcct(String name){
+        KikAccount rm = getAcct(name);
+        if (rm != null){
+            extraAccts.remove(rm);
+        }
+    }
+
     public boolean getMainacctenabled() {
         return mainacctenabled;
     }

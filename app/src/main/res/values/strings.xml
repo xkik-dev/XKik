@@ -42,4 +42,7 @@
     <string name="unfilter_gifs">Unfilter GIFs</string>
     <string name="current_status">Current Status</string>
     <string name="loading">Loading...</string>
+    <string name="auto_loop_video">Auto loop video</string>
+    <string name="auto_mute_video">Auto mute video</string>
+    <string name="auto_play_video">Auto Play Video</string>
 </resources>

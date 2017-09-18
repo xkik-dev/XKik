@@ -44,6 +44,7 @@ android {
 dependencies {
     provided fileTree(include: ['*.jar'], dir: 'libs')
     compile 'commons-io:commons-io:2.5'
+    compile 'org.apache.commons:commons-lang3:3.5'
     compile 'com.google.code.gson:gson:2.8.1'
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.github.dmytrodanylyk.android-process-button:library:1.0.4'

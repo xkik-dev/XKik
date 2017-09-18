@@ -13,13 +13,19 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.xkikdev.xkik.config_activities.quickConfig;
+import com.xkikdev.xkik.datatype_parsers.msgText;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -60,6 +66,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
     private Pattern fromPattern = Pattern.compile("from=\"(.*?)\"");
     private Pattern msgIdPattern = Pattern.compile("msgid id=\"(.*?)\"");
     private Pattern useridPattern = Pattern.compile("(.*)_[^_]*");
+    private Pattern timestampPattern = Pattern.compile("cts=\"(.*?)\"");
     private Object smileyManager = null;
     private Class smileyClass;
     private String MODULE_PATH;
@@ -294,11 +301,12 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                         if (settings.getWhosLurking()) {
                             char[] txtBuf = (char[]) XposedHelpers.getObjectField(param.args[0], "srcBuf");
                             String resp = String.valueOf(txtBuf);
+                            XposedBridge.log(resp);
                             if (resp.contains("type=\"read\"")) {
                                 Matcher fromMch = fromPattern.matcher(resp);
                                 Matcher uuidMch = msgIdPattern.matcher(resp);
                                 String from = null;
-                                String uuid = null; // currently no use for this, but eventually will map a seen receipt to a specific message
+                                String uuid = null;
                                 if (fromMch.find()) {
                                     from = fromMch.group(1);
                                     Matcher userMatcher = useridPattern.matcher(from);
@@ -308,21 +316,44 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                                 }
                                 if (uuidMch.find()) {
                                     uuid = uuidMch.group(1);
+                                    for (int i = 0;i<uuidMch.groupCount();i++){
+                                        XposedBridge.log(uuidMch.group(i+1));
+                                    }
                                 }
                                 if (chatContext != null) {
 
                                     if (from != null && !from.equals("warehouse@talk.kik.com")) { // avoids some of the internal kik classes
-                                        kikToast(from + " saw your message!");
+                                        //kikToast(from + " saw your message!");
+                                        XposedBridge.log("from: " + from+ " for uuid "+uuid);
+                                        settings.addWhoread(from,uuid);
                                     }
 
                                 }
-                                XposedBridge.log("from: " + from);
+
                             }
                         }
                         super.beforeHookedMethod(param);
                     }
                 });
 
+                XposedHelpers.findAndHookMethod("kik.android.chat.vm.messaging.AbstractMessageViewModel", loadPackageParam.classLoader, "a", "kik.android.chat.vm.messaging.AbstractMessageViewModel", Long.class, Boolean.class, hooks.kikMessage, new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        Boolean on = (Boolean) param.args[2];
+
+                        if (on){
+                            String UUID = new msgText(param.args[3]).getUUID();
+                            XposedBridge.log("opend msg "+UUID);
+                            if (settings.getWhoread().containsKey(UUID)){
+                                String sby = "Seen by ";
+                                sby+=StringUtils.join(settings.getWhoread().get(UUID).getStrarr().toArray(),", ");
+
+                                param.setResult(param.getResult()+" - "+sby);
+                            }
+                        }
+                        super.afterHookedMethod(param);
+                    }
+                });
 
                 /*
                 Dev mode
@@ -564,6 +595,30 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
         if (settings == null) {
             return;
         }
+
+        resParam.res.hookLayout("kik.android", "layout", "incoming_message_bubble", new XC_LayoutInflated() {
+            @Override
+            public void handleLayoutInflated(LayoutInflatedParam liparam) throws Throwable {
+                TextView timestamp_incoming = (TextView) liparam.view.findViewById(
+                        liparam.res.getIdentifier("message_timestamp", "id", "kik.android"));
+                timestamp_incoming.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT));
+                timestamp_incoming.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+                timestamp_incoming.setSelected(true);
+                timestamp_incoming.setSingleLine(true);
+            }
+        });
+
+        resParam.res.hookLayout("kik.android", "layout", "outgoing_message_bubble", new XC_LayoutInflated() {
+            @Override
+            public void handleLayoutInflated(LayoutInflatedParam liparam) throws Throwable {
+                TextView timestamp_outgoing = (TextView) liparam.view.findViewById(
+                        liparam.res.getIdentifier("message_timestamp", "id", "kik.android"));
+                timestamp_outgoing.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT));
+                timestamp_outgoing.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+                timestamp_outgoing.setSelected(true);
+                timestamp_outgoing.setSingleLine(true);
+            }
+        });
 
         /*
         Replaces colors

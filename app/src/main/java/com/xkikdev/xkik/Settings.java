@@ -50,6 +50,7 @@ public class Settings {
     private HashMap<String, String> strings = new HashMap<String, String>(); // string settings
     private ArrayList<kikSmiley> smileys = new ArrayList<>();
     private ArrayList<KikAccount> extraAccts = new ArrayList<>();
+    private HashMap<String, longStringarray> whoread = new HashMap<>();
 
     /**
      * Checks if the app has permission to write to device storage
@@ -116,26 +117,69 @@ public class Settings {
         return new File(getSaveDir().getPath() + File.separator + "config.json");
     }
 
+    /**
+     * Get the who read hashmap
+     *
+     * @return the who read hashmap
+     */
+    public HashMap<String, longStringarray> getWhoread() {
+        return whoread;
+    }
+
+    /**
+     * Add a user who read a message
+     *
+     * @param who  Who read it
+     * @param uuid UUID of message
+     */
+    public void addWhoread(String who, String uuid) {
+        if (whoread.containsKey(uuid)) {
+            if (!whoread.get(uuid).contains(who)) {
+                whoread.get(uuid).addStrarr(who);
+            }
+        } else {
+            whoread.put(uuid, new longStringarray(System.currentTimeMillis() + 604800000L, new ArrayList<String>()));
+            whoread.get(uuid).addStrarr(who);
+        }
+        purgeWhoread();
+        try {
+            save(false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Purges the config file from old read notifications, to keep file size small
+     */
+    public void purgeWhoread() {
+        for (String key : whoread.keySet()) {
+            if (whoread.get(key).getLong() < System.currentTimeMillis()) {
+                whoread.remove(key);
+            }
+        }
+    }
+
     public ArrayList<KikAccount> getExtraAccts() {
         return extraAccts;
     }
 
-    public KikAccount getAcct(String name){
-        for (KikAccount ka : getExtraAccts()){
-            if (ka.getName().equals(name)){
+    public KikAccount getAcct(String name) {
+        for (KikAccount ka : getExtraAccts()) {
+            if (ka.getName().equals(name)) {
                 return ka;
             }
         }
         return null;
     }
 
-    public void addExtraAcct(String name){
+    public void addExtraAcct(String name) {
         extraAccts.add(new KikAccount(name));
     }
 
-    public void removeExtraAcct(String name){
+    public void removeExtraAcct(String name) {
         KikAccount rm = getAcct(name);
-        if (rm != null){
+        if (rm != null) {
             extraAccts.remove(rm);
         }
     }
@@ -377,6 +421,7 @@ public class Settings {
         this.autoplay = autoPlay;
         trySave();
     }
+
     public boolean getUnfilterGIFs() {
         return unfilterGIFs;
     }

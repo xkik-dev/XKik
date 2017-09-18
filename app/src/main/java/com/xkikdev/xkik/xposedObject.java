@@ -2,19 +2,19 @@ package com.xkikdev.xkik;
 
 import de.robv.android.xposed.XposedHelpers;
 
-class xposedObject {
+public class xposedObject {
 
     private Object obj;
 
-    xposedObject(Object obj) {
+    public xposedObject(Object obj) {
         this.obj = obj;
     }
 
-    Object getSelf(){
+    public Object getSelf(){
         return obj;
     }
 
-    Object get(String var) {
+    public Object get(String var) {
         return Util.getObjField(obj, var);
     }
 

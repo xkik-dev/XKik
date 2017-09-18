@@ -4,9 +4,13 @@ package com.xkikdev.xkik;
  * Hooks all kept in one place to make changes easier
  */
 
-class hooks {
+public class hooks {
+
+    public static final String DATATYPE_MSG_TEXT = "kik.core.datatypes.messageExtensions.g";
+    static final String DATATYPE_MSG_CONTENT = "kik.core.datatypes.messageExtensions.ContentMessage";
 
     static final String kikRecptMgr = "kik.core.net.c.a.b";
+    static final String kikMessage = "kik.core.datatypes.Message";
     static final String kikContentMessage = "kik.core.datatypes.messageExtensions.ContentMessage";
     static final String kikDeviceUtils = "kik.android.util.DeviceUtils";
     static final String kikDateDisplayManager = "kik.android.util.ca";

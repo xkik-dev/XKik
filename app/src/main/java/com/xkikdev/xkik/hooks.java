@@ -28,4 +28,6 @@ public class hooks {
     public static final String kikRecordTextMgr = "kik.android.util.ch";
     public static final String kikConversationFragment = "kik.android.chat.fragment.KikConversationsFragment";
     public static final String kikPKG = "kik.android";
+    public static final String kABSTRACT_MESSAGE_VIEW_MODEL = "kik.android.chat.vm.messaging.AbstractMessageViewModel";
+    public static final String kikReceiptParser = "kik.core.net.g";
 }

@@ -28,6 +28,7 @@ public class Settings {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
     int save_version = 1;
+    private boolean noHook = false;
     private boolean devMode = false; // devMode mode enabled
     private boolean noReadreceipt = false; // read receipt allowed
     private boolean noTyping = false; // typing blocked
@@ -115,6 +116,14 @@ public class Settings {
      */
     private static File getSaveFile() {
         return new File(getSaveDir().getPath() + File.separator + "config.json");
+    }
+
+    public boolean getNoHook() {
+        return noHook;
+    }
+
+    public void setNoHook(boolean noHook) {
+        this.noHook = noHook;
     }
 
     /**

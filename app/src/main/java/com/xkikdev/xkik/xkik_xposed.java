@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -98,6 +99,9 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
             return;
         }
         settings = Settings.load(); // load settings
+        if (settings.getNoHook()) {
+            return;
+        }
         format.setTimeZone(TimeZone.getDefault()); // set timezone, to keep accurate date correct
 
 
@@ -192,8 +196,8 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                         @Override
                         protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
                             int tim = (int) Math.max(0, longvidTime - ((long) methodHookParam.args[0]));
-                            new xposedObject(methodHookParam.thisObject).getXObj("a").set("h",tim);
-                            new xposedObject(methodHookParam.thisObject).getXObj("a").getXObj("r").call("b",tim);
+                            new xposedObject(methodHookParam.thisObject).getXObj("a").set("h", tim);
+                            new xposedObject(methodHookParam.thisObject).getXObj("a").getXObj("r").call("b", tim);
                             return null;
                         }
                     });
@@ -292,63 +296,50 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                     }
                 });
 
+
                 /*
                     Who's lurking feature
                  */
-                XposedHelpers.findAndHookMethod(hooks.KIK_RECEIPT_RECV, loadPackageParam.classLoader, "a", "kik.core.net.g", new XC_MethodHook() {
+                XposedHelpers.findAndHookMethod(hooks.KIK_RECEIPT_RECV, loadPackageParam.classLoader, "a", hooks.kikReceiptParser, new XC_MethodHook() {
+
                     @Override
-                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                        if (settings.getWhosLurking()) {
-                            char[] txtBuf = (char[]) XposedHelpers.getObjectField(param.args[0], "srcBuf");
-                            String resp = String.valueOf(txtBuf);
-                            XposedBridge.log(resp);
-                            if (resp.contains("type=\"read\"")) {
-                                Matcher fromMch = fromPattern.matcher(resp);
-                                Matcher uuidMch = msgIdPattern.matcher(resp);
-                                String from = null;
-                                String uuid = null;
-                                if (fromMch.find()) {
-                                    from = fromMch.group(1);
-                                    Matcher userMatcher = useridPattern.matcher(from);
-                                    if (userMatcher.find()) {
-                                        from = userMatcher.group(1);
-                                    }
-                                }
-                                if (uuidMch.find()) {
-                                    uuid = uuidMch.group(1);
-                                    for (int i = 0;i<uuidMch.groupCount();i++){
-                                        XposedBridge.log(uuidMch.group(i+1));
-                                    }
-                                }
-                                if (chatContext != null) {
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 
-                                    if (from != null && !from.equals("warehouse@talk.kik.com")) { // avoids some of the internal kik classes
-                                        //kikToast(from + " saw your message!");
-                                        XposedBridge.log("from: " + from+ " for uuid "+uuid);
-                                        settings.addWhoread(from,uuid);
-                                    }
+                        Vector<String> msgs = (Vector<String>) new xposedObject(param.thisObject).get("m");
 
-                                }
-
+                        if (new xposedObject(param.thisObject).get("l").equals(500)) {
+                            String whoJID = (String) new xposedObject(param.thisObject).getXObj("b").get("d");
+                            String from;
+                            Matcher userMatcher = useridPattern.matcher(whoJID);
+                            if (userMatcher.find()) {
+                                from = userMatcher.group(1);
+                            } else {
+                                return;
+                            }
+                            for (String uuid : msgs) {
+                                //XposedBridge.log("message "+rd+" read by JID "+whoJID);
+                                settings.addWhoread(from, uuid);
                             }
                         }
-                        super.beforeHookedMethod(param);
                     }
                 });
 
-                XposedHelpers.findAndHookMethod("kik.android.chat.vm.messaging.AbstractMessageViewModel", loadPackageParam.classLoader, "a", "kik.android.chat.vm.messaging.AbstractMessageViewModel", Long.class, Boolean.class, hooks.kikMessage, new XC_MethodHook() {
+                /*
+                Who's lurking displayer
+                 */
+                XposedHelpers.findAndHookMethod(hooks.kABSTRACT_MESSAGE_VIEW_MODEL, loadPackageParam.classLoader, "a", hooks.kABSTRACT_MESSAGE_VIEW_MODEL, Long.class, Boolean.class, hooks.kikMessage, new XC_MethodHook() {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                         Boolean on = (Boolean) param.args[2];
 
-                        if (on){
-                            String UUID = new msgText(param.args[3]).getUUID();
-                            XposedBridge.log("opend msg "+UUID);
-                            if (settings.getWhoread().containsKey(UUID)){
+                        if (on) {
+                            String UUID = new msgText(new xposedObject(param.args[0]).get("w")).getUUID();
+                            XposedBridge.log("opend msg " + UUID);
+                            if (settings.getWhoread().containsKey(UUID)) {
                                 String sby = "Seen by ";
-                                sby+=StringUtils.join(settings.getWhoread().get(UUID).getStrarr().toArray(),", ");
+                                sby += StringUtils.join(settings.getWhoread().get(UUID).getStrarr().toArray(), ", ");
 
-                                param.setResult(param.getResult()+" - "+sby);
+                                param.setResult(param.getResult() + " - " + sby);
                             }
                         }
                         super.afterHookedMethod(param);
@@ -601,7 +592,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
             public void handleLayoutInflated(LayoutInflatedParam liparam) throws Throwable {
                 TextView timestamp_incoming = (TextView) liparam.view.findViewById(
                         liparam.res.getIdentifier("message_timestamp", "id", "kik.android"));
-                timestamp_incoming.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT));
+                timestamp_incoming.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
                 timestamp_incoming.setEllipsize(TextUtils.TruncateAt.MARQUEE);
                 timestamp_incoming.setSelected(true);
                 timestamp_incoming.setSingleLine(true);
@@ -613,7 +604,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
             public void handleLayoutInflated(LayoutInflatedParam liparam) throws Throwable {
                 TextView timestamp_outgoing = (TextView) liparam.view.findViewById(
                         liparam.res.getIdentifier("message_timestamp", "id", "kik.android"));
-                timestamp_outgoing.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT));
+                timestamp_outgoing.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
                 timestamp_outgoing.setEllipsize(TextUtils.TruncateAt.MARQUEE);
                 timestamp_outgoing.setSelected(true);
                 timestamp_outgoing.setSingleLine(true);

@@ -8,12 +8,23 @@ Beta: Currently Compatible with <b>KIK 11.22.1.1600</b> (old)
 
 Current tweaks available:
 
+Accounts
+* **BETA** Multiple account manager
+
 Chat
 * Fake Camera
 * Longer Camera record time
 * Block Read Receipts
 * Block Typing Receipts
 * See who's reading your messages in group chats
+
+Media
+* Make media un-savable
+* Make media un-forwardable
+* Make video auto-loop
+* Make video auto-play
+* Make video auto-mute
+* Remove the GIF filter
 
 Visual
 * Small color tweaks

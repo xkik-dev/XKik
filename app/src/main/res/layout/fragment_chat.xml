@@ -163,7 +163,6 @@
                         android:layout_below="@+id/read_recpt_switch"
                         android:layout_marginTop="11dp"
                         android:text="@string/disable_typing_receipts" />
-
                     <Switch
                         android:id="@+id/lurk_detector"
                         android:layout_width="match_parent"
@@ -173,6 +172,13 @@
                         android:layout_below="@id/typing_recpt_switch"
                         android:layout_marginTop="11dp"
                         android:text="@string/whos_reading" />
+
+                    <TextView
+                        android:id="@+id/lurk_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/lurk_detector"
+                        android:text="@string/whoread_info" />
                 </RelativeLayout>
 
             </android.support.v7.widget.CardView>

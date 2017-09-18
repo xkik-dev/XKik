@@ -46,6 +46,7 @@
     <string name="auto_mute_video">Auto mute video</string>
     <string name="auto_play_video">Auto Play Video</string>
     <string name="account_manager">Account Manager</string>
+    <string name="account_manager_rt">Account Manager [ROOT]</string>
     <string name="xkik_main">XKik Main</string>
     <string name="chat_tweaks">Chat Tweaks</string>
     <string name="visual_tweaks">Visual Tweaks</string>
@@ -53,4 +54,5 @@
     <string name="smiley_manager">Smiley Manager</string>
     <string name="licenses">Licenses</string>
     <string name="account_warnings">Hold down on an account to delete it\n\n\nWARNING: uninstalling XKik does not delete your accounts. Delete your accounts before uninstalling XKik to prevent storage usage.\nWARNING: Deleting your XKik config file will leave your accounts inaccessible - please delete your XKik accounts before deleting the config file</string>
+    <string name="add_account">Add Account</string>
 </resources>

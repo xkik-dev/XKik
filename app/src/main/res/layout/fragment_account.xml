@@ -32,7 +32,7 @@
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentTop="true"
-                        android:text="@string/account_manager"
+                        android:text="@string/account_manager_rt"
                         android:textAlignment="center"
                         android:textSize="18sp" />
 
@@ -54,7 +54,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/imgt"
-                android:text="Add Account" />
+                android:text="@string/add_account" />
 
             <TextView
                 android:id="@+id/acctWarn"

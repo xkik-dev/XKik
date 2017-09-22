@@ -42,6 +42,7 @@ public class Settings {
     private boolean autoplay = false;
     private boolean automute = false;
     private boolean unfilterGIFs = false;
+    private boolean scrollingtxt = false;
     private boolean mainacctenabled = true;
     private boolean BETA = false;
     private transient Activity creator;
@@ -118,12 +119,30 @@ public class Settings {
         return new File(getSaveDir().getPath() + File.separator + "config.json");
     }
 
+    public boolean getScrollingtxt() {
+        return scrollingtxt;
+    }
+
+    public void setScrollingtxt(boolean scrollingtxt) {
+        this.scrollingtxt = scrollingtxt;
+        try {
+            save(false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public boolean getNoHook() {
         return noHook;
     }
 
     public void setNoHook(boolean noHook) {
         this.noHook = noHook;
+        try {
+            save(false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -184,6 +203,11 @@ public class Settings {
 
     public void addExtraAcct(String name) {
         extraAccts.add(new KikAccount(name));
+        try {
+            save(false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void removeExtraAcct(String name) {
@@ -191,6 +215,12 @@ public class Settings {
         if (rm != null) {
             extraAccts.remove(rm);
         }
+        try {
+            save(false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public boolean getMainacctenabled() {

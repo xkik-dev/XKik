@@ -596,6 +596,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                 timestamp_outgoing.setEllipsize(TextUtils.TruncateAt.MARQUEE);
                 timestamp_outgoing.setSelected(true);
                 timestamp_outgoing.setSingleLine(true);
+                timestamp_outgoing.setMarqueeRepeatLimit(-1);
             }
         });
 
@@ -608,6 +609,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                     txt.setEllipsize(TextUtils.TruncateAt.MARQUEE);
                     txt.setSelected(true);
                     txt.setSingleLine(true);
+                    txt.setMarqueeRepeatLimit(-1);
                 }
             }
         });
@@ -620,6 +622,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                 txt.setEllipsize(TextUtils.TruncateAt.MARQUEE);
                 txt.setSelected(true);
                 txt.setSingleLine(true);
+                txt.setMarqueeRepeatLimit(-1);
             }
         });
 
@@ -631,6 +634,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                 txt.setEllipsize(TextUtils.TruncateAt.MARQUEE);
                 txt.setSelected(true);
                 txt.setSingleLine(true);
+                txt.setMarqueeRepeatLimit(-1);
             }
         });
 

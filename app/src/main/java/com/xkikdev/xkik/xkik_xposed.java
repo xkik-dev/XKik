@@ -316,10 +316,17 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                             } else {
                                 return;
                             }
+                            if (from == null || from.equals("warehouse@talk.kik.com")){ // avoids kik internal classes
+                                return;
+                            }
                             for (String uuid : msgs) {
-                                //XposedBridge.log("message "+rd+" read by JID "+whoJID);
                                 settings.addWhoread(from, uuid);
                             }
+                            if (settings.getLurkingToast()){
+                                kikToast(from + " saw your message!");
+                            }
+
+
                         }
                     }
                 });

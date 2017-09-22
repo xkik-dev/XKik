@@ -11,6 +11,8 @@ import android.widget.Switch;
 import com.xkikdev.xkik.R;
 import com.xkikdev.xkik.Settings;
 
+import net.cachapa.expandablelayout.ExpandableLayout;
+
 import java.io.IOException;
 
 public class ChatFragment extends Fragment {
@@ -19,6 +21,7 @@ public class ChatFragment extends Fragment {
     Switch typingRecpt;
     Switch fakeCam;
     Switch lurkDetector;
+    Switch lurkToast;
     Switch longCam;
     Switch disableFwd;
     Switch disableSave;
@@ -26,6 +29,7 @@ public class ChatFragment extends Fragment {
     Switch autoloop;
     Switch automute;
     Switch autoplay;
+    ExpandableLayout lurkEL;
     Settings settings;
 
     public ChatFragment() {
@@ -54,6 +58,7 @@ public class ChatFragment extends Fragment {
         typingRecpt = (Switch) rootView.findViewById(R.id.typing_recpt_switch);
         fakeCam = (Switch) rootView.findViewById(R.id.fake_cam_switch);
         lurkDetector = (Switch) rootView.findViewById(R.id.lurk_detector);
+        lurkToast = (Switch) rootView.findViewById(R.id.lurk_toast);
         longCam = (Switch) rootView.findViewById(R.id.long_cam);
         disableFwd = (Switch) rootView.findViewById(R.id.disable_fwd);
         disableSave = (Switch) rootView.findViewById(R.id.disable_save);
@@ -61,6 +66,7 @@ public class ChatFragment extends Fragment {
         autoloop = (Switch) rootView.findViewById(R.id.auto_loop_video);
         automute = (Switch) rootView.findViewById(R.id.auto_mute_video);
         autoplay = (Switch) rootView.findViewById(R.id.auto_play_video);
+        lurkEL = (ExpandableLayout) rootView.findViewById(R.id.toastEL);
 
         readRecpt.setChecked(settings.getNoReadreceipt());
         typingRecpt.setChecked(settings.getNoTyping());
@@ -111,11 +117,21 @@ public class ChatFragment extends Fragment {
             }
         });
 
-        lurkDetector.setChecked(settings.getWhosLurking());
+
         readRecpt.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 settings.setNoReadreceipt(isChecked, true);
+            }
+        });
+
+
+
+        lurkToast.setChecked(settings.getLurkingToast());
+        lurkToast.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                settings.setLurkingToast(isChecked);
             }
         });
 
@@ -133,10 +149,17 @@ public class ChatFragment extends Fragment {
             }
         });
 
+        lurkDetector.setChecked(settings.getWhosLurking());
+        lurkEL.setExpanded(settings.getWhosLurking());
         lurkDetector.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 settings.setWhosLurking(isChecked, true);
+                if (isChecked){
+                    lurkEL.expand();
+                }else{
+                    lurkEL.collapse();
+                }
             }
         });
 

@@ -48,6 +48,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.1'
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.github.dmytrodanylyk.android-process-button:library:1.0.4'
+    compile 'net.cachapa.expandablelayout:expandablelayout:2.9.2'
     compile 'com.kingfisherphuoc:easy-file-folder-picker-dialog:1.2'
     compile 'com.android.support:design:24.2.1'
     compile 'com.android.support:support-v4:24.2.1'

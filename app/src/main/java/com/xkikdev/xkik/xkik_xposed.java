@@ -597,13 +597,16 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
         resParam.res.hookLayout(hooks.kikPKG, "layout", "outgoing_message_bubble", new XC_LayoutInflated() {
             @Override
             public void handleLayoutInflated(LayoutInflatedParam liparam) throws Throwable {
-                TextView timestamp_outgoing = (TextView) liparam.view.findViewById(
-                        liparam.res.getIdentifier("message_timestamp", "id", "kik.android"));
-                timestamp_outgoing.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
-                timestamp_outgoing.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-                timestamp_outgoing.setSelected(true);
-                timestamp_outgoing.setSingleLine(true);
-                timestamp_outgoing.setMarqueeRepeatLimit(-1);
+                if (settings.getScrollingtxt()) {
+                    TextView timestamp_outgoing = (TextView) liparam.view.findViewById(
+                            liparam.res.getIdentifier("message_timestamp", "id", "kik.android"));
+                    timestamp_outgoing.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
+                    timestamp_outgoing.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+                    timestamp_outgoing.setSelected(true);
+                    timestamp_outgoing.setSingleLine(true);
+                    timestamp_outgoing.setMarqueeRepeatLimit(-1);
+                }
+
             }
         });
 
@@ -624,24 +627,28 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
         resParam.res.hookLayout(hooks.kikPKG, "layout", "activity_chat_info", new XC_LayoutInflated() {
             @Override
             public void handleLayoutInflated(LayoutInflatedParam layoutInflatedParam) throws Throwable {
-                TextView txt = (TextView) layoutInflatedParam.view.findViewById(
-                        layoutInflatedParam.res.getIdentifier("profile_name","id",hooks.kikPKG));
-                txt.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-                txt.setSelected(true);
-                txt.setSingleLine(true);
-                txt.setMarqueeRepeatLimit(-1);
+                if (settings.getScrollingtxt()) {
+                    TextView txt = (TextView) layoutInflatedParam.view.findViewById(
+                            layoutInflatedParam.res.getIdentifier("profile_name","id",hooks.kikPKG));
+                    txt.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+                    txt.setSelected(true);
+                    txt.setSingleLine(true);
+                    txt.setMarqueeRepeatLimit(-1);
+                }
             }
         });
 
         resParam.res.hookLayout(hooks.kikPKG, "layout", "list_entry_conversations", new XC_LayoutInflated() {
             @Override
             public void handleLayoutInflated(LayoutInflatedParam layoutInflatedParam) throws Throwable {
-                TextView txt = (TextView) layoutInflatedParam.view.findViewById(
-                        layoutInflatedParam.res.getIdentifier("conversation_name","id",hooks.kikPKG));
-                txt.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-                txt.setSelected(true);
-                txt.setSingleLine(true);
-                txt.setMarqueeRepeatLimit(-1);
+                if (settings.getScrollingtxt()) {
+                    TextView txt = (TextView) layoutInflatedParam.view.findViewById(
+                            layoutInflatedParam.res.getIdentifier("conversation_name","id",hooks.kikPKG));
+                    txt.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+                    txt.setSelected(true);
+                    txt.setSingleLine(true);
+                    txt.setMarqueeRepeatLimit(-1);
+                }
             }
         });
 

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.XModuleResources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -27,12 +28,15 @@ import com.xkikdev.xkik.datatype_parsers.msgText;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.TimeZone;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
@@ -436,17 +440,39 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                     @Override
                     protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
                         super.afterHookedMethod(param);
-                        if (settings.isBETA()) {
-                            final Activity kact = (Activity) XposedHelpers.callMethod(param.thisObject, "getActivity");
-                            final FrameLayout fl = (FrameLayout) param.getResult();
 
+                        //Gets the Kik activity
+                        final Activity kact = (Activity) XposedHelpers.callMethod(param.thisObject, "getActivity");
+                        //Gets the layout where we can find the background
+                        final FrameLayout fl = (FrameLayout) param.getResult();
+
+                        //Make sure there is a file selected
+                        if (!settings.getFileList().isEmpty()) {
+                            //Randomizes the selection
+                            File file = settings.getFileList().get(new Random().nextInt(
+                                    settings.getFileList().size()));
+
+                            //If file is real
+                            if(file.exists()) {
+                                FileInputStream streamIn = new FileInputStream(file);
+
+                                //Decodes the image
+                                Bitmap bitmap = BitmapFactory.decodeStream(streamIn); //This gets the image
+
+                                streamIn.close();
+
+                                //Sets the background as a drawable
+                                fl.getChildAt(0).setBackground(new BitmapDrawable(kact.getResources(), bitmap)); //background
+                            }
+                        }
+                        else if (settings.isBETA()) {
                             new Thread() {
                                 @Override
                                 public void run() {
                                     final View v = (View) XposedHelpers.getObjectField(param.thisObject, "_messageRecyclerView");
-                                    final Bitmap b = Bitmap.createBitmap(768, 1280, Bitmap.Config.ARGB_8888);
+                                    final Bitmap b = Bitmap.createBitmap(768, 1280 / 2, Bitmap.Config.ARGB_8888);
                                     final Canvas c = new Canvas(b);
-                                    final WaveView wv = new WaveView(768, 1280);
+                                    final WaveView wv = new WaveView(768, 1280 / 2);
                                     wv.setWaveColor(Color.RED, Color.GREEN);
                                     wv.setShowWave(true);
                                     int time = 0;

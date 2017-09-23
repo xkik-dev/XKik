@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Settings class
@@ -47,6 +48,7 @@ public class Settings {
     private transient Activity creator;
     private boolean longCam = false;
     private int dateFormat = 0; // date format, currently only 0 and 1
+    private List<File> fileList = new ArrayList<>();
     private HashMap<String, Integer> colors = new HashMap<String, Integer>(); // color settings
     private HashMap<String, String> strings = new HashMap<String, String>(); // string settings
     private ArrayList<kikSmiley> smileys = new ArrayList<>();
@@ -125,6 +127,17 @@ public class Settings {
     public void setNoHook(boolean noHook) {
         this.noHook = noHook;
     }
+
+
+    public List<File> getFileList() {
+        return fileList;
+    }
+
+    public void setFileList(List<File> value, boolean kill) {
+        fileList = value;
+        trySave(kill);
+    }
+
 
     /**
      * Get the who read hashmap

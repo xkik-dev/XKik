@@ -36,6 +36,7 @@
     <string name="export_to_text_file">Export to text file</string>
     <string name="import_from_public_database">Import from public database</string>
     <string name="import_from_text_file">Import from text file</string>
+    <string name="background_picture">Image Background</string>
     <string name="dark_chat_background">Dark Chat Background</string>
     <string name="disable_forwarding">Disable Forwarding</string>
     <string name="disable_saving">Disable Saving</string>

@@ -34,6 +34,7 @@ public class Settings {
     private boolean noTyping = false; // typing blocked
     private boolean fakeCamera = false; // fake camera enabled
     private boolean whosLurking = false;
+    private boolean lurkingToast = false;
     private boolean autoSmiley = false;
     private boolean darkBg = false;
     private boolean disableSave = false;
@@ -42,6 +43,7 @@ public class Settings {
     private boolean autoplay = false;
     private boolean automute = false;
     private boolean unfilterGIFs = false;
+    private boolean scrollingtxt = false;
     private boolean mainacctenabled = true;
     private boolean BETA = false;
     private transient Activity creator;
@@ -118,12 +120,43 @@ public class Settings {
         return new File(getSaveDir().getPath() + File.separator + "config.json");
     }
 
+    public boolean getLurkingToast() {
+        return lurkingToast;
+    }
+
+    public void setLurkingToast(boolean lurkingToast) {
+        this.lurkingToast = lurkingToast;
+        try {
+            save(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean getScrollingtxt() {
+        return scrollingtxt;
+    }
+
+    public void setScrollingtxt(boolean scrollingtxt) {
+        this.scrollingtxt = scrollingtxt;
+        try {
+            save(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public boolean getNoHook() {
         return noHook;
     }
 
     public void setNoHook(boolean noHook) {
         this.noHook = noHook;
+        try {
+            save(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -184,6 +217,11 @@ public class Settings {
 
     public void addExtraAcct(String name) {
         extraAccts.add(new KikAccount(name));
+        try {
+            save(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void removeExtraAcct(String name) {
@@ -191,6 +229,12 @@ public class Settings {
         if (rm != null) {
             extraAccts.remove(rm);
         }
+        try {
+            save(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public boolean getMainacctenabled() {

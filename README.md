@@ -30,6 +30,7 @@ Visual
 * Small color tweaks
 * Small text tweaks
 * Using exact dates instead of approximations like "3 minutes ago"
+* Marquee/Scrolling text
 
 Technical
 * Kik dev features (risky)

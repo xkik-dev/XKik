@@ -35,7 +35,8 @@ public class VisualFragment extends Fragment {
     Settings settings;
     Switch accdate;
     Switch darkbg;
-      Button setBackground;    Switch scrolltxt;    
+    Button setBackground;
+    Switch scrolltxt;
 
     ColorSetting[] colorSettings = new ColorSetting[]{
             /*new ColorSetting("Main Background", new String[]{"white"}, "#ffffffff"),

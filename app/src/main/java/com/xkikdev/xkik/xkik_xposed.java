@@ -62,7 +62,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 @SuppressLint("SimpleDateFormat")
 public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPackageResources, IXposedHookZygoteInit {
 
-    public static final String kikChatFragment = "kik.android.chat.fragment.KikChatFragment";
+    public static final String kikChatFragment = hooks.kikChatFragment;
     private static final String kikCamObj = "kik.android.c.d";
     public static Settings settings = null;
     public static XModuleResources resources;
@@ -321,10 +321,17 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                             } else {
                                 return;
                             }
+                            if (from == null || from.equals("warehouse@talk.kik.com")){ // avoids kik internal classes
+                                return;
+                            }
                             for (String uuid : msgs) {
-                                //XposedBridge.log("message "+rd+" read by JID "+whoJID);
                                 settings.addWhoread(from, uuid);
                             }
+                            if (settings.getLurkingToast()){
+                                kikToast(from + " saw your message!");
+                            }
+
+
                         }
                     }
                 });
@@ -649,27 +656,61 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
             return;
         }
 
-        resParam.res.hookLayout("kik.android", "layout", "incoming_message_bubble", new XC_LayoutInflated() {
+        resParam.res.hookLayout(hooks.kikPKG, "layout", "outgoing_message_bubble", new XC_LayoutInflated() {
             @Override
             public void handleLayoutInflated(LayoutInflatedParam liparam) throws Throwable {
-                TextView timestamp_incoming = (TextView) liparam.view.findViewById(
-                        liparam.res.getIdentifier("message_timestamp", "id", "kik.android"));
-                timestamp_incoming.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
-                timestamp_incoming.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-                timestamp_incoming.setSelected(true);
-                timestamp_incoming.setSingleLine(true);
+                if (settings.getScrollingtxt()) {
+                    TextView timestamp_outgoing = (TextView) liparam.view.findViewById(
+                            liparam.res.getIdentifier("message_timestamp", "id", "kik.android"));
+                    timestamp_outgoing.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
+                    timestamp_outgoing.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+                    timestamp_outgoing.setSelected(true);
+                    timestamp_outgoing.setSingleLine(true);
+                    timestamp_outgoing.setMarqueeRepeatLimit(-1);
+                }
+
             }
         });
 
-        resParam.res.hookLayout("kik.android", "layout", "outgoing_message_bubble", new XC_LayoutInflated() {
+        resParam.res.hookLayout(hooks.kikPKG, "layout", "kik_back_button", new XC_LayoutInflated() {
             @Override
-            public void handleLayoutInflated(LayoutInflatedParam liparam) throws Throwable {
-                TextView timestamp_outgoing = (TextView) liparam.view.findViewById(
-                        liparam.res.getIdentifier("message_timestamp", "id", "kik.android"));
-                timestamp_outgoing.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
-                timestamp_outgoing.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-                timestamp_outgoing.setSelected(true);
-                timestamp_outgoing.setSingleLine(true);
+            public void handleLayoutInflated(LayoutInflatedParam layoutInflatedParam) throws Throwable {
+                if (settings.getScrollingtxt()) {
+                    TextView txt = (TextView) layoutInflatedParam.view.findViewById(
+                            layoutInflatedParam.res.getIdentifier("title_view", "id", hooks.kikPKG));
+                    txt.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+                    txt.setSelected(true);
+                    txt.setSingleLine(true);
+                    txt.setMarqueeRepeatLimit(-1);
+                }
+            }
+        });
+
+        resParam.res.hookLayout(hooks.kikPKG, "layout", "activity_chat_info", new XC_LayoutInflated() {
+            @Override
+            public void handleLayoutInflated(LayoutInflatedParam layoutInflatedParam) throws Throwable {
+                if (settings.getScrollingtxt()) {
+                    TextView txt = (TextView) layoutInflatedParam.view.findViewById(
+                            layoutInflatedParam.res.getIdentifier("profile_name","id",hooks.kikPKG));
+                    txt.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+                    txt.setSelected(true);
+                    txt.setSingleLine(true);
+                    txt.setMarqueeRepeatLimit(-1);
+                }
+            }
+        });
+
+        resParam.res.hookLayout(hooks.kikPKG, "layout", "list_entry_conversations", new XC_LayoutInflated() {
+            @Override
+            public void handleLayoutInflated(LayoutInflatedParam layoutInflatedParam) throws Throwable {
+                if (settings.getScrollingtxt()) {
+                    TextView txt = (TextView) layoutInflatedParam.view.findViewById(
+                            layoutInflatedParam.res.getIdentifier("conversation_name","id",hooks.kikPKG));
+                    txt.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+                    txt.setSelected(true);
+                    txt.setSingleLine(true);
+                    txt.setMarqueeRepeatLimit(-1);
+                }
             }
         });
 

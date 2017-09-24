@@ -35,7 +35,7 @@ public class VisualFragment extends Fragment {
     Settings settings;
     Switch accdate;
     Switch darkbg;
-    Button setBackground;
+      Button setBackground;    Switch scrolltxt;    
 
     ColorSetting[] colorSettings = new ColorSetting[]{
             /*new ColorSetting("Main Background", new String[]{"white"}, "#ffffffff"),
@@ -87,8 +87,10 @@ public class VisualFragment extends Fragment {
         setImagePicker();
         accdate = (Switch) view.findViewById(R.id.accdate_switch);
         darkbg = (Switch) view.findViewById(R.id.darkbg_switch);
+        scrolltxt = (Switch) view.findViewById(R.id.scrolltxt_switch);
         accdate.setChecked(settings.getDateFormat() == 1);
         darkbg.setChecked(settings.getDarkBg());
+        scrolltxt.setChecked(settings.getScrollingtxt());
         accdate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -103,6 +105,13 @@ public class VisualFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 settings.setDarkBg(isChecked);
+            }
+        });
+
+        scrolltxt.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                settings.setScrollingtxt(isChecked);
             }
         });
 

@@ -30,4 +30,5 @@ public class hooks {
     public static final String kikPKG = "kik.android";
     public static final String kABSTRACT_MESSAGE_VIEW_MODEL = "kik.android.chat.vm.messaging.AbstractMessageViewModel";
     public static final String kikReceiptParser = "kik.core.net.g";
+    public static final String kikChatFragment = "kik.android.chat.fragment.KikChatFragment";
 }

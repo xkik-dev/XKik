@@ -3,7 +3,6 @@ package com.xkikdev.xkik.config_activities;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +31,7 @@ import easyfilepickerdialog.kingfisher.com.library.view.FilePickerDialogFragment
 
 public class VisualFragment extends Fragment {
 
+    public static String incomingColor = "incoming";
     Settings settings;
     Switch accdate;
     Switch darkbg;
@@ -45,6 +45,7 @@ public class VisualFragment extends Fragment {
             new ColorSetting("Tertiary Text", "gray_4", "#ffa9adc1"),
             new ColorSetting("App Bar Background", "gray_1", "#fffafafa"),
             new ColorSetting("White", "white", "#ffeeeeee"),
+            new ColorSetting("Incoming Background", incomingColor, "#ffeeeeee"), //Background of incoming text
     };
 
     StringSetting[] stringSettings = new StringSetting[]{
@@ -135,7 +136,7 @@ public class VisualFragment extends Fragment {
                             }
                         })
                         .build()
-                        .show(((FragmentActivity) v.getContext()).getSupportFragmentManager(), null);
+                        .show(getActivity().getSupportFragmentManager(), null);
             }
         });
     }

@@ -23,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.xkikdev.xkik.config_activities.VisualFragment;
 import com.xkikdev.xkik.config_activities.quickConfig;
 import com.xkikdev.xkik.datatype_parsers.msgText;
 
@@ -428,7 +429,42 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                         super.afterHookedMethod(param);
-                        XposedHelpers.callMethod(param.thisObject, "setBackground", new ColorDrawable(Color.WHITE));
+                        //Gets the root of all incoming messages
+                        View view = (View) XposedHelpers.callMethod(param.thisObject, "getRootView");
+
+                        //Default color in the case of a default parameter or lack of settings.
+                        int backgroundColor = Color.WHITE;
+                        try {
+                            if(settings != null)
+                            {
+                                //Gets the color from the settings
+                                backgroundColor = settings.getColors().get(VisualFragment.incomingColor);
+                            }
+                        }
+                        catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        //Sets the background
+                        view.setBackgroundColor(backgroundColor);
+
+                        //In the case of transparent item, it will correct it on any change
+                        //Changes may turn color into transparent, this reverts it
+                        final int finalColor = backgroundColor;
+                        view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+                            @Override
+                            public void onViewAttachedToWindow(View v) {
+                                //If transparent and resets it
+                                if(v.getBackground() == null) {
+                                    v.setBackgroundColor(finalColor);
+                                    v.invalidate();
+                                }
+                            }
+
+                            @Override
+                            public void onViewDetachedFromWindow(View v) {
+                            }
+                        });
                     }
                 });
 

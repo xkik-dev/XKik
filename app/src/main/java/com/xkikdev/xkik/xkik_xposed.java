@@ -316,13 +316,13 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                             } else {
                                 return;
                             }
-                            if (from == null || from.equals("warehouse@talk.kik.com")){ // avoids kik internal classes
+                            if (from == null || from.equals("warehouse@talk.kik.com")) { // avoids kik internal classes
                                 return;
                             }
                             for (String uuid : msgs) {
                                 settings.addWhoread(from, uuid);
                             }
-                            if (settings.getLurkingToast()){
+                            if (settings.getLurkingToast()) {
                                 kikToast(from + " saw your message!");
                             }
 
@@ -531,6 +531,34 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                     }
                 });
 
+                /*
+                 * Xmpp receive
+                 */
+                XposedHelpers.findAndHookMethod("kik.android.net.a", loadPackageParam.classLoader, "a", new XC_MethodHook() {
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                        xposedObject xthis = new xposedObject(param.thisObject);
+                        String a = xthis.get("a").toString();
+                        XposedBridge.log("IN: " + a);
+                        super.beforeHookedMethod(param);
+                    }
+                });
+
+
+                /*
+                Xmpp send
+                 */
+                XposedHelpers.findAndHookMethod("kik.android.net.b", loadPackageParam.classLoader, "a", new XC_MethodHook() {
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                        xposedObject xthis = new xposedObject(param.thisObject);
+                        String a = xthis.get("c").toString();
+                        XposedBridge.log("OUT: " + a);
+                        super.beforeHookedMethod(param);
+                    }
+                });
+
+
             }
         });
 
@@ -629,7 +657,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
             public void handleLayoutInflated(LayoutInflatedParam layoutInflatedParam) throws Throwable {
                 if (settings.getScrollingtxt()) {
                     TextView txt = (TextView) layoutInflatedParam.view.findViewById(
-                            layoutInflatedParam.res.getIdentifier("profile_name","id",hooks.kikPKG));
+                            layoutInflatedParam.res.getIdentifier("profile_name", "id", hooks.kikPKG));
                     txt.setEllipsize(TextUtils.TruncateAt.MARQUEE);
                     txt.setSelected(true);
                     txt.setSingleLine(true);
@@ -643,7 +671,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
             public void handleLayoutInflated(LayoutInflatedParam layoutInflatedParam) throws Throwable {
                 if (settings.getScrollingtxt()) {
                     TextView txt = (TextView) layoutInflatedParam.view.findViewById(
-                            layoutInflatedParam.res.getIdentifier("conversation_name","id",hooks.kikPKG));
+                            layoutInflatedParam.res.getIdentifier("conversation_name", "id", hooks.kikPKG));
                     txt.setEllipsize(TextUtils.TruncateAt.MARQUEE);
                     txt.setSelected(true);
                     txt.setSingleLine(true);

@@ -148,6 +148,18 @@ public class VisualFragment extends Fragment {
                         .show(getActivity().getSupportFragmentManager(), null);
             }
         });
+        setBackground.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                settings.getFileList().clear();
+                try {
+                    settings.save(true);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return true;
+            }
+        });
     }
 
     /**

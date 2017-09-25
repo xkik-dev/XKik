@@ -59,4 +59,5 @@
     <string name="whoread_info">(Click on a message to view who read it)</string>
     <string name="scrolling_text">Scrolling Text</string>
     <string name="show_toast_on_read">Show toast on read</string>
+    <string name="bg_images">Background Image/s</string>
 </resources>

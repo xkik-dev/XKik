@@ -141,7 +141,7 @@ public class VisualFragment extends Fragment {
                             @Override
                             public void onFileSelected(final List<File> list) {
                                 if(settings != null) {
-                                    settings.setFileList(list, false);
+                                    settings.setFileList(list, true);
                                 }
                             }
                         })

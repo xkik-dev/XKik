@@ -54,11 +54,18 @@
 
                 </TableLayout>
 
+                <Button
+                    android:id="@+id/background_picture"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/color_tl"
+                    android:text="@string/background_picture"/>
+
                 <Switch
                     android:id="@+id/darkbg_switch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/color_tl"
+                    android:layout_below="@id/background_picture"
                     android:text="@string/dark_chat_background" />
 
             </RelativeLayout>

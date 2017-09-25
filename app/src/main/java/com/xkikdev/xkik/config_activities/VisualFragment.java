@@ -20,15 +20,24 @@ import com.xkikdev.xkik.R;
 import com.xkikdev.xkik.Settings;
 import com.xkikdev.xkik.StringSetting;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.List;
+
+import easyfilepickerdialog.kingfisher.com.library.model.DialogConfig;
+import easyfilepickerdialog.kingfisher.com.library.model.SupportFile;
+import easyfilepickerdialog.kingfisher.com.library.view.FilePickerDialogFragment;
 
 
 public class VisualFragment extends Fragment {
 
+    public static String incomingColor = "incoming";
     Settings settings;
     Switch accdate;
     Switch darkbg;
+    Button setBackground;
     Switch scrolltxt;
+
     ColorSetting[] colorSettings = new ColorSetting[]{
             /*new ColorSetting("Main Background", new String[]{"white"}, "#ffffffff"),
             new ColorSetting("Chat Background", new String[]{"chat_background_color","chat_info_background"},"#ffeeeeee"),*/
@@ -37,6 +46,7 @@ public class VisualFragment extends Fragment {
             new ColorSetting("Tertiary Text", "gray_4", "#ffa9adc1"),
             new ColorSetting("App Bar Background", "gray_1", "#fffafafa"),
             new ColorSetting("White", "white", "#ffeeeeee"),
+            new ColorSetting("Incoming Background", incomingColor, "#ffeeeeee"), //Background of incoming text
     };
 
     StringSetting[] stringSettings = new StringSetting[]{
@@ -73,6 +83,9 @@ public class VisualFragment extends Fragment {
             string_tl.addView(genStringTweak(inflater, c.label, c.id, c.defval));
         }
 
+
+        setBackground = (Button) view.findViewById(R.id.background_picture);
+        setImagePicker();
         accdate = (Switch) view.findViewById(R.id.accdate_switch);
         darkbg = (Switch) view.findViewById(R.id.darkbg_switch);
         scrolltxt = (Switch) view.findViewById(R.id.scrolltxt_switch);
@@ -104,6 +117,49 @@ public class VisualFragment extends Fragment {
         });
 
         return view;
+    }
+
+    /**
+     * When clicked on the image picker, creates a dialog that will let the user choose images for the background.
+     */
+    private void setImagePicker() {
+        setBackground.setText(R.string.bg_images);
+        setBackground.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                DialogConfig dialogConfig = new DialogConfig.Builder()
+                        .supportFiles(new SupportFile(".jpg", android.R.drawable.ic_menu_gallery),
+                                new SupportFile(".jpeg", android.R.drawable.ic_menu_gallery),
+                                new SupportFile(".png", android.R.drawable.ic_menu_gallery),
+                                new SupportFile(".bmp", android.R.drawable.ic_menu_gallery))
+                        .enableMultipleSelect(true)
+                        .build();
+                new FilePickerDialogFragment.Builder()
+                        .configs(dialogConfig)
+                        .onFilesSelected(new FilePickerDialogFragment.OnFilesSelectedListener() {
+                            @Override
+                            public void onFileSelected(final List<File> list) {
+                                if (settings != null) {
+                                    settings.setFileList(list, true);
+                                }
+                            }
+                        })
+                        .build()
+                        .show(getActivity().getSupportFragmentManager(), null);
+            }
+        });
+        setBackground.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                settings.getFileList().clear();
+                try {
+                    settings.save(true);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return true;
+            }
+        });
     }
 
     /**

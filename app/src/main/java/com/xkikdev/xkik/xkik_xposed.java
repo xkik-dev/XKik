@@ -231,7 +231,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                                     @Override
                                     public boolean onLongClick(View v) {
                                         quickConfig qc = new quickConfig();
-                                        qc.show(((Activity) v.getContext()).getFragmentManager(), "quick_config");
+                                        qc.show(((Activity) v.getRootView().getContext()).getFragmentManager(), "quick_config");
                                         return true;
                                     }
                                 });

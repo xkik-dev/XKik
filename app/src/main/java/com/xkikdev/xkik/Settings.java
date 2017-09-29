@@ -208,10 +208,14 @@ public class Settings {
      * Purges the config file from old read notifications, to keep file size small
      */
     public void purgeWhoread() {
+        ArrayList<String> del = new ArrayList<>();
         for (String key : whoread.keySet()) {
             if (whoread.get(key).getLong() < System.currentTimeMillis()) {
-                whoread.remove(key);
+                del.add(key);
             }
+        }
+        for (String key : del){
+            whoread.remove(key);
         }
     }
 

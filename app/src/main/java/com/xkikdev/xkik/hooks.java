@@ -25,7 +25,7 @@ public class hooks {
     public static final String kikGifApi = "kik.android.gifs.api.g";
     public static final String kikGifSearchRating = "kik.android.gifs.api.GifApiProvider.GifSearchRating";
     public static final String kikBubbleFrameLayout = "kik.android.widget.BubbleFramelayout";
-    public static final String kikRecordTextMgr = "kik.android.util.ch";
+    public static final String kikRecordTextMgr = "kik.android.util.bx";
     public static final String kikConversationFragment = "kik.android.chat.fragment.KikConversationsFragment";
     public static final String kikPKG = "kik.android";
     public static final String kABSTRACT_MESSAGE_VIEW_MODEL = "kik.android.chat.vm.messaging.AbstractMessageViewModel";

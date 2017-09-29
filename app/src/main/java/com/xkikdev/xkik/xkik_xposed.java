@@ -442,7 +442,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                         //Default color in the case of a default parameter or lack of settings.
                         int backgroundColor = Color.WHITE;
                         try {
-                            if(settings != null)
+                            if(settings != null && settings.getColors().containsKey(VisualFragment.incomingColor))
                             {
                                 //Gets the color from the settings
                                 backgroundColor = settings.getColors().get(VisualFragment.incomingColor);

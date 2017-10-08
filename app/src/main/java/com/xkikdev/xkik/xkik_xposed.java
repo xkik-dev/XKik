@@ -231,7 +231,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                                     @Override
                                     public boolean onLongClick(View v) {
                                         quickConfig qc = new quickConfig();
-                                        qc.show(((Activity) v.getContext()).getFragmentManager(), "quick_config");
+                                        qc.show(((Activity) v.getRootView().getContext()).getFragmentManager(), "quick_config");
                                         return true;
                                     }
                                 });
@@ -273,7 +273,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                 /*
                 Smiley Manager
                  */
-                XposedHelpers.findAndHookConstructor(hooks.kikSmileyManager, loadPackageParam.classLoader, Context.class, "kik.core.interfaces.ae", new XC_MethodHook() {
+                XposedHelpers.findAndHookConstructor(hooks.kikSmileyManager, loadPackageParam.classLoader, Context.class, "kik.core.interfaces.af", new XC_MethodHook() {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                         smileyManager = param.thisObject;
@@ -442,7 +442,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                         //Default color in the case of a default parameter or lack of settings.
                         int backgroundColor = Color.WHITE;
                         try {
-                            if(settings != null)
+                            if(settings != null && settings.getColors().containsKey(VisualFragment.incomingColor))
                             {
                                 //Gets the color from the settings
                                 backgroundColor = settings.getColors().get(VisualFragment.incomingColor);
@@ -686,7 +686,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
             }
         });
 
-        resParam.res.hookLayout(hooks.kikPKG, "layout", "activity_chat_info", new XC_LayoutInflated() {
+        resParam.res.hookLayout(hooks.kikPKG, "layout", "chat_profile_view", new XC_LayoutInflated() {
             @Override
             public void handleLayoutInflated(LayoutInflatedParam layoutInflatedParam) throws Throwable {
                 if (settings.getScrollingtxt()) {

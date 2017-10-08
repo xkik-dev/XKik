@@ -345,7 +345,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                         Boolean on = (Boolean) param.args[2];
 
                         if (on) {
-                            String UUID = new msgText(new xposedObject(param.args[0]).get("w")).getUUID();
+                            String UUID = new msgText(new xposedObject(param.args[0]).get("g")).getUUID();
                             XposedBridge.log("opend msg " + UUID);
                             if (settings.getWhoread().containsKey(UUID)) {
                                 String sby = "Seen by ";

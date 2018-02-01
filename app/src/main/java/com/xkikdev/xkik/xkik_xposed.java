@@ -11,7 +11,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -19,7 +18,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +33,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -55,14 +54,15 @@ import de.robv.android.xposed.callbacks.XC_InitPackageResources;
 import de.robv.android.xposed.callbacks.XC_LayoutInflated;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
+import static com.xkikdev.xkik.hooks.kikMessage;
+
 /**
  * Main xposed class
  */
 
 @SuppressLint("SimpleDateFormat")
 public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPackageResources, IXposedHookZygoteInit {
-
-    public static final String kikChatFragment = hooks.kikChatFragment;
+    private static final String kikChatFragment = hooks.kikChatFragment;
     private static final String kikCamObj = "kik.android.c.d";
     public static Settings settings = null;
     public static XModuleResources resources;
@@ -242,7 +242,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                 /*
                 On smiley click
                  */
-                XposedHelpers.findAndHookMethod(hooks.smileyView, loadPackageParam.classLoader, "onClick", View.class, new XC_MethodHook() {
+                XposedHelpers.findAndHookMethod(hooks.smileyView, loadPackageParam.classLoader, "a", new XC_MethodHook() {
                     @Override
                     protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                         if (settings.getAutoSmiley()) {
@@ -273,7 +273,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                 /*
                 Smiley Manager
                  */
-                XposedHelpers.findAndHookConstructor(hooks.kikSmileyManager, loadPackageParam.classLoader, Context.class, "kik.core.interfaces.af", new XC_MethodHook() {
+                XposedHelpers.findAndHookConstructor(hooks.kikSmileyManager, loadPackageParam.classLoader, Context.class, "kik.core.interfaces.ad", new XC_MethodHook() {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                         smileyManager = param.thisObject;
@@ -321,17 +321,15 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                             } else {
                                 return;
                             }
-                            if (from == null || from.equals("warehouse@talk.kik.com")){ // avoids kik internal classes
+                            if (from == null || from.equals("warehouse@talk.kik.com")) { // avoids kik internal classes
                                 return;
                             }
                             for (String uuid : msgs) {
                                 settings.addWhoread(from, uuid);
                             }
-                            if (settings.getLurkingToast()){
+                            if (settings.getLurkingToast()) {
                                 kikToast(from + " saw your message!");
                             }
-
-
                         }
                     }
                 });
@@ -339,7 +337,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                 /*
                 Who's lurking displayer
                  */
-                XposedHelpers.findAndHookMethod(hooks.kABSTRACT_MESSAGE_VIEW_MODEL, loadPackageParam.classLoader, "a", hooks.kABSTRACT_MESSAGE_VIEW_MODEL, Long.class, Boolean.class, hooks.kikMessage, new XC_MethodHook() {
+                XposedHelpers.findAndHookMethod(hooks.kABSTRACT_MESSAGE_VIEW_MODEL, loadPackageParam.classLoader, "a", hooks.kABSTRACT_MESSAGE_VIEW_MODEL, Long.class, Boolean.class, kikMessage, new XC_MethodHook() {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                         Boolean on = (Boolean) param.args[2];
@@ -442,13 +440,11 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                         //Default color in the case of a default parameter or lack of settings.
                         int backgroundColor = Color.WHITE;
                         try {
-                            if(settings != null && settings.getColors().containsKey(VisualFragment.incomingColor))
-                            {
+                            if (settings != null && settings.getColors().containsKey(VisualFragment.incomingColor)) {
                                 //Gets the color from the settings
                                 backgroundColor = settings.getColors().get(VisualFragment.incomingColor);
                             }
-                        }
-                        catch (Exception e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 
@@ -462,7 +458,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                             @Override
                             public void onViewAttachedToWindow(View v) {
                                 //If transparent and resets it
-                                if(v.getBackground() == null) {
+                                if (v.getBackground() == null) {
                                     v.setBackgroundColor(finalColor);
                                     v.invalidate();
                                 }
@@ -496,7 +492,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                                     settings.getFileList().size()));
 
                             //If file is real
-                            if(file.exists()) {
+                            if (file.exists()) {
                                 FileInputStream streamIn = new FileInputStream(file);
 
                                 //Decodes the image
@@ -507,8 +503,7 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                                 //Sets the background as a drawable
                                 fl.getChildAt(0).setBackground(new BitmapDrawable(kact.getResources(), bitmap)); //background
                             }
-                        }
-                        else if (settings.isBETA()) {
+                        } else if (settings.isBETA()) {
                             new Thread() {
                                 @Override
                                 public void run() {
@@ -548,6 +543,32 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
                                 }
                             }.start();
                         }
+                    }
+                });
+
+                 /*
+                started working on do not disturb
+
+                XposedHelpers.findAndHookMethod(XposedHelpers.findClass(hooks.KikApplication, loadPackageParam.classLoader), "a", kikMessage, new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        Class<?> messageClass = param.args[0].getClass();
+                        String JID = String.valueOf(messageClass.getMethod("i");
+                        XposedBridge.log("Debug" + JID);
+                        super.afterHookedMethod(param);
+                    }
+                });
+
+                */
+
+                /*
+                Manages bypass options
+                 */
+                XposedBridge.hookAllMethods(XposedHelpers.findClass(hooks.kikContentMessage, loadPackageParam.classLoader), "y", new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        if(settings.getBypassSave()) param.setResult(false);
+                        super.afterHookedMethod(param);
                     }
                 });
 
@@ -658,59 +679,22 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
 
         resParam.res.hookLayout(hooks.kikPKG, "layout", "outgoing_message_bubble", new XC_LayoutInflated() {
             @Override
-            public void handleLayoutInflated(LayoutInflatedParam liparam) throws Throwable {
-                if (settings.getScrollingtxt()) {
-                    TextView timestamp_outgoing = (TextView) liparam.view.findViewById(
-                            liparam.res.getIdentifier("message_timestamp", "id", "kik.android"));
-                    timestamp_outgoing.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
-                    timestamp_outgoing.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-                    timestamp_outgoing.setSelected(true);
-                    timestamp_outgoing.setSingleLine(true);
-                    timestamp_outgoing.setMarqueeRepeatLimit(-1);
-                }
-
+            public void handleLayoutInflated(LayoutInflatedParam layoutInflatedParam) throws Throwable {
+                scrollingText((TextView) layoutInflatedParam.view.findViewById(layoutInflatedParam.res.getIdentifier("message_timestamp", "id", hooks.kikPKG)));
             }
         });
 
         resParam.res.hookLayout(hooks.kikPKG, "layout", "kik_back_button", new XC_LayoutInflated() {
             @Override
             public void handleLayoutInflated(LayoutInflatedParam layoutInflatedParam) throws Throwable {
-                if (settings.getScrollingtxt()) {
-                    TextView txt = (TextView) layoutInflatedParam.view.findViewById(
-                            layoutInflatedParam.res.getIdentifier("title_view", "id", hooks.kikPKG));
-                    txt.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-                    txt.setSelected(true);
-                    txt.setSingleLine(true);
-                    txt.setMarqueeRepeatLimit(-1);
-                }
-            }
-        });
-
-        resParam.res.hookLayout(hooks.kikPKG, "layout", "chat_profile_view", new XC_LayoutInflated() {
-            @Override
-            public void handleLayoutInflated(LayoutInflatedParam layoutInflatedParam) throws Throwable {
-                if (settings.getScrollingtxt()) {
-                    TextView txt = (TextView) layoutInflatedParam.view.findViewById(
-                            layoutInflatedParam.res.getIdentifier("profile_name","id",hooks.kikPKG));
-                    txt.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-                    txt.setSelected(true);
-                    txt.setSingleLine(true);
-                    txt.setMarqueeRepeatLimit(-1);
-                }
+                scrollingText((TextView) layoutInflatedParam.view.findViewById(layoutInflatedParam.res.getIdentifier("title_view", "id", hooks.kikPKG)));
             }
         });
 
         resParam.res.hookLayout(hooks.kikPKG, "layout", "list_entry_conversations", new XC_LayoutInflated() {
             @Override
             public void handleLayoutInflated(LayoutInflatedParam layoutInflatedParam) throws Throwable {
-                if (settings.getScrollingtxt()) {
-                    TextView txt = (TextView) layoutInflatedParam.view.findViewById(
-                            layoutInflatedParam.res.getIdentifier("conversation_name","id",hooks.kikPKG));
-                    txt.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-                    txt.setSelected(true);
-                    txt.setSingleLine(true);
-                    txt.setMarqueeRepeatLimit(-1);
-                }
+                scrollingText((TextView) layoutInflatedParam.view.findViewById(layoutInflatedParam.res.getIdentifier("conversation_name", "id", hooks.kikPKG)));
             }
         });
 
@@ -740,6 +724,15 @@ public class xkik_xposed implements IXposedHookLoadPackage, IXposedHookInitPacka
             }
         }
 
+    }
+
+    public static void scrollingText(TextView tv){
+        if (settings.getScrollingtxt()) {
+            tv.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            tv.setSelected(true);
+            tv.setSingleLine(true);
+            tv.setMarqueeRepeatLimit(-1);
+        }
     }
 
     @Override

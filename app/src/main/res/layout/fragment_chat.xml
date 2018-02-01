@@ -77,12 +77,22 @@
                         android:text="@string/disable_saving" />
 
                     <Switch
-                        android:id="@+id/auto_loop_video"
+                        android:id="@+id/bypass_save"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
                         android:layout_below="@+id/disable_save"
+                        android:layout_marginTop="11dp"
+                        android:text="@string/bypass_no_save" />
+
+                    <Switch
+                        android:id="@+id/auto_loop_video"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_below="@+id/bypass_save"
                         android:layout_marginTop="11dp"
                         android:text="@string/auto_loop_video" />
 

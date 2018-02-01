@@ -1,6 +1,7 @@
 package com.xkikdev.xkik.config_activities;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,7 @@ public class ChatFragment extends Fragment {
     Switch autoloop;
     Switch automute;
     Switch autoplay;
+    Switch bypassSave;
     ExpandableLayout lurkEL;
     Settings settings;
 
@@ -43,7 +45,7 @@ public class ChatFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
         // Inflate the layout for this fragment
@@ -54,20 +56,20 @@ public class ChatFragment extends Fragment {
             e.printStackTrace();
         }
 
-        readRecpt = (Switch) rootView.findViewById(R.id.read_recpt_switch);
-        typingRecpt = (Switch) rootView.findViewById(R.id.typing_recpt_switch);
-        fakeCam = (Switch) rootView.findViewById(R.id.fake_cam_switch);
-        lurkDetector = (Switch) rootView.findViewById(R.id.lurk_detector);
-        lurkToast = (Switch) rootView.findViewById(R.id.lurk_toast);
-        longCam = (Switch) rootView.findViewById(R.id.long_cam);
-        disableFwd = (Switch) rootView.findViewById(R.id.disable_fwd);
-        disableSave = (Switch) rootView.findViewById(R.id.disable_save);
-        disableFilter = (Switch) rootView.findViewById(R.id.unfilter_gif);
-        autoloop = (Switch) rootView.findViewById(R.id.auto_loop_video);
-        automute = (Switch) rootView.findViewById(R.id.auto_mute_video);
-        autoplay = (Switch) rootView.findViewById(R.id.auto_play_video);
-        lurkEL = (ExpandableLayout) rootView.findViewById(R.id.toastEL);
-
+        readRecpt = rootView.findViewById(R.id.read_recpt_switch);
+        typingRecpt = rootView.findViewById(R.id.typing_recpt_switch);
+        fakeCam = rootView.findViewById(R.id.fake_cam_switch);
+        lurkDetector = rootView.findViewById(R.id.lurk_detector);
+        lurkToast = rootView.findViewById(R.id.lurk_toast);
+        longCam = rootView.findViewById(R.id.long_cam);
+        disableFwd = rootView.findViewById(R.id.disable_fwd);
+        disableSave = rootView.findViewById(R.id.disable_save);
+        disableFilter = rootView.findViewById(R.id.unfilter_gif);
+        autoloop = rootView.findViewById(R.id.auto_loop_video);
+        automute = rootView.findViewById(R.id.auto_mute_video);
+        autoplay = rootView.findViewById(R.id.auto_play_video);
+        lurkEL = rootView.findViewById(R.id.toastEL);
+        bypassSave = rootView.findViewById(R.id.bypass_save);
         readRecpt.setChecked(settings.getNoReadreceipt());
         typingRecpt.setChecked(settings.getNoTyping());
         fakeCam.setChecked(settings.getFakeCam());
@@ -78,6 +80,13 @@ public class ChatFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 settings.setDisableFwd(isChecked);
+            }
+        });
+        bypassSave.setChecked(settings.getBypassSave());
+        bypassSave.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                settings.setBypassSave(isChecked);
             }
         });
         autoloop.setChecked(settings.getAutoLoop());

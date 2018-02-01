@@ -39,6 +39,7 @@ public class Settings {
     private boolean autoSmiley = false;
     private boolean darkBg = false;
     private boolean disableSave = false;
+    private boolean bypassSave = false;
     private boolean disableFwd = false;
     private boolean autoloop = false;
     private boolean autoplay = false;
@@ -51,8 +52,8 @@ public class Settings {
     private boolean longCam = false;
     private int dateFormat = 0; // date format, currently only 0 and 1
     private List<File> fileList = new ArrayList<>();
-    private HashMap<String, Integer> colors = new HashMap<String, Integer>(); // color settings
-    private HashMap<String, String> strings = new HashMap<String, String>(); // string settings
+    private HashMap<String, Integer> colors = new HashMap<>(); // color settings
+    private HashMap<String, String> strings = new HashMap<>(); // string settings
     private ArrayList<kikSmiley> smileys = new ArrayList<>();
     private ArrayList<KikAccount> extraAccts = new ArrayList<>();
     private HashMap<String, longStringarray> whoread = new HashMap<>();
@@ -84,7 +85,7 @@ public class Settings {
      * @return Settings object
      * @throws IOException
      */
-    public static Settings load() throws IOException {
+    static Settings load() throws IOException {
         if (getSaveFile().exists()) {
             return new Gson().fromJson(FileUtils.readFileToString(getSaveFile(), "UTF-8"), Settings.class);
         } else {
@@ -453,6 +454,15 @@ public class Settings {
 
     public void setDisableSave(boolean disableSave) {
         this.disableSave = disableSave;
+        trySave();
+    }
+
+    public boolean getBypassSave() {
+        return bypassSave;
+    }
+
+    public void setBypassSave(boolean bypass) {
+        this.bypassSave = bypass;
         trySave();
     }
 
